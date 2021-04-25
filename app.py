@@ -179,7 +179,7 @@ app.layout = html.Div(
                        style={'color': 'white', 'border': 'solid 1px white', 'font-size':'12px'}
                 )
             ]
-        )
+        ),
         html.Div(
             id="upper-container",
             className="row",
