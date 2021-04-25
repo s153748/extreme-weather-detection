@@ -180,7 +180,6 @@ app.layout = html.Div(
                 html.Img(src='data:image/png;base64,{}'.format(
                             base64.b64encode(open('./assets/GitHub-Mark-Light-64px.png'),'rb').read()).decode()
                         )
-                )
             ],
         ),
         html.Div(
