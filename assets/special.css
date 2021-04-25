@@ -20,7 +20,7 @@ body {
   display: flex;
   flex-direction: row nowrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
 .banner h6 {
@@ -33,7 +33,7 @@ body {
 
 .banner Img {
   position: relative;
-  height: 2rem;
+  height: 3rem;
   width: auto;
 }
 
