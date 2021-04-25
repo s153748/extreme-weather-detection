@@ -26,8 +26,8 @@ server = app.server
 app.config.suppress_callback_exceptions = True
 
 githublink = 'https://github.com/s153748/extreme-weather-detection'
-#mapbox_access_token = 'pk.eyJ1IjoiczE1Mzc0OCIsImEiOiJja25wcDlwdjYxcWJmMnFueDhhbHdreTlmIn0.DXfj5S2H91AZEPG1JnHbxg'
-mapbox_access_token = "pk.eyJ1IjoiczE1Mzc0OCIsImEiOiJja25wcDYwYmMxbnVhMm9wZXh6bzd4eXkzIn0.l-UDELQKHDMPpeycLroSGw"
+mapbox_access_token = 'pk.eyJ1IjoiczE1Mzc0OCIsImEiOiJja25wcDlwdjYxcWJmMnFueDhhbHdreTlmIn0.DXfj5S2H91AZEPG1JnHbxg'
+#mapbox_access_token = "pk.eyJ1IjoiczE1Mzc0OCIsImEiOiJja25wcDYwYmMxbnVhMm9wZXh6bzd4eXkzIn0.l-UDELQKHDMPpeycLroSGw"
 px.set_mapbox_access_token(mapbox_access_token)
 
 # Load data
@@ -135,7 +135,7 @@ def generate_geo_map(geo_data, month_select, graph_select):
             ),
             pitch=5,
             zoom=2,
-            style="mapbox://styles/plotlymapbox/cjvppq1jl1ips1co3j12b9hex",
+            style="mapbox://styles/s153748/cjvppq1jl1ips1co3j12b9hex",
         ),
         font=dict(color='#737a8d')
     )
