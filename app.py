@@ -12,6 +12,7 @@ from ast import literal_eval
 import pandas as pd
 import numpy as np
 import calendar
+import base64
 
 # Initiate app
 app = dash.Dash()
@@ -99,14 +100,9 @@ def generate_geo_map(geo_data, month_select, graph_select):
         fig = px.scatter_mapbox(filtered_data, 
                                 lat="lat", 
                                 lon="lon",
-                                #color='retweet_count',
-                                #size='retweet_count',
-                                #size_max=25,
-                                #opacity=0.8,
                                 hover_name='full_text',
                                 hover_data=['user_location','created_at','retweet_count'],
                                 color_discrete_sequence=['#dae1f2'])
-                                #color_continuous_scale='teal')
     elif graph_select == 'Hexagon map':
         fig = ff.create_hexbin_mapbox(data_frame=filtered_data, 
                                       lat="lat", 
@@ -176,8 +172,15 @@ app.layout = html.Div(
             className="banner",
             children=[
                 html.H6("Extreme Weather Event Detection"),
+                html.A(id='gh-link',
+                       children=['View on Github'], 
+                       href=githublink, 
+                       style={'color': 'white', 'border': 'solid 1px white'}),
                 #html.Img(src=app.get_asset_url("plotly_logo_white.png")),
-                html.A('View on Github', href=githublink),
+                html.Img(src='data:image/png;base64,{}'.format(
+                            base64.b64encode(open('./assets/GitHub-Mark-Light-64px.png'),'rb').read()).decode()
+                        )
+                )
             ],
         ),
         html.Div(
