@@ -171,13 +171,15 @@ app.layout = html.Div(
             className="banner",
             children=[
                 html.H6("Extreme Weather Event Detection"),
+                html.Img(src=app.get_asset_url("GitHub-Mark-Light-64px.png",
+                         style={'height':'110%', 'width':'110%'}),
                 html.A(id='gh-link',
                        children=['View on Github'], 
                        href=githublink, 
-                       style={'color': 'white', 'border': 'solid 1px white'}),
-                html.Img(src=app.get_asset_url("GitHub-Mark-Light-64px.png"))
-            ],
-        ),
+                       style={'color': 'white', 'border': 'solid 1px white', 'font-size':'12px'}
+                )
+            ]
+        )
         html.Div(
             id="upper-container",
             className="row",
