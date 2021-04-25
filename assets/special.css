@@ -19,6 +19,8 @@ body {
   padding: 0rem 5rem 0rem;
   display: flex;
   flex-direction: row nowrap;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .banner h6 {
@@ -27,15 +29,10 @@ body {
   font-weight: 600;
   line-height: 1;
   text-transform: uppercase;
-  display: flex;
-  position: relative;
-  justify-content: flex-start;
 }
 
 .banner Img {
-  display: flex;
   position: relative;
-  justify-content: flex-end;
   height: 2.5rem;
   width: auto;
 }
