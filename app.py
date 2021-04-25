@@ -12,6 +12,7 @@ from ast import literal_eval
 import pandas as pd
 import numpy as np
 import calendar
+import pathlib
 
 # Initiate app
 app = dash.Dash(
@@ -28,7 +29,8 @@ githublink = 'https://github.com/s153748/extreme-weather-detection'
 mapbox_access_token = 'pk.eyJ1IjoiczE1Mzc0OCIsImEiOiJja25wcDlwdjYxcWJmMnFueDhhbHdreTlmIn0.DXfj5S2H91AZEPG1JnHbxg'
 
 # Load data
-df = pd.read_csv('data/final_labelled_tweets.csv')
+DATA_PATH = pathlib.Path(__file__).parent.joinpath("data") 
+df = pd.read_csv(DATA_PATH.joinpath("final_labelled_tweets.csv")) 
 
 # Data prep
 df.dropna(subset=['tokens'], inplace=True)
@@ -112,8 +114,7 @@ def generate_geo_map(geo_data, month_select, graph_select):
                                       min_count=1, 
                                       color_continuous_scale='teal',
                                       show_original_data=True, 
-                                      original_data_marker=dict(size=5, opacity=1, color="#dae1f2")
-        )
+                                      original_data_marker=dict(size=5, opacity=1, color="#dae1f2"))
     else:
         fig = px.scatter_mapbox()
         
@@ -144,7 +145,7 @@ def generate_line_chart(time_data):
                   x='Date',
                   y='Count',
                   hover_data=['full_text'],
-                  color_discrete_sequence=['#dae1f2'])
+                  color_discrete_sequence=['teal'])
     fig.update_yaxes(showgrid=False)
     fig.update_xaxes(
         showgrid=False,
