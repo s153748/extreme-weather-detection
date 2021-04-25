@@ -27,7 +27,8 @@ app.config.suppress_callback_exceptions = True
 
 githublink = 'https://github.com/s153748/extreme-weather-detection'
 #mapbox_access_token = 'pk.eyJ1IjoiczE1Mzc0OCIsImEiOiJja25wcDlwdjYxcWJmMnFueDhhbHdreTlmIn0.DXfj5S2H91AZEPG1JnHbxg'
-mapbox_access_token = "pk.eyJ1IjoicGxvdGx5bWFwYm94IiwiYSI6ImNrOWJqb2F4djBnMjEzbG50amg0dnJieG4ifQ.Zme1-Uzoi75IaFbieBDl3A"
+mapbox_access_token = "pk.eyJ1IjoiczE1Mzc0OCIsImEiOiJja25wcDYwYmMxbnVhMm9wZXh6bzd4eXkzIn0.l-UDELQKHDMPpeycLroSGw"
+px.set_mapbox_access_token(mapbox_access_token)
 
 # Load data
 DATA_PATH = pathlib.Path(__file__).parent.joinpath("data") 
