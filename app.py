@@ -174,13 +174,8 @@ app.layout = html.Div(
                 html.A([
                     html.Img(
                         src=app.get_asset_url("GitHub-Mark-Light-64px.png")
-                    ), href=githublink)
-                ])
-                #html.A(id='gh-link',
-                #       children=['Github'], 
-                #       href=githublink, 
-                #       style={'color': 'white', 'border': 'solid 1px white', 'font-size':'12px'}
-                #)  
+                    )
+                ], href=githublink)
             ]
         ),
         html.Div(
