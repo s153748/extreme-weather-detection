@@ -12,7 +12,6 @@ from ast import literal_eval
 import pandas as pd
 import numpy as np
 import calendar
-import base64
 
 # Initiate app
 app = dash.Dash(
@@ -176,10 +175,7 @@ app.layout = html.Div(
                        children=['View on Github'], 
                        href=githublink, 
                        style={'color': 'white', 'border': 'solid 1px white'}),
-                #html.Img(src=app.get_asset_url("plotly_logo_white.png")),
-                html.Img(src='data:image/png;base64,{}'.format(
-                            base64.b64encode(open('./assets/GitHub-Mark-Light-64px.png'),'rb').read()).decode()
-                        )
+                html.Img(src=app.get_asset_url("GitHub-Mark-Light-64px.png"))
             ],
         ),
         html.Div(
