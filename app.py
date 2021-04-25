@@ -15,7 +15,7 @@ import calendar
 import base64
 
 # Initiate app
-app = dash.Dash()
+app = dash.Dash(
     __name__,
     meta_tags=[{
             "name": "viewport",
