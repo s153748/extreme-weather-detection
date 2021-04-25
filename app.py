@@ -171,7 +171,7 @@ app.layout = html.Div(
             className="banner",
             children=[
                 html.H6("Extreme Weather Event Detection"),
-                html.Img(src=app.get_asset_url("GitHub-Mark-Light-64px.png",
+                html.Img(src=app.get_asset_url("GitHub-Mark-Light-64px.png"),
                          style={'height':'110%', 'width':'110%'}),
                 html.A(id='gh-link',
                        children=['View on Github'], 
