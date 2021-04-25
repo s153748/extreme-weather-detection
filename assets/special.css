@@ -1,0 +1,109 @@
+.container.scalable {
+  width: 100%;
+  max-width: none;
+}
+
+._dash-undo-redo {
+  display: none;
+}
+
+body {
+  background-color: #171b26;
+  color: #9fa6b7;
+  overflow-x: hidden;
+}
+
+.banner {
+  height: 5rem;
+  margin-bottom: 1rem;
+  padding: 0rem 5rem 0rem;
+  display: flex;
+  flex-direction: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.banner h6 {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.banner Img {
+  position: relative;
+  height: 2rem;
+  width: auto;
+}
+
+#upper-container, #lower-container {
+  margin: 2rem 5rem;
+}
+
+#upper-left, #geo-map-outer {
+  padding: 1rem 2rem 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.control-row-1 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#upper-left > div > label {
+  font-weight: bold;
+  margin: 20px 0px;
+}
+
+*.Select-control, Select--single, .Select-multi-value-wrapper, .Select-value, .Select-value-label {
+  background-color: #171b26 !important;
+  color: #7b7d8d !important;
+}
+
+.Select-control, .Select-menu-outer {
+  border: 1px solid dimgrey !important;
+}
+
+span.Select-clear-zone {
+  display: none !important;
+}
+
+.Select-menu-outer, .Select-menu-outer div, .Select--multi {
+  background-color: #171b26 !important;
+  color: #7b7d8d !important;
+}
+
+.Select-menu-outer div:hover {
+  color: white !important;
+  cursor: pointer;
+}
+
+#lower-container {
+  border-top: 1px solid #1f2536;
+  height: 800px;
+  overflow-y: scroll;
+  overflow-x: scroll;
+}
+
+#geo-map-loading-outer {
+  height: 60rem;
+}
+
+#geo-map {
+  height: 55rem;
+}
+
+.section-title, #map-title {
+  font-size: 16px;
+  font-weight: bold;
+  display: block;
+}
+
+.mapboxgl-canvas,
+.mapboxgl-map {
+  min-width: 100%;
+}
