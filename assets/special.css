@@ -54,6 +54,12 @@ body {
   justify-content: space-between;
 }
 
+.control-row-2 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 #graph-select-outer, #graph-style-outer {
   width: 40%;
 }
@@ -92,7 +98,7 @@ span.Select-clear-zone {
 }
 
 #lower-container {
-  margin-top: 2px;
+  margin-top: 20px;
   display: flex;
   justify-content: flex-end;
   border-top: 1px solid #1f2536;
@@ -107,12 +113,14 @@ span.Select-clear-zone {
 
 #geo-map-loading-outer {
   height: 60rem;
-  width: 75rem;
 }
 
 #geo-map {
   height: 55rem;
-  width: 75rem;
+}
+
+#line-chart {
+  margin: auto;
 }
 
 .section-title, #map-title {
