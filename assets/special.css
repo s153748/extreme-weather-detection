@@ -54,6 +54,10 @@ body {
   justify-content: space-between;
 }
 
+#graph-select-outer, #graph-style-outer {
+  width: 20%;
+}
+
 #upper-left > div > label {
   font-weight: bold;
   margin: 20px 0px;
@@ -82,19 +86,26 @@ span.Select-clear-zone {
   cursor: pointer;
 }
 
+#state-select-outer > label, #graph-style-outer > label {
+  margin-bottom: 2px;
+  color: #7b7d8d;
+}
+
 #lower-container {
   border-top: 1px solid #1f2536;
-  height: 800px;
+  height: 400px;
   overflow-y: scroll;
   overflow-x: scroll;
 }
 
 #geo-map-loading-outer {
   height: 60rem;
+  width: 100rem;
 }
 
 #geo-map {
   height: 55rem;
+  width: 95rem;
 }
 
 .section-title, #map-title {
