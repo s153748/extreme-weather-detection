@@ -207,14 +207,14 @@ app.layout = html.Div(
         ),
         html.Div(
             id="left-column",
-            className="eight columns",
+            className="four columns",
             children=[
                 build_control_panel()
             ]
         ),
         html.Div(
             id="right-columns",
-            className="eight columns",
+            className="four columns",
             children=[
                 html.Br(),
                 html.P(
