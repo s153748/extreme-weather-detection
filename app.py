@@ -158,7 +158,7 @@ def generate_line_chart(time_data):
     fig = px.line(time_data,
                   x='Date',
                   y='Count',
-                  hover_data=['full_text'],
+                  #hover_data=['full_text'],
                   color_discrete_sequence=['#a5d8e6'])
     fig.update_traces(line=dict(width=3))
     fig.update_yaxes(
@@ -247,6 +247,7 @@ app.layout = html.Div(
                         )
                     ]
                 ),
+                html.Br(),
                 html.Br(),
                 html.Div(
                     id="line-chart-outer",
