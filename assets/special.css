@@ -45,20 +45,25 @@ body {
     margin-top: 20px;
     padding: 0rem 2rem;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: flex-start;
     min-height: calc(100vh - 5.5rem);
 }
 
 #right-column {
-    background-color: #f4f4f4;
+    margin-top: 20px;
     padding: 0rem 2rem;
+    display: flex;
+    justify-content: flex-end;
     min-height: calc(100vh - 5.5rem);
 }
 
 .geo.map > div, .line-chart > div {
     height: 100% !important;
     width: 100% !important;
+}
+
+.draglayer {
+    cursor: pointer !important;
 }
 
 .control-row-1, .control-row-2 {
@@ -68,12 +73,7 @@ body {
 }
 
 #graph-select-outer, #graph-style-outer {
-  width: 40%;
-}
-
-#upper-left > div > label {
-  font-weight: bold;
-  margin: 20px 0px;
+  width: 80%;
 }
 
 *.Select-control, Select--single, .Select-multi-value-wrapper, .Select-value, .Select-value-label {
