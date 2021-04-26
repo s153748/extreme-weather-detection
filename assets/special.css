@@ -10,7 +10,7 @@
 body {
   background-color: #171b26;
   color: #9fa6b7;
-  overflow-x: hidden;
+  margin: 0px;
 }
 
 .banner {
@@ -33,47 +33,36 @@ body {
 
 .banner Img {
   position: relative;
-  height: 2.5rem;
+  height: 2.8rem;
   width: auto;
-}
-
-#upper-container, #lower-container {
-  margin: 2rem 5rem;
 }
 
 #left-column {
     margin-top: 20px;
     padding: 0rem 2rem;
     display: flex;
-    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
     min-height: calc(100vh - 5.5rem);
 }
 
 #right-column {
-    margin-top: 20px;
+    background-color: #f4f4f4;
     padding: 0rem 2rem;
-    display: flex;
-    justify-content: flex-end;
     min-height: calc(100vh - 5.5rem);
 }
 
 .geo.map > div, .line-chart > div {
-    height: 100% !important;
-    width: 100% !important;
+    height: 90% !important;
+    width: 90% !important;
 }
 
 .draglayer {
     cursor: pointer !important;
 }
 
-.control-row-1, .control-row-2 {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
 #graph-select-outer, #graph-style-outer {
-  width: 80%;
+  width: 90%;
 }
 
 *.Select-control, Select--single, .Select-multi-value-wrapper, .Select-value, .Select-value-label {
@@ -108,6 +97,7 @@ span.Select-clear-zone {
   font-size: 16px;
   font-weight: bold;
   display: block;
+  text-align: justify;
 }
 
 .mapboxgl-canvas, .mapboxgl-map {
