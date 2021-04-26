@@ -209,7 +209,7 @@ app.layout = html.Div(
         ),
         html.Div(
             id="left-column",
-            className="four columns",
+            className="eight columns",
             children=[
                 build_control_panel()
             ]
@@ -251,6 +251,7 @@ app.layout = html.Div(
                         )
                     ]
                 ),
+                html.Br(),
                 html.Div(
                     id="line-chart-outer",
                     children=[
