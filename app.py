@@ -64,7 +64,7 @@ time_df = geo_df.drop_duplicates(subset="Date").assign(Count=count_dates).sort_v
 
 # Set graph options
 graph_list = ['Point map','Hexagon map']
-style_list = ["carto-darkmatter",'carto-positron','open-street-map','stamen-terrain']
+style_list = ["carto-darkmatter",'carto-positron','open-street-map']
 
 def build_upper_left_panel():
     return html.Div(
@@ -156,20 +156,34 @@ def generate_line_chart(time_data):
                   y='Count',
                   hover_data=['full_text'],
                   color_discrete_sequence=['#a5d8e6'])
-    fig.update_yaxes(showgrid=False)
+    fig.update_traces(line=dict(width=3))
+    fig.update_yaxes(
+        showgrid=False,
+        showline=True,
+        linecolor='#ffffff',
+        linewidth=1.5
+    )
     fig.update_xaxes(
         showgrid=False,
-        rangeslider_visible=True,
-        rangeselector=dict(buttons=list([
-            dict(count=1, label="1m", step="month", stepmode="backward"),
-            dict(count=6, label="6m", step="month", stepmode="backward"),
-            dict(count=1, label="1y", step="year", stepmode="backward"),
-            dict(step="all")
-        ])))
+        rangeslider=dict(
+            visible=True,
+            bgcolor='#737a8d',
+            bordercolor='#737a8d',
+            thickness=0.125),
+        rangeselector=dict(
+            buttons=list([
+                dict(count=1, label="1m", step="month", stepmode="backward"),
+                #dict(count=6, label="6m", step="month", stepmode="backward"),
+                #dict(count=1, label="1y", step="year", stepmode="backward"),
+                dict(step="all")
+        ])),
+        rangeselector_font=dict(color='#737a8d',size=12),
+        rangeselector_bgcolor='#ffffff'
+    )
     fig.update_layout(
         plot_bgcolor="#171b26",
         paper_bgcolor="#171b26",
-        font=dict(color='#737a8d')
+        font=dict(color='#737a8d',size=14)
     )
     return fig
 
