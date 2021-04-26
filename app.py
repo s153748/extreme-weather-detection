@@ -27,7 +27,6 @@ app.config.suppress_callback_exceptions = True
 
 githublink = 'https://github.com/s153748/extreme-weather-detection'
 mapbox_access_token = 'pk.eyJ1IjoiczE1Mzc0OCIsImEiOiJja25wcDlwdjYxcWJmMnFueDhhbHdreTlmIn0.DXfj5S2H91AZEPG1JnHbxg'
-#mapbox_access_token = "pk.eyJ1IjoiczE1Mzc0OCIsImEiOiJja25wcDYwYmMxbnVhMm9wZXh6bzd4eXkzIn0.l-UDELQKHDMPpeycLroSGw"
 
 # Load data
 DATA_PATH = pathlib.Path(__file__).parent.joinpath("data") 
@@ -66,6 +65,7 @@ time_df = geo_df.drop_duplicates(subset="Date").assign(Count=count_dates).sort_v
 # Set graph options
 graph_list = ['Point map','Hexagon map']
 
+
 def build_upper_left_panel():
     return html.Div(
         id="upper-left",
@@ -75,6 +75,7 @@ def build_upper_left_panel():
                 className="section-title",
                 children="Choose graph type to inspect the Tweets in different ways",
             ),
+            html.Br(),
             html.Div(
                 className="control-row-1",
                 children=[
@@ -128,11 +129,9 @@ def generate_geo_map(geo_data, month_select, graph_select):
         showlegend=False,
         mapbox=go.layout.Mapbox(
             accesstoken=mapbox_access_token,
-            bearing=10,
             center=go.layout.mapbox.Center(
                 lat=filtered_data.lat.mean(), lon=filtered_data.lon.mean()
             ),
-            pitch=5,
             zoom=2,
             style="carto-darkmatter",
         ),
