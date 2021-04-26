@@ -216,6 +216,7 @@ app.layout = html.Div(
             id="right-columns",
             className="eight columns",
             children=[
+                html.Br(),
                 html.P(
                     id="map-title",
                     children="Spatio-Temporal Development of Relevant Tweets"
