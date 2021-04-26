@@ -243,8 +243,8 @@ app.layout = html.Div(
                                     min=geo_df['created_at_month'].min(),
                                     max=geo_df['created_at_month'].max(),
                                     value=geo_df['created_at_month'].min(),
-                                    marks={int(month): {'label': f'{calendar.month_name[int(month)][:3]} {str(year)[:4]}' for year, month in zip(
-                                        geo_df['created_at_year'], geo_df['created_at_month']), 'color': '#737a8d'}},
+                                    marks={int(month): f'{calendar.month_name[int(month)][:3]} {str(year)[:4]}' for year, month in zip(
+                                        geo_df['created_at_year'], geo_df['created_at_month'])},
                                     step=None
                                 )
                             ]
