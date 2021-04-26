@@ -98,7 +98,7 @@ def build_control_panel():
                     html.Div(
                         id="graph-style-outer",
                         children=[
-                            html.Label("Select Basemap Style"),
+                            html.Label("Select Map Style"),
                             dcc.Dropdown(
                                 id="style-select",
                                 options=[{"label": i, "value": i} for i in style_list],
@@ -213,7 +213,7 @@ app.layout = html.Div(
             ]
         ),
         html.Div(
-            id="right-columns",
+            id="right-column",
             className="six columns",
             children=[
                 html.Br(),
@@ -222,32 +222,29 @@ app.layout = html.Div(
                     children="Spatio-Temporal Development of Relevant Tweets"
                 ),
                 html.Div( 
-                    id="geo-map-loading-outer",
+                    id="geo-map-outer",
+                    className="row div-for-charts bg-grey",
                     children=[
-                        dcc.Loading(
-                            id="loading",
-                            children=[
-                                dcc.Graph(
-                                    id="geo-map",
-                                    figure={
-                                        "data": [],
-                                        "layout": dict(
-                                            plot_bgcolor="#171b26",
-                                           
-                                            paper_bgcolor="#171b26",
-                                        ),
-                                    },
+                        dcc.Graph(
+                            id="geo-map",
+                            figure={
+                                "data": [],
+                                "layout": dict(
+                                    plot_bgcolor="#171b26",
+                                    paper_bgcolor="#171b26",
                                 ),
-                                dcc.Slider(
-                                    id='month-slider',
-                                    min=geo_df['created_at_month'].min(),
-                                    max=geo_df['created_at_month'].max(),
-                                    value=geo_df['created_at_month'].min(),
-                                    marks={int(month): f'{calendar.month_name[int(month)][:3]} {str(year)[:4]}' for year, month in zip(
-                                        geo_df['created_at_year'], geo_df['created_at_month'])},
-                                    step=None
-                                )
-                            ]
+                            },
+                        ),
+                        dcc.Slider(
+                            id='month-slider',
+                            min=geo_df['created_at_month'].min(),
+                            max=geo_df['created_at_month'].max(),
+                            value=geo_df['created_at_month'].min(),
+                            marks={int(month): f'{calendar.month_name[int(month)][:3]} {str(year)[:4]}' for year, month in zip(
+                                geo_df['created_at_year'], geo_df['created_at_month'])},
+                            step=None,
+                            updatemode='drag',
+                            verticalHeight=450
                         )
                     ]
                 ),
@@ -259,19 +256,9 @@ app.layout = html.Div(
                             id="line-chart-title",
                             children="Number of Relevant Tweets"
                         ),
-                        html.Div(
-                            id="line-chart-loading-outer",
-                            children=[
-                                dcc.Loading(
-                                    id="loading-line-chart",
-                                    children=[
-                                        dcc.Graph(
-                                            id="line-chart",
-                                            figure=generate_line_chart(time_df)
-                                        )
-                                    ]
-                                )
-                            ]
+                        dcc.Graph(
+                            id="line-chart",
+                            figure=generate_line_chart(time_df)
                         )
                     ]
                 )
@@ -281,11 +268,11 @@ app.layout = html.Div(
 )
 
 @app.callback(
-    Output('geo-map', 'figure'),
+    Output('geo-map-outer', 'children'),
     [
         Input('month-slider', 'value'),
-        Input("graph-select", "value"),
-        Input("style-select", "value"),
+        Input('graph-select', 'value'),
+        Input('style-select', 'value'),
     ],
 )
 def update_geo_map(month_select, graph_select, style_select):
