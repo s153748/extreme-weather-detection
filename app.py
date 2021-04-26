@@ -64,7 +64,7 @@ time_df = geo_df.drop_duplicates(subset="Date").assign(Count=count_dates).sort_v
 
 # Set graph options
 graph_list = ['Point map','Hexagon map']
-style_list = ["carto-darkmatter",'carto-positron','open-street-map','stamen-terrain','stamen-toner','stamen-watercolor']
+style_list = ["carto-darkmatter",'carto-positron','open-street-map','stamen-terrain']
 
 def build_upper_left_panel():
     return html.Div(
@@ -117,7 +117,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select):
                                 lon="lon",
                                 hover_name='full_text',
                                 hover_data=['user_location','created_at','retweet_count'],
-                                color_discrete_sequence=['#a5d8e6'])
+                                color_discrete_sequence=['#a5d8e6' if style_select='carto-darkmatter' else '#457582'])
     else:
         fig = ff.create_hexbin_mapbox(data_frame=filtered_data, 
                                       lat="lat", 
@@ -155,7 +155,7 @@ def generate_line_chart(time_data):
                   x='Date',
                   y='Count',
                   hover_data=['full_text'],
-                  color_discrete_sequence=['teal'])
+                  color_discrete_sequence=['#a5d8e6'])
     fig.update_yaxes(showgrid=False)
     fig.update_xaxes(
         showgrid=False,
