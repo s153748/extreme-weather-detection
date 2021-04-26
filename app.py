@@ -75,6 +75,7 @@ def build_upper_left_panel():
                 className="section-title",
                 children="Choose graph type to inspect the Tweets in different ways",
             ),
+            html.Br(),
             html.Div(
                 className="control-row-1",
                 children=[
@@ -82,19 +83,21 @@ def build_upper_left_panel():
                         id="graph-select-outer",
                         children=[
                             html.Label("Select Graph Type"),
-                            html.Br(),
                             dcc.Dropdown(
                                 id="graph-select",
                                 options=[{"label": i, "value": i} for i in graph_list],
                                 value=graph_list[0],
                             ),
                         ],
-                    ),
+                    )
+                ]
+            html.Div(
+                className="control-row-2",
+                children=[
                     html.Div(
                         id="graph-style-outer",
                         children=[
                             html.Label("Select Basemap Style"),
-                            html.Br(),
                             dcc.Dropdown(
                                 id="style-select",
                                 options=[{"label": i, "value": i} for i in style_list],
