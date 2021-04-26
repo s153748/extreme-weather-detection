@@ -16,7 +16,7 @@ body {
 .banner {
   height: 4rem;
   margin-bottom: 1rem;
-  padding: 5rem 5rem 0rem;
+  padding: 4rem 4rem 0rem;
   display: flex;
   flex-direction: row nowrap;
   align-items: center;
@@ -39,7 +39,7 @@ body {
 
 #left-column {
     margin-top: 20px;
-    padding: 0rem 2rem;
+    padding: 0rem 1rem;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -90,12 +90,6 @@ span.Select-clear-zone {
 #graph-select-outer > label, #graph-style-outer > label {
   margin-bottom: 2px;
   color: #7b7d8d;
-}
-
-.control-row-1, .control-row-2 {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
 }
 
 #state-select-outer, #select-metric-outer {
