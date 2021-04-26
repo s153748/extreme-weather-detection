@@ -126,7 +126,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select):
         fig = ff.create_hexbin_mapbox(data_frame=filtered_data, 
                                       lat="lat", 
                                       lon="lon",
-                                      nx_hexagon=int(max(5,len(filtered_data)/15)), 
+                                      nx_hexagon=int(max(5,len(filtered_data)/30)), 
                                       opacity=0.6, 
                                       labels={"color": "Relevant Tweets"},
                                       min_count=1, 
@@ -223,7 +223,6 @@ app.layout = html.Div(
                 ),
                 html.Div( 
                     id="geo-map-outer",
-                    className="row div-for-charts bg-grey",
                     children=[
                         dcc.Graph(
                             id="geo-map",
@@ -268,7 +267,7 @@ app.layout = html.Div(
 )
 
 @app.callback(
-    Output('geo-map-outer', 'children'),
+    Output('geo-map', 'figure'),
     [
         Input('month-slider', 'value'),
         Input('graph-select', 'value'),
@@ -278,6 +277,18 @@ app.layout = html.Div(
 def update_geo_map(month_select, graph_select, style_select):
     
     return generate_geo_map(geo_df, month_select, graph_select, style_select)
+
+@app.callback(
+    Output('month-slider', 'geo_df'),
+    [
+        Input('month-slider', 'value'),
+        Input('graph-select', 'value'),
+        Input('style-select', 'value'),
+    ],
+)
+def update_slider(month_select, graph_select, style_select):
+    geo_df = geo_data[geo_data.created_at_month == month_select]
+    return geo_df
 
 if __name__ == '__main__':
     app.run_server()
