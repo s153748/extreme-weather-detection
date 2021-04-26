@@ -192,7 +192,6 @@ def generate_line_chart(time_data):
 # Set up the layout
 app.layout = html.Div(
     id="app-container",
-    className="container scalable",
     children=[
         html.Div(
             id="banner",
@@ -208,14 +207,14 @@ app.layout = html.Div(
         ),
         html.Div(
             id="left-column",
-            className="six columns",
+            className="four columns",
             children=[
                 build_control_panel()
             ]
         ),
         html.Div(
             id="right-columns",
-            className="six columns",
+            className="eight columns",
             children=[
                 html.P(
                     id="map-title",
@@ -233,6 +232,7 @@ app.layout = html.Div(
                                         "data": [],
                                         "layout": dict(
                                             plot_bgcolor="#171b26",
+                                           
                                             paper_bgcolor="#171b26",
                                         ),
                                     },
