@@ -91,6 +91,8 @@ def build_upper_left_panel():
                         ],
                     )
                 ]
+            ),
+            html.Br(),
             html.Div(
                 className="control-row-2",
                 children=[
