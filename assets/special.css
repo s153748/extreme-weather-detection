@@ -92,6 +92,7 @@ span.Select-clear-zone {
 }
 
 #lower-container {
+  margin-top: 2px;
   display: flex;
   justify-content: flex-end;
   border-top: 1px solid #1f2536;
@@ -101,17 +102,17 @@ span.Select-clear-zone {
 }
 
 #line-chart {
-  width: 80rem;
+  width: 70rem;
 }
 
 #geo-map-loading-outer {
   height: 60rem;
-  width: 80rem;
+  width: 75rem;
 }
 
 #geo-map {
-  height: 60rem;
-  width: 80rem;
+  height: 55rem;
+  width: 70rem;
 }
 
 .section-title, #map-title {
