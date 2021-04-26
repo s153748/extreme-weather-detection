@@ -55,7 +55,7 @@ body {
 }
 
 #graph-select-outer, #graph-style-outer {
-  width: 45%;
+  width: 40%;
 }
 
 #upper-left > div > label {
@@ -112,7 +112,7 @@ span.Select-clear-zone {
 
 #geo-map {
   height: 55rem;
-  width: 70rem;
+  width: 75rem;
 }
 
 .section-title, #map-title {
