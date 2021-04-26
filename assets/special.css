@@ -16,7 +16,7 @@ body {
 .banner {
   height: 5rem;
   margin-bottom: 1rem;
-  padding: 0rem 5rem 0rem;
+  padding: 5rem 5rem 0rem;
   display: flex;
   flex-direction: row nowrap;
   align-items: center;
@@ -51,7 +51,7 @@ body {
     padding: 0rem 2rem 0rem 2rem;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     background-color: #f4f4f4;
     min-height: calc(100vh - 5.5rem);
 }
@@ -101,7 +101,6 @@ span.Select-clear-zone {
   font-size: 16px;
   font-weight: bold;
   display: block;
-  text-align: justify;
 }
 
 .mapboxgl-canvas, .mapboxgl-map {
