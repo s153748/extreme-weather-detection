@@ -55,7 +55,7 @@ body {
 }
 
 #graph-select-outer, #graph-style-outer {
-  width: 20%;
+  width: 50%;
 }
 
 #upper-left > div > label {
@@ -92,20 +92,22 @@ span.Select-clear-zone {
 }
 
 #lower-container {
+  display: flex;
+  justify-content: flex-end;
   border-top: 1px solid #1f2536;
-  height: 400px;
+  height: 600px;
   overflow-y: scroll;
   overflow-x: scroll;
 }
 
 #geo-map-loading-outer {
-  height: 60rem;
-  width: 100rem;
+  height: 70rem;
+  width: 90rem;
 }
 
 #geo-map {
-  height: 55rem;
-  width: 95rem;
+  height: 60rem;
+  width: 80rem;
 }
 
 .section-title, #map-title {
