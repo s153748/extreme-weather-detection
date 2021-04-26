@@ -63,8 +63,8 @@ count_dates = geo_df.groupby('Date').size().values
 time_df = geo_df.drop_duplicates(subset="Date").assign(Count=count_dates).sort_values(by='Date').reset_index(drop=True)
 
 # Set graph options
-graph_list = ['Point map','Hexagon map']
-style_list = ["carto-darkmatter",'carto-positron','open-street-map']
+graph_list = ['Hexagon map','Point map']
+style_list = ['positron','darkmatter','open-street-map','dark','light']
 
 def build_control_panel():
     return html.Div(
@@ -119,9 +119,10 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select):
         fig = px.scatter_mapbox(filtered_data, 
                                 lat="lat", 
                                 lon="lon",
+                                size='retweet_count',
                                 hover_name='full_text',
-                                hover_data=['user_location','created_at','retweet_count'],
-                                color_discrete_sequence=['#a5d8e6'] if style_select=='carto-darkmatter' else ['#457582'])
+                                hover_data=['user_location'],
+                                color_discrete_sequence=['#a5d8e6'] if style_select=='darkmatter' elif style_select=='dark' else ['#457582'])
     else:
         fig = ff.create_hexbin_mapbox(data_frame=filtered_data, 
                                       lat="lat", 
