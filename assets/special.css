@@ -48,13 +48,7 @@ body {
   justify-content: space-evenly;
 }
 
-.control-row-1 {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.control-row-2 {
+.control-row-1, .control-row-2 {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -107,17 +101,12 @@ span.Select-clear-zone {
   overflow-x: scroll;
 }
 
-#line-chart {
-  width: 70rem;
-}
-
 #geo-map-loading-outer {
   height: 60rem;
 }
 
 #geo-map {
   height: 55rem;
-  width: 70rem;
 }
 
 .section-title, #map-title, #line-chart-title {
