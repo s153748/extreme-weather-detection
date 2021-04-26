@@ -69,7 +69,6 @@ style_list = ["carto-darkmatter",'carto-positron','open-street-map']
 def build_control_panel():
     return html.Div(
         id="control-panel",
-        className="six columns", 
         children=[
             html.P(
                 className="section-title",
@@ -209,14 +208,14 @@ app.layout = html.Div(
         ),
         html.Div(
             id="left-column",
-            className="eight columns",
+            className="six columns",
             children=[
                 build_control_panel()
             ]
         ),
         html.Div(
             id="right-columns",
-            className="eight columns",
+            className="six columns",
             children=[
                 html.P(
                     id="map-title",
