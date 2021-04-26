@@ -186,6 +186,7 @@ def generate_line_chart(time_data):
     fig.update_layout(
         plot_bgcolor="#171b26",
         paper_bgcolor="#171b26",
+        font=dict(color='#737a8d'),
     )
     return fig
 
