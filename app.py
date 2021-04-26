@@ -276,7 +276,7 @@ app.layout = html.Div(
         Input("style-select", "value"),
     ],
 )
-def update_geo_map(month_select, graph_select):
+def update_geo_map(month_select, graph_select, style_select):
     
     return generate_geo_map(geo_df, month_select, graph_select, style_select)
 
