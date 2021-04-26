@@ -147,7 +147,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select):
             center=go.layout.mapbox.Center(
                 lat=filtered_data.lat.mean(), lon=filtered_data.lon.mean()
             ),
-            zoom=2,
+            zoom=3,
             style=style_select,
         ),
         font=dict(color='#737a8d')
@@ -181,14 +181,11 @@ def generate_line_chart(time_data):
                 #dict(count=6, label="6m", step="month", stepmode="backward"),
                 #dict(count=1, label="1y", step="year", stepmode="backward"),
                 dict(step="all")
-        ])),
-        rangeselector_font=dict(color='#737a8d',size=12),
-        rangeselector_bgcolor='#ffffff'
+        ]))
     )
     fig.update_layout(
         plot_bgcolor="#171b26",
         paper_bgcolor="#171b26",
-        font=dict(color='#737a8d',size=14)
     )
     return fig
 
