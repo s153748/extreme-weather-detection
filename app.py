@@ -64,7 +64,7 @@ time_df = geo_df.drop_duplicates(subset="Date").assign(Count=count_dates).sort_v
 
 # Set graph options
 graph_list = ['Point map','Hexagon map']
-
+style_list = ["carto-darkmatter",'carto-positron','open-street-map','stamen-terrain','stamen-toner','stamen-watercolor']
 
 def build_upper_left_panel():
     return html.Div(
@@ -75,7 +75,6 @@ def build_upper_left_panel():
                 className="section-title",
                 children="Choose graph type to inspect the Tweets in different ways",
             ),
-            html.Br(),
             html.Div(
                 className="control-row-1",
                 children=[
@@ -83,10 +82,23 @@ def build_upper_left_panel():
                         id="graph-select-outer",
                         children=[
                             html.Label("Select Graph Type"),
+                            html.Br(),
                             dcc.Dropdown(
                                 id="graph-select",
                                 options=[{"label": i, "value": i} for i in graph_list],
                                 value=graph_list[0],
+                            ),
+                        ],
+                    ),
+                    html.Div(
+                        id="graph-style-outer",
+                        children=[
+                            html.Label("Select Basemap Style"),
+                            html.Br(),
+                            dcc.Dropdown(
+                                id="style-select",
+                                options=[{"label": i, "value": i} for i in style_list],
+                                value=style_list[0],
                             ),
                         ],
                     ),
@@ -95,7 +107,7 @@ def build_upper_left_panel():
         ],
     )
 
-def generate_geo_map(geo_data, month_select, graph_select):
+def generate_geo_map(geo_data, month_select, graph_select, style_select):
     
     filtered_data = geo_data[geo_data.created_at_month == month_select]
     
@@ -105,8 +117,8 @@ def generate_geo_map(geo_data, month_select, graph_select):
                                 lon="lon",
                                 hover_name='full_text',
                                 hover_data=['user_location','created_at','retweet_count'],
-                                color_discrete_sequence=['#dae1f2'])
-    elif graph_select == 'Hexagon map':
+                                color_discrete_sequence=['#a5d8e6'])
+    else:
         fig = ff.create_hexbin_mapbox(data_frame=filtered_data, 
                                       lat="lat", 
                                       lon="lon",
@@ -116,9 +128,7 @@ def generate_geo_map(geo_data, month_select, graph_select):
                                       min_count=1, 
                                       color_continuous_scale='teal',
                                       show_original_data=True, 
-                                      original_data_marker=dict(size=5, opacity=1, color="#dae1f2"))
-    else:
-        fig = px.scatter_mapbox()
+                                      original_data_marker=dict(size=5, opacity=1, color="#a5d8e6"))
         
     fig.update_layout(
         margin=dict(l=10, r=10, t=20, b=10, pad=5),
@@ -133,7 +143,7 @@ def generate_geo_map(geo_data, month_select, graph_select):
                 lat=filtered_data.lat.mean(), lon=filtered_data.lon.mean()
             ),
             zoom=2,
-            style="carto-darkmatter",
+            style=style_select,
         ),
         font=dict(color='#737a8d')
     )
@@ -263,11 +273,12 @@ app.layout = html.Div(
     [
         Input('month-slider', 'value'),
         Input("graph-select", "value"),
+        Input("style-select", "value"),
     ],
 )
 def update_geo_map(month_select, graph_select):
     
-    return generate_geo_map(geo_df, month_select, graph_select)
+    return generate_geo_map(geo_df, month_select, graph_select, style_select)
 
 if __name__ == '__main__':
     app.run_server()
