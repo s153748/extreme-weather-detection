@@ -66,9 +66,9 @@ time_df = geo_df.drop_duplicates(subset="Date").assign(Count=count_dates).sort_v
 graph_list = ['Point map','Hexagon map']
 style_list = ["carto-darkmatter",'carto-positron','open-street-map']
 
-def build_upper_left_panel():
+def build_control_panel():
     return html.Div(
-        id="upper-left",
+        id="control-panel",
         className="six columns", 
         children=[
             html.P(
@@ -127,7 +127,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select):
         fig = ff.create_hexbin_mapbox(data_frame=filtered_data, 
                                       lat="lat", 
                                       lon="lon",
-                                      nx_hexagon=int(max(3,len(filtered_data)/10)), 
+                                      nx_hexagon=int(max(5,len(filtered_data)/15)), 
                                       opacity=0.6, 
                                       labels={"color": "Relevant Tweets"},
                                       min_count=1, 
@@ -192,6 +192,7 @@ def generate_line_chart(time_data):
 
 # Set up the layout
 app.layout = html.Div(
+    id="app-container",
     className="container scalable",
     children=[
         html.Div(
@@ -207,58 +208,51 @@ app.layout = html.Div(
             ]
         ),
         html.Div(
-            id="upper-container",
-            className="row",
+            id="left-column",
+            className="four columns",
             children=[
-                build_upper_left_panel(),
-                html.Div(
-                    id="geo-map-outer",
-                    className="six columns",
-                    children=[
-                        html.P(
-                            id="map-title",
-                            children="Spatio-Temporal Development of Relevant Tweets"
-                        ),
-                        html.Div(
-                            id="geo-map-loading-outer",
-                            children=[
-                                dcc.Loading(
-                                    id="loading",
-                                    children=[
-                                        dcc.Graph(
-                                            id="geo-map",
-                                            figure={
-                                                "data": [],
-                                                "layout": dict(
-                                                    plot_bgcolor="#171b26",
-                                                    paper_bgcolor="#171b26",
-                                                ),
-                                            },
-                                        ),
-                                        dcc.Slider(
-                                            id='month-slider',
-                                            min=geo_df['created_at_month'].min(),
-                                            max=geo_df['created_at_month'].max(),
-                                            value=geo_df['created_at_month'].min(),
-                                            marks={int(month): f'{calendar.month_name[int(month)][:3]} {str(year)[:4]}' for year, month in zip(
-                                                geo_df['created_at_year'], geo_df['created_at_month'])},
-                                            step=None
-                                        )
-                                    ]
-                                )
-                            ],
-                        ),
-                    ],
-                ),
-            ],
+                build_control_panel()
+            ]
         ),
-       html.Div(
-            id="lower-container",
-            className="row",
+        html.Div(
+            id="right-columns",
+            className="eight columns",
             children=[
+                html.P(
+                    id="map-title",
+                    children="Spatio-Temporal Development of Relevant Tweets"
+                ),
+                html.Div( 
+                    id="geo-map-loading-outer",
+                    children=[
+                        dcc.Loading(
+                            id="loading",
+                            children=[
+                                dcc.Graph(
+                                    id="geo-map",
+                                    figure={
+                                        "data": [],
+                                        "layout": dict(
+                                            plot_bgcolor="#171b26",
+                                            paper_bgcolor="#171b26",
+                                        ),
+                                    },
+                                ),
+                                dcc.Slider(
+                                    id='month-slider',
+                                    min=geo_df['created_at_month'].min(),
+                                    max=geo_df['created_at_month'].max(),
+                                    value=geo_df['created_at_month'].min(),
+                                    marks={int(month): f'{calendar.month_name[int(month)][:3]} {str(year)[:4]}' for year, month in zip(
+                                        geo_df['created_at_year'], geo_df['created_at_month'])},
+                                    step=None
+                                )
+                            ]
+                        )
+                    ]
+                ),
                 html.Div(
                     id="line-chart-outer",
-                    className="six columns",
                     children=[
                         html.P(
                             id="line-chart-title",
