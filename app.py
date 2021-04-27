@@ -30,7 +30,7 @@ mapbox_access_token = 'pk.eyJ1IjoiczE1Mzc0OCIsImEiOiJja25wcDlwdjYxcWJmMnFueDhhbH
 
 # Load data
 DATA_PATH = pathlib.Path(__file__).parent.joinpath("data") 
-df = pd.read_csv(DATA_PATH.joinpath("final_labelled_tweets.csv")) 
+df = pd.read_csv(DATA_PATH.joinpath("final_coords_tweets.csv")) 
 
 # Data prep
 df.dropna(subset=['tokens'], inplace=True)
@@ -63,7 +63,7 @@ count_dates = geo_df.groupby('Date').size().values
 time_df = geo_df.drop_duplicates(subset="Date").assign(Count=count_dates).sort_values(by='Date').reset_index(drop=True)
 
 # Set graph options
-graph_list = ['Hexagon map','Point map']
+graph_list = ['Point map','Hexagon map','Scatter map']
 style_list = ['light','dark','open-street-map'] # 'carto-positron','carto-darkmatter'
 
 def build_control_panel():
@@ -119,11 +119,10 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select):
         fig = px.scatter_mapbox(filtered_data, 
                                 lat="lat", 
                                 lon="lon",
-                                size='retweet_count',
                                 hover_name='full_text',
                                 hover_data=['user_location'],
-                                color_discrete_sequence=['#a5d8e6'] if style_select=='carto-darkmatter' else ['#457582'])
-    else:
+                                color_discrete_sequence=['#a5d8e6'] if style_select=='dark' else ['#457582'])
+    elif graph_select == 'Hexagon map':
         fig = ff.create_hexbin_mapbox(data_frame=filtered_data, 
                                       lat="lat", 
                                       lon="lon",
@@ -133,7 +132,15 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select):
                                       min_count=1, 
                                       color_continuous_scale='teal',
                                       show_original_data=True, 
-                                      original_data_marker=dict(size=5, opacity=1, color='#a5d8e6' if style_select=='carto-darkmatter' else '#457582'))
+                                      original_data_marker=dict(size=5, opacity=1, color='#a5d8e6' if style_select=='dark' else '#457582'))
+    else:
+        fig = px.scatter_mapbox(filtered_data, 
+                                lat="lat", 
+                                lon="lon",
+                                size='retweet_count',
+                                hover_name='full_text',
+                                hover_data=['user_location'],
+                                color_discrete_sequence=['#a5d8e6'] if style_select=='dark' else ['#457582'])
         
     fig.update_layout(
         margin=dict(l=10, r=10, t=20, b=10, pad=5),
