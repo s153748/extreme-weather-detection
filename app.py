@@ -102,6 +102,20 @@ def build_control_panel():
                     ),
                 ],
             ),
+            html.Div(
+                id="text-container",
+                className="control-row-3",
+                children=[
+                    #html.P("Tweet"),
+                    dcc.Textarea(
+                        id='text',
+                        value='',
+                        style={'width': '100%', 'height': 100},
+                    ),
+                    html.Button('Search', id='search-button', n_clicks=0),
+                    html.Div(id='text-output', style={'whiteSpace': 'pre-line'})
+                ]
+           )
         ],
     )
 
@@ -281,17 +295,13 @@ def update_geo_map(month_select, graph_select, style_select):
     
     return generate_geo_map(geo_df, month_select, graph_select, style_select)
 
-#@app.callback(
-#    Output('month-slider', 'value'),
-#    [
-#        Input('month-slider', 'value'),
-#        Input('graph-select', 'value'),
-#        Input('style-select', 'value'),
-#    ],
-#)
-#def update_slider(month_select, graph_select, style_select):
-#    
-#    return month_select
+@app.callback(
+    Output('text-output', 'children'),
+    Input('text', 'value')
+)
+def update_output(value):
+    if n_clicks > 0:
+        return 'Searching for Tweets containing: {}'.format(value)
 
 if __name__ == '__main__':
     app.run_server()
