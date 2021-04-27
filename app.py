@@ -33,6 +33,11 @@ DATA_PATH = pathlib.Path(__file__).parent.joinpath("data")
 df = pd.read_csv(DATA_PATH.joinpath("final_coords_tweets.csv")) 
 
 # Data prep
+for i in range(len(df)):
+    try:
+        df['final_coords'][i] = eval(df['final_coords'][i])
+    except:
+        df['final_coords'][i] = np.nan
 geo_df = df[~df['final_coords'].isna()].reset_index(drop=True)
 geo_df = geo_df[geo_df['relevant'] == 1].reset_index(drop=True)
 
@@ -98,7 +103,7 @@ def build_control_panel():
                     html.Div(
                         id="text-outer",
                         children=[
-                            html.Label("Filter on keywords"),
+                            html.Label("Filter on Keywords"),
                             dcc.Textarea(
                                 id='text-search',
                                 value='',
