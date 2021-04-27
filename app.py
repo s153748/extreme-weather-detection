@@ -245,7 +245,7 @@ app.layout = html.Div(
                                 geo_df['created_at_year'], geo_df['created_at_month'])},
                             step=None,
                             updatemode='drag',
-                            verticalHeight=450
+                            #verticalHeight=450
                         )
                     ]
                 ),
