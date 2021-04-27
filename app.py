@@ -107,7 +107,7 @@ def build_control_panel():
                             dcc.Textarea(
                                 id='text-search',
                                 value='',
-                                style={'width': '100%', 'height': 0.5, 'background-color': '#171b26', 'color': '#7b7d8d'},
+                                style={'width': '100%', 'height': 0.1, 'background-color': '#171b26', 'color': '#7b7d8d', 'border': 'dimgrey'},
                                 draggable=False,
                                 placeholder='e.g. AlbertaFloods'
                             ),
