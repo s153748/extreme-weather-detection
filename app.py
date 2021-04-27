@@ -57,7 +57,7 @@ count_dates = geo_df.groupby('Date').size().values
 time_df = geo_df.drop_duplicates(subset="Date").assign(Count=count_dates).sort_values(by='Date').reset_index(drop=True)
 
 # Set graph options
-graph_list = ['Point map','Hexagon map','Scatter map']
+graph_list = ['Hexagon map','Point map','Scatter map']
 style_list = ['light','dark'] 
 
 def build_control_panel():
@@ -113,7 +113,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select):
         fig = px.scatter_mapbox(filtered_data, 
                                 lat="lat", 
                                 lon="lon",
-                                hover_name='full_text',
+                                hover_data=['full_text'],
                                 color_discrete_sequence=['#a5d8e6'] if style_select=='dark' else ['#457582'])
     elif graph_select == 'Hexagon map':
         fig = ff.create_hexbin_mapbox(data_frame=filtered_data, 
@@ -132,9 +132,8 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select):
                                 lon="lon",
                                 size='retweet_count',
                                 color='retweet_count',
-                                labels={"color": "Retweets"},
                                 color_continuous_scale='teal',
-                                hover_name='full_text',
+                                hover_data=['full_text'],
                                 color_discrete_sequence=['#a5d8e6'] if style_select=='dark' else ['#457582'])
         
     fig.update_layout(
