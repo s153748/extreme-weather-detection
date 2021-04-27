@@ -112,11 +112,12 @@ def build_control_panel():
                                 placeholder='e.g. AlbertaFloods'
                             ),
                             html.Button('Search', id='search-button', n_clicks=0),
-                            html.Div(id='text-output',style={'color':'#7b7d8d'})
                         ]
                     )
                 ]
-           )
+           ),
+           html.Br(),
+           html.Div(id='counter',style={'color':'#7b7d8d'}) 
         ],
     )
 
@@ -169,7 +170,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select):
         font=dict(color='#737a8d')
     )
         
-    return fig
+    return fig, filtered_data
 
 def generate_line_chart(time_data):
     fig = px.line(time_data,
@@ -283,25 +284,25 @@ app.layout = html.Div(
 )
 
 @app.callback(
-    Output('geo-map', 'figure'),
     [
+        Output('geo-map', 'figure'),
+        Output('counter', 'children')
+    ], [
         Input('month-slider', 'value'),
         Input('graph-select', 'value'),
         Input('style-select', 'value'),
+        Input('search-button', 'n_clicks'),
+        State('text-search', 'keyword')
     ],
 )
-def update_geo_map(month_select, graph_select, style_select):
+def update_geo_map(month_select, graph_select, style_select, n_clicks, keyword):
     
-    return generate_geo_map(geo_df, month_select, graph_select, style_select)
-
-@app.callback(
-    Output('text-output', 'children'),
-    Input('search-button', 'n_clicks'),
-    State('text-search', 'value')
-)
-def update_output(n_clicks, value):
     if n_clicks > 0:
-        return 'Filtering Tweets on: {}'.format(value)
+        geo_df = geo_df # filter on keyword here
+    
+    figure, filtered_data = generate_geo_map(geo_df, month_select, graph_select, style_select)
+    
+    return figure, 'Number of relevant Tweets: {}'.format(len(filtered_data))
 
 if __name__ == '__main__':
     app.run_server()
