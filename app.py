@@ -64,7 +64,7 @@ time_df = geo_df.drop_duplicates(subset="Date").assign(Count=count_dates).sort_v
 
 # Set graph options
 graph_list = ['Hexagon map','Point map']
-style_list = ['carto-positron','carto-darkmatter','open-street-map','dark','light']
+style_list = ['light','dark','open-street-map'] # 'carto-positron','carto-darkmatter'
 
 def build_control_panel():
     return html.Div(
@@ -147,7 +147,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select):
             center=go.layout.mapbox.Center(
                 lat=filtered_data.lat.mean(), lon=filtered_data.lon.mean()
             ),
-            zoom=3,
+            zoom=2.5,
             style=style_select,
         ),
         font=dict(color='#737a8d')
