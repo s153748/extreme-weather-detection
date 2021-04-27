@@ -33,19 +33,8 @@ DATA_PATH = pathlib.Path(__file__).parent.joinpath("data")
 df = pd.read_csv(DATA_PATH.joinpath("final_coords_tweets.csv")) 
 
 # Data prep
-for i in range(len(df)):
-    try:
-        df['final_coords'][i] = eval(df['final_coords'][i])
-    except:
-        df['final_coords'][i] = np.nan
-    
 geo_df = df[~df['final_coords'].isna()].reset_index(drop=True)
 geo_df = geo_df[geo_df['relevant'] == 1].reset_index(drop=True)
-for i in range(len(geo_df)):
-    try:
-        geo_df['final_coords'][i] = eval(geo_df['final_coords'][i])
-    except:
-        geo_df['final_coords'][i] = geo_df['final_coords'][i]
 
 # Get coordinates
 geo_df['lat'] = [geo_df['final_coords'][i][0] for i in range(len(geo_df))]
@@ -109,10 +98,11 @@ def build_control_panel():
                     html.Div(
                         id="text-outer",
                         children=[
+                            html.Label("Filter on keywords"),
                             dcc.Textarea(
                                 id='text-search',
                                 value='',
-                                style={'width': '60%', 'height': 25},
+                                style={'width': '40%', 'height': 10},
                             ),
                             html.Button('Search', id='search-button', n_clicks=0),
                             html.Div(id='text-output') # style={'whiteSpace': 'pre-line'}
@@ -178,7 +168,6 @@ def generate_line_chart(time_data):
     fig = px.line(time_data,
                   x='Date',
                   y='Count',
-                  #hover_data=['full_text'],
                   color_discrete_sequence=['#a5d8e6'])
     fig.update_traces(line=dict(width=3))
     fig.update_yaxes(
@@ -197,8 +186,7 @@ def generate_line_chart(time_data):
         rangeselector=dict(
             buttons=list([
                 dict(count=1, label="1m", step="month", stepmode="backward"),
-                #dict(count=6, label="6m", step="month", stepmode="backward"),
-                #dict(count=1, label="1y", step="year", stepmode="backward"),
+                dict(count=3, label="3m", step="month", stepmode="backward"),
                 dict(step="all")
         ]))
     )
@@ -304,7 +292,7 @@ def update_geo_map(month_select, graph_select, style_select):
     Input('text-button', 'n_clicks'),
     State('text-search', 'value')
 )
-def update_output(value):
+def update_output(n_clicks, value):
     if n_clicks > 0:
         return 'Filtering Tweets on: {}'.format(value)
 
