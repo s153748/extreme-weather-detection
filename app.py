@@ -107,7 +107,7 @@ def build_control_panel():
                             dcc.Textarea(
                                 id='text-search',
                                 value='',
-                                style={'width': '40%', 'height': 10},
+                                style={'width': '100%', 'height': 5},
                             ),
                             html.Button('Search', id='search-button', n_clicks=0),
                             html.Div(id='text-output') # style={'whiteSpace': 'pre-line'}
@@ -294,7 +294,7 @@ def update_geo_map(month_select, graph_select, style_select):
 
 @app.callback(
     Output('text-output', 'children'),
-    Input('text-button', 'n_clicks'),
+    Input('search-button', 'n_clicks'),
     State('text-search', 'value')
 )
 def update_output(n_clicks, value):
