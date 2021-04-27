@@ -297,7 +297,7 @@ app.layout = html.Div(
 )
 def update_geo_map(month_select, graph_select, style_select, n_clicks, value):
     
-    if n_clicks > 0:
+    #if n_clicks > 0:
         # filter on keyword here
     
     figure, filtered_data = generate_geo_map(geo_df, month_select, graph_select, style_select)
