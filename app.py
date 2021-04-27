@@ -58,7 +58,7 @@ time_df = geo_df.drop_duplicates(subset="Date").assign(Count=count_dates).sort_v
 
 # Set graph options
 graph_list = ['Point map','Hexagon map','Scatter map']
-style_list = ['light','dark','open-street-map'] # 'carto-positron','carto-darkmatter'
+style_list = ['light','dark'] 
 
 def build_control_panel():
     return html.Div(
@@ -114,13 +114,12 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select):
                                 lat="lat", 
                                 lon="lon",
                                 hover_name='full_text',
-                                hover_data=['user_location'],
                                 color_discrete_sequence=['#a5d8e6'] if style_select=='dark' else ['#457582'])
     elif graph_select == 'Hexagon map':
         fig = ff.create_hexbin_mapbox(data_frame=filtered_data, 
                                       lat="lat", 
                                       lon="lon",
-                                      nx_hexagon=int(max(5,len(filtered_data)/5)), 
+                                      nx_hexagon=int(max(5,len(filtered_data)/10)), 
                                       opacity=0.6, 
                                       labels={"color": "Relevant Tweets"},
                                       min_count=1, 
@@ -132,8 +131,9 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select):
                                 lat="lat", 
                                 lon="lon",
                                 size='retweet_count',
+                                color='retweet_count',
+                                color_continuous_scale='teal',
                                 hover_name='full_text',
-                                hover_data=['user_location'],
                                 color_discrete_sequence=['#a5d8e6'] if style_select=='dark' else ['#457582'])
         
     fig.update_layout(
@@ -148,7 +148,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select):
             center=go.layout.mapbox.Center(
                 lat=filtered_data.lat.mean(), lon=filtered_data.lon.mean()
             ),
-            zoom=2.5,
+            zoom=1,
             style=style_select,
         ),
         font=dict(color='#737a8d')
