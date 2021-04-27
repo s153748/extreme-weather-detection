@@ -119,12 +119,13 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select):
         fig = ff.create_hexbin_mapbox(data_frame=filtered_data, 
                                       lat="lat", 
                                       lon="lon",
-                                      nx_hexagon=int(max(5,len(filtered_data)/8)), 
+                                      nx_hexagon=int(max(10,len(filtered_data)/10)), 
                                       opacity=0.6, 
                                       labels={"color": "Relevant Tweets"},
                                       min_count=1, 
                                       color_continuous_scale='teal',
                                       show_original_data=True, 
+                                      hover_data=['full_text'],
                                       original_data_marker=dict(size=5, opacity=1, color='#a5d8e6' if style_select=='dark' else '#457582'))
     else:
         fig = px.scatter_mapbox(filtered_data, 
