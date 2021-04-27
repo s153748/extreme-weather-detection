@@ -59,7 +59,7 @@ body {
     cursor: pointer !important;
 }
 
-#graph-select-outer, #graph-style-outer {
+#graph-select-outer, #graph-style-outer, #text-outer {
   width: 100%;
 }
 
