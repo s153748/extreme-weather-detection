@@ -107,12 +107,12 @@ def build_control_panel():
                             dcc.Textarea(
                                 id='text-search',
                                 value='',
-                                style={'width': '100%', 'height': 2, 'background-color': '#171b26', 'color': '#7b7d8d'},
+                                style={'width': '100%', 'height': 1, 'background-color': '#171b26'},
                                 draggable=False,
                                 placeholder='e.g. AlbertaFloods'
                             ),
                             html.Button('Search', id='search-button', n_clicks=0),
-                            html.Div(id='text-output') # style={'whiteSpace': 'pre-line'}
+                            html.Div(id='text-output')
                         ]
                     )
                 ]
