@@ -103,13 +103,13 @@ def build_control_panel():
                     html.Div(
                         id="text-outer",
                         children=[
-                            html.Label("Filter on Keywords"),
+                            html.Label("Filter on Keyword"),
                             dcc.Textarea(
                                 id='text-search',
                                 value='',
-                                style={'width': '100%', 'height': "2 px", 'background-color': '#171b26', 'opacity': 0.5, 'color': '#ffffff'},
+                                style={'width': '100%', 'height': "1 px", 'background-color': '#171b26', 'opacity': 0.5, 'color': '#ffffff'},
                                 draggable=False,
-                                placeholder='e.g. AlbertaFloods'
+                                placeholder='e.g. Floods'
                             ),
                             html.Button('Search', id='search-button', n_clicks=0),
                         ]
@@ -121,9 +121,13 @@ def build_control_panel():
         ],
     )
 
-def generate_geo_map(geo_data, month_select, graph_select, style_select):
+def generate_geo_map(geo_data, month_select, graph_select, style_select, n_clicks, keyword):
     
-    filtered_data = geo_data[geo_data.created_at_month == month_select]
+    if n_clicks > 0:
+        keyword_filtered = geo_data[geo_data['full_text'].str.contains(keyword, case=False)]
+        filtered_data = keyword_filtered[keyword_filtered.created_at_month == month_select]
+    else:
+        filtered_data = geo_data[geo_data.created_at_month == month_select]
     
     if graph_select == 'Point map':
         fig = px.scatter_mapbox(filtered_data, 
@@ -297,10 +301,7 @@ app.layout = html.Div(
 )
 def update_geo_map(month_select, graph_select, style_select, n_clicks, value):
     
-    #if n_clicks > 0:
-        # filter on keyword here
-    
-    figure, filtered_data = generate_geo_map(geo_df, month_select, graph_select, style_select)
+    figure, filtered_data = generate_geo_map(geo_df, month_select, graph_select, style_select, n_clicks, value)
     
     return figure, 'Number of relevant Tweets: {}'.format(len(filtered_data))
 
