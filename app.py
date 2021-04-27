@@ -119,7 +119,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select):
         fig = ff.create_hexbin_mapbox(data_frame=filtered_data, 
                                       lat="lat", 
                                       lon="lon",
-                                      nx_hexagon=int(max(10,len(filtered_data)/10)), 
+                                      nx_hexagon=int(max(25,len(filtered_data)/15)), 
                                       opacity=0.6, 
                                       labels={"color": "Relevant Tweets"},
                                       min_count=1, 
