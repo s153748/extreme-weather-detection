@@ -289,7 +289,7 @@ def update_geo_map(month_select, graph_select, style_select):
     ],
 )
 def update_slider(month_select, graph_select, style_select):
-    geo_df = geo_data[geo_data.created_at_month == month_select]
+    geo_df = geo_df[geo_df.created_at_month == month_select]
     return geo_df
 
 if __name__ == '__main__':
