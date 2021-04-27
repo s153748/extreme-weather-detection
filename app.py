@@ -107,7 +107,7 @@ def build_control_panel():
                             dcc.Textarea(
                                 id='text-search',
                                 value='',
-                                style={'width': '100%', 'height': "2 px", 'background-color': '#7b7d8d', 'color': '#ffffff'},
+                                style={'width': '100%', 'height': "2 px", 'background-color': '#171b26', 'opacity': 0.5, 'color': '#ffffff'},
                                 draggable=False,
                                 placeholder='e.g. AlbertaFloods'
                             ),
@@ -292,13 +292,13 @@ app.layout = html.Div(
         Input('graph-select', 'value'),
         Input('style-select', 'value'),
         Input('search-button', 'n_clicks'),
-        State('text-search', 'keyword')
+        State('text-search', 'value')
     ],
 )
-def update_geo_map(month_select, graph_select, style_select, n_clicks, keyword):
+def update_geo_map(month_select, graph_select, style_select, n_clicks, value):
     
     if n_clicks > 0:
-        geo_df = geo_df # filter on keyword here
+        # filter on keyword here
     
     figure, filtered_data = generate_geo_map(geo_df, month_select, graph_select, style_select)
     
