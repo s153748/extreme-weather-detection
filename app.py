@@ -33,29 +33,23 @@ DATA_PATH = pathlib.Path(__file__).parent.joinpath("data")
 df = pd.read_csv(DATA_PATH.joinpath("final_coords_tweets.csv")) 
 
 # Data prep
-df.dropna(subset=['tokens'], inplace=True)
-df['tokens'] = [literal_eval(s) for s in df['tokens']]
 for i in range(len(df)):
     try:
-        df['geo'][i] = eval(df['geo'][i])
+        df['final_coords'][i] = eval(df['final_coords'][i])
     except:
-        df['geo'][i] = np.nan
-    try:
-        df['place'][i] = eval(df['place'][i])
-    except:
-        df['place'][i] = np.nan
+        df['final_coords'][i] = np.nan
     
-geo_df = df[~df['geo'].isna()].reset_index(drop=True)
+geo_df = df[~df['final_coords'].isna()].reset_index(drop=True)
 geo_df = geo_df[geo_df['relevant'] == 1].reset_index(drop=True)
 for i in range(len(geo_df)):
     try:
-        geo_df['geo'][i] = eval(geo_df['geo'][i])
+        geo_df['final_coords'][i] = eval(geo_df['final_coords'][i])
     except:
-        geo_df['geo'][i] = geo_df['geo'][i]
+        geo_df['final_coords'][i] = geo_df['final_coords'][i]
 
 # Get coordinates
-geo_df['lat'] = [geo_df['geo'][i]['coordinates'][0] for i in range(len(geo_df))]
-geo_df['lon'] = [geo_df['geo'][i]['coordinates'][1] for i in range(len(geo_df))]
+geo_df['lat'] = [geo_df['final_coords'][i][0] for i in range(len(geo_df))]
+geo_df['lon'] = [geo_df['final_coords'][i][1] for i in range(len(geo_df))]
 
 # Find number of tweets by date
 geo_df['Date'] = pd.to_datetime(geo_df['created_at']).dt.date
