@@ -47,9 +47,7 @@ body {
 }
 
 #right-column {
-    padding: 0rem 2rem;
     background-color: #171b26;
-    min-height: calc(100vh - 5.5rem);
 }
 
 .geo-map > div, .line-chart > div {
