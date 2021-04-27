@@ -119,7 +119,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select):
         fig = ff.create_hexbin_mapbox(data_frame=filtered_data, 
                                       lat="lat", 
                                       lon="lon",
-                                      nx_hexagon=int(max(5,len(filtered_data)/10)), 
+                                      nx_hexagon=int(max(5,len(filtered_data)/6)), 
                                       opacity=0.6, 
                                       labels={"color": "Relevant Tweets"},
                                       min_count=1, 
@@ -132,6 +132,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select):
                                 lon="lon",
                                 size='retweet_count',
                                 color='retweet_count',
+                                labels={"color": "Retweets"},
                                 color_continuous_scale='teal',
                                 hover_name='full_text',
                                 color_discrete_sequence=['#a5d8e6'] if style_select=='dark' else ['#457582'])
