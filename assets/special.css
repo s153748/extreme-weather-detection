@@ -38,8 +38,8 @@ body {
 }
 
 #left-column {
-    margin-top: 20px;
-    padding: 0rem 1rem;
+    margin-top: 10px;
+    padding: 0rem 2rem;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -47,6 +47,7 @@ body {
 }
 
 #right-column {
+    padding: 0rem 0.2rem;
     background-color: #171b26;
     min-height: calc(100vh - 5.5rem);
 }
