@@ -125,7 +125,6 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select):
                                       min_count=1, 
                                       color_continuous_scale='teal',
                                       show_original_data=True, 
-                                      hover_data=['full_text'],
                                       original_data_marker=dict(size=5, opacity=1, color='#a5d8e6' if style_select=='dark' else '#457582'))
     else:
         fig = px.scatter_mapbox(filtered_data, 
