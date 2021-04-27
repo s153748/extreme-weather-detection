@@ -57,7 +57,7 @@ count_dates = geo_df.groupby('Date').size().values
 time_df = geo_df.drop_duplicates(subset="Date").assign(Count=count_dates).sort_values(by='Date').reset_index(drop=True)
 
 # Set graph options
-graph_list = ['Hexagon map','Point map','Scatter map']
+graph_list = ['Point map','Hexagon map','Scatter map']
 style_list = ['light','dark'] 
 
 def build_control_panel():
