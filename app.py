@@ -122,7 +122,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select):
                                 size='retweet_count',
                                 hover_name='full_text',
                                 hover_data=['user_location'],
-                                color_discrete_sequence=['#a5d8e6'] if style_select.isin('carto-darkmatter','dark') else ['#457582'])
+                                color_discrete_sequence=['#a5d8e6'] if style_select=='carto-darkmatter' else ['#457582'])
     else:
         fig = ff.create_hexbin_mapbox(data_frame=filtered_data, 
                                       lat="lat", 
@@ -133,7 +133,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select):
                                       min_count=1, 
                                       color_continuous_scale='teal',
                                       show_original_data=True, 
-                                      original_data_marker=dict(size=5, opacity=1, color='#a5d8e6' if style_select.isin('carto-darkmatter','dark') else '#457582'))
+                                      original_data_marker=dict(size=5, opacity=1, color='#a5d8e6' if style_select=='carto-darkmatter' else '#457582'))
         
     fig.update_layout(
         margin=dict(l=10, r=10, t=20, b=10, pad=5),
