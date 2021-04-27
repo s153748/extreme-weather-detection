@@ -155,6 +155,9 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select):
         
     return fig
 
+def generate_slider(geo_data, month_select):
+    return geo_data[geo_data.created_at_month == month_select]
+
 def generate_line_chart(time_data):
     fig = px.line(time_data,
                   x='Date',
@@ -289,8 +292,8 @@ def update_geo_map(month_select, graph_select, style_select):
     ],
 )
 def update_slider(month_select, graph_select, style_select):
-    geo_df = geo_df[geo_df.created_at_month == month_select]
-    return geo_df
+    
+    return generate_slider(geo_df, month_select)
 
 if __name__ == '__main__':
     app.run_server()
