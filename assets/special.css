@@ -39,7 +39,7 @@ body {
 
 #left-column {
     margin-top: 25px;
-    padding: 0rem 1.5rem;
+    padding: 0rem 1rem;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
