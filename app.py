@@ -51,7 +51,7 @@ count_dates = geo_df.groupby('Date').size().values
 time_df = geo_df.drop_duplicates(subset="Date").assign(Count=count_dates).sort_values(by='Date').reset_index(drop=True)
 
 # Set graph options
-graph_list = ['Point map','Hexagon map','Scatter map']
+graph_list = ['Point map','Hexagon map']
 style_list = ['Light','Dark','Streets','Outdoors','Satellite'] 
 
 def build_control_panel():
@@ -73,7 +73,7 @@ def build_control_panel():
                             dcc.Dropdown(
                                 id="graph-select",
                                 options=[{"label": i, "value": i} for i in graph_list],
-                                value=graph_list[0].lower(),
+                                value=graph_list[0],
                             ),
                         ],
                     )
@@ -123,7 +123,7 @@ def build_control_panel():
 
 def generate_geo_map(geo_data, month_select, graph_select, style_select, n_clicks, keywords):
     
-    if n_clicks > 0:
+    if n_clicks > 0 and not keywords.strip():
         keywords = keywords.split(', ')
         for keyword in keywords:
             keyword_filtered = geo_data[geo_data['full_text'].str.contains(keyword, case=False)]
@@ -137,7 +137,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, n_click
                                 lon="lon",
                                 hover_data=['full_text'],
                                 color_discrete_sequence=['#a5d8e6'] if style_select=='dark' else ['#457582'])
-    elif graph_select == 'Hexagon map':
+    else: # 'Hexagon map':
         fig = ff.create_hexbin_mapbox(data_frame=filtered_data, 
                                       lat="lat", 
                                       lon="lon",
@@ -148,18 +148,9 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, n_click
                                       color_continuous_scale='teal',
                                       show_original_data=True, 
                                       original_data_marker=dict(size=5, opacity=1, color='#a5d8e6' if style_select=='dark' else '#457582'))
-    else:
-        fig = px.scatter_mapbox(filtered_data, 
-                                lat="lat", 
-                                lon="lon",
-                                size='retweet_count',
-                                color='retweet_count',
-                                color_continuous_scale='teal',
-                                hover_data=['full_text'],
-                                color_discrete_sequence=['#a5d8e6'] if style_select=='dark' else ['#457582'])
         
     fig.update_layout(
-        margin=dict(l=10, r=10, t=20, b=10, pad=5),
+        margin=dict(l=0, r=0, t=0, b=0), # dict(l=10, r=10, t=20, b=10, pad=5),
         plot_bgcolor="#171b26",
         paper_bgcolor="#171b26",
         clickmode="event+select",
