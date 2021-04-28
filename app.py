@@ -27,9 +27,6 @@ app.config.suppress_callback_exceptions = True
 
 githublink = 'https://github.com/s153748/extreme-weather-detection'
 
-# Plotly mapbox token
-mapbox_access_token = "pk.eyJ1IjoicGxvdGx5bWFwYm94IiwiYSI6ImNrOWJqb2F4djBnMjEzbG50amg0dnJieG4ifQ.Zme1-Uzoi75IaFbieBDl3A"
-
 # Load data
 DATA_PATH = pathlib.Path(__file__).parent.joinpath("data") 
 df = pd.read_csv(DATA_PATH.joinpath("final_coords_tweets.csv")) 
@@ -54,7 +51,7 @@ time_df = geo_df.drop_duplicates(subset="Date").assign(Count=count_dates).sort_v
 
 # Set graph options
 graph_list = ['Point map','Hexagon map','Scatter map']
-style_list = ['light','dark'] 
+style_list = ['Light','Dark','Streets','Outdoors','Satellite'] 
 
 def build_control_panel():
     return html.Div(
@@ -123,10 +120,12 @@ def build_control_panel():
         ],
     )
 
-def generate_geo_map(geo_data, month_select, graph_select, style_select, n_clicks, keyword):
+def generate_geo_map(geo_data, month_select, graph_select, style_select, n_clicks, keywords):
     
     if n_clicks > 0:
-        keyword_filtered = geo_data[geo_data['full_text'].str.contains(keyword, case=False)]
+        keywords = keywords.split(', ')
+        for keyword in keywords:
+            keyword_filtered = geo_data[geo_data['full_text'].str.contains(keyword, case=False)]
         filtered_data = keyword_filtered[keyword_filtered.created_at_month == month_select]
     else:
         filtered_data = geo_data[geo_data.created_at_month == month_select]
@@ -141,7 +140,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, n_click
         fig = ff.create_hexbin_mapbox(data_frame=filtered_data, 
                                       lat="lat", 
                                       lon="lon",
-                                      nx_hexagon=25, # int(max(25,len(filtered_data)/15)), 
+                                      nx_hexagon=25, # int(max(25,len(filtered_data)/10)), 
                                       opacity=0.6, 
                                       labels={"color": "Relevant Tweets"},
                                       min_count=1, 
@@ -166,7 +165,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, n_click
         hovermode="closest",
         showlegend=False,
         mapbox=go.layout.Mapbox(
-            accesstoken=mapbox_access_token,
+            #accesstoken=mapbox_access_token,
             center=go.layout.mapbox.Center(
                 lat=filtered_data.lat.mean(), lon=filtered_data.lon.mean()
             ),
@@ -265,7 +264,6 @@ app.layout = html.Div(
                                 geo_df['created_at_year'], geo_df['created_at_month'])},
                             step=None,
                             updatemode='drag',
-                            #verticalHeight=450
                         )
                     ]
                 ),
