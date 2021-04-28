@@ -103,7 +103,7 @@ def build_control_panel():
                     html.Div(
                         id="text-outer",
                         children=[
-                            html.Label("Filter on Keyword"),
+                            html.Label("Filter on Keywords"),
                             dcc.Textarea(
                                 id='text-search',
                                 value='',
@@ -131,7 +131,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, n_click
     else:
         filtered_data = geo_data[geo_data.created_at_month == month_select]
     
-    if len(filtered_data) = 0: # no matches
+    if len(filtered_data) == 0: # no matches
         empty=pd.DataFrame([0, 0]).T
         empty.columns=['lat','long']
         fig = px.scatter_mapbox(empty, lat="lat", lon="long", color_discrete_sequence=['#cbd2d3'])
