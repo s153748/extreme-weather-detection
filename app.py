@@ -44,6 +44,7 @@ for i in range(len(df)):
         df['final_coords'][i] = np.nan
 geo_df = df[~df['final_coords'].isna()].reset_index(drop=True)
 geo_df = geo_df[geo_df['relevant'] == 1].reset_index(drop=True)
+total_count = len(geo_df)
 
 # Get coordinates
 geo_df['lat'] = [geo_df['final_coords'][i][0] for i in range(len(geo_df))]
@@ -57,6 +58,8 @@ time_df = geo_df.drop_duplicates(subset="Date").assign(Count=count_dates).sort_v
 # Set graph options
 graph_list = ['Point map','Hexagon map']
 style_list = ['Light','Dark','Streets','Outdoors','Satellite'] 
+loc_types = {'Geotagged coordinates':1,'Geotagged place':2,'Geoparsed from Tweet':3,'Registered user location':4}
+loc_list = list(loc_types.keys())
 
 def build_control_panel():
     return html.Div(
@@ -105,6 +108,24 @@ def build_control_panel():
                 className="control-row-3",
                 children=[
                     html.Div(
+                        id="loc-outer",
+                        children=[
+                            html.Label("Select Localization Method"),
+                            dcc.Dropdown(
+                                id='loc-select',
+                                options=[{"label": i, "value": i} for i in loc_list],
+                                multi=True,
+                                value=loc_list
+                            )
+                        ]
+                    )
+                ],
+            ),
+            html.Br(),
+            html.Div(
+                className="control-row-4",
+                children=[
+                    html.Div(
                         id="text-outer",
                         children=[
                             html.Label("Filter on Keywords"),
@@ -121,19 +142,20 @@ def build_control_panel():
                 ]
            ),
            html.Br(),
-           html.Div(id='counter',style={'color':'#7b7d8d'}) 
+           html.Div(f'Total number of relevant Tweets: {total_count}',style={'color':'#7b7d8d'}),
+           html.Div(id='counter',style={'color':'#7b7d8d'})
         ],
     )
 
-def generate_geo_map(geo_data, month_select, graph_select, style_select, n_clicks, keywords):
+def generate_geo_map(geo_data, month_select, graph_select, style_select, loc_select, n_clicks, keywords):
     
     if n_clicks > 0 and keywords.strip():
         keywords = keywords.split(', ')
         for keyword in keywords:
-            keyword_filtered = geo_data[geo_data['full_text'].str.contains(keyword, case=False)]
-        filtered_data = keyword_filtered[keyword_filtered.created_at_month == month_select]
-    else:
-        filtered_data = geo_data[geo_data.created_at_month == month_select]
+            geo_data = geo_data[geo_data['full_text'].str.contains(keyword, case=False)]
+    
+    geo_data = geo_data[geo_data['final_coords_type'].isin(loc_select)]
+    filtered_data = geo_data[geo_data.created_at_month == month_select]
     
     if len(filtered_data) == 0: # no matches
         empty=pd.DataFrame([0, 0]).T
@@ -145,7 +167,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, n_click
                                 lat="lat", 
                                 lon="lon",
                                 hover_name='full_text',
-                                hover_data={'lat':False,'lon':False,'user_name':True,'user_location':True,'source':True,'retweet_count':True},
+                                hover_data={'lat':False,'lon':False,'user_name':True,'user_location':True,'created_at':True,'source':True,'retweet_count':True},
                                 color_discrete_sequence=['#a5d8e6'] if style_select=='dark' else ['#457582'])
     else: # 'Hexagon map':
         fig = ff.create_hexbin_mapbox(filtered_data, 
@@ -297,15 +319,16 @@ app.layout = html.Div(
         Input('month-slider', 'value'),
         Input('graph-select', 'value'),
         Input('style-select', 'value'),
+        Input('loc-select', 'value'),
         Input('search-button', 'n_clicks'),
         State('text-search', 'value')
     ],
 )
-def update_geo_map(month_select, graph_select, style_select, n_clicks, value):
+def update_geo_map(month_select, graph_select, style_select, loc_select, n_clicks, keywords):
     
-    figure, filtered_data = generate_geo_map(geo_df, month_select, graph_select, style_select.lower(), n_clicks, value)
+    figure, filtered_data = generate_geo_map(geo_df, month_select, graph_select, style_select.lower(), loc_select, n_clicks, keywords)
     
-    return figure, 'Number of relevant Tweets: {}'.format(len(filtered_data))
+    return figure, f'Number of relevant Tweets in selection: {len(filtered_data)}'
 
 if __name__ == '__main__':
     app.run_server()
