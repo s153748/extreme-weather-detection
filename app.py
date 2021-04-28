@@ -91,7 +91,7 @@ def build_control_panel():
                 className="control-row-2",
                 children=[
                     html.Div(
-                        id="graph-style-outer",
+                        id="style-select-outer",
                         children=[
                             html.Label("Select Map Style"),
                             dcc.Dropdown(
@@ -108,7 +108,7 @@ def build_control_panel():
                 className="control-row-3",
                 children=[
                     html.Div(
-                        id="loc-outer",
+                        id="loc-select-outer",
                         children=[
                             html.Label("Select Localization Method"),
                             dcc.Dropdown(
@@ -126,7 +126,7 @@ def build_control_panel():
                 className="control-row-4",
                 children=[
                     html.Div(
-                        id="text-outer",
+                        id="text-search-outer",
                         children=[
                             html.Label("Filter on Keywords"),
                             dcc.Textarea(
@@ -154,7 +154,9 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, loc_sel
         for keyword in keywords:
             geo_data = geo_data[geo_data['full_text'].str.contains(keyword, case=False)]
     
-    geo_data = geo_data[geo_data['final_coords_type'].isin(loc_select)]
+    types_selected = [loc_types[loc_select[i]] for i in range(len(loc_select))]
+    geo_data = geo_data[geo_data['final_coords_type'].isin(types_selected)]
+    
     filtered_data = geo_data[geo_data.created_at_month == month_select]
     
     if len(filtered_data) == 0: # no matches
