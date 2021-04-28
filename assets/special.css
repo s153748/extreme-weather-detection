@@ -86,7 +86,7 @@ span.Select-clear-zone {
   cursor: pointer;
 }
 
-#graph-select-outer > label, #graph-select-outer > label, #loc-select-outer > label, #text-select-outer > label {
+#graph-select-outer > label, #style-select-outer > label, #loc-select-outer > label, #text-select-outer > label {
   margin-bottom: 2px;
   color: #7b7d8d;
 }
