@@ -109,7 +109,7 @@ def build_control_panel():
                                 value='',
                                 style={'width': '100%', 'height': "1 px", 'background-color': '#171b26', 'opacity': 0.5, 'color': '#ffffff'},
                                 draggable=False,
-                                placeholder='e.g. Floods'
+                                placeholder='e.g. Floods, Queensland'
                             ),
                             html.Button('Search', id='search-button', n_clicks=0),
                         ]
