@@ -136,7 +136,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, n_click
         empty.columns=['lat','long']
         fig = px.scatter_mapbox(empty, lat="lat", lon="long", color_discrete_sequence=['#cbd2d3'])
     
-    elif: graph_select == 'Point map':
+    elif graph_select == 'Point map':
         fig = px.scatter_mapbox(filtered_data, 
                                 lat="lat", 
                                 lon="lon",
