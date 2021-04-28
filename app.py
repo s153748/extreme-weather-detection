@@ -26,6 +26,7 @@ server = app.server
 app.config.suppress_callback_exceptions = True
 
 githublink = 'https://github.com/s153748/extreme-weather-detection'
+mapbox_access_token = open(".mapbox_token").read()
 
 # Load data
 DATA_PATH = pathlib.Path(__file__).parent.joinpath("data") 
@@ -72,7 +73,7 @@ def build_control_panel():
                             dcc.Dropdown(
                                 id="graph-select",
                                 options=[{"label": i, "value": i} for i in graph_list],
-                                value=graph_list[0],
+                                value=graph_list[0].lower(),
                             ),
                         ],
                     )
@@ -89,7 +90,7 @@ def build_control_panel():
                             dcc.Dropdown(
                                 id="style-select",
                                 options=[{"label": i, "value": i} for i in style_list],
-                                value=style_list[0],
+                                value=style_list[0].lower(),
                             ),
                         ],
                     ),
@@ -165,7 +166,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, n_click
         hovermode="closest",
         showlegend=False,
         mapbox=go.layout.Mapbox(
-            #accesstoken=mapbox_access_token,
+            accesstoken=mapbox_access_token,
             center=go.layout.mapbox.Center(
                 lat=filtered_data.lat.mean(), lon=filtered_data.lon.mean()
             ),
@@ -301,7 +302,7 @@ app.layout = html.Div(
 )
 def update_geo_map(month_select, graph_select, style_select, n_clicks, value):
     
-    figure, filtered_data = generate_geo_map(geo_df, month_select, graph_select, style_select, n_clicks, value)
+    figure, filtered_data = generate_geo_map(geo_df, month_select, graph_select, style_select.lower(), n_clicks, value)
     
     return figure, 'Number of relevant Tweets: {}'.format(len(filtered_data))
 
