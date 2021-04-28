@@ -13,6 +13,7 @@ import pandas as pd
 import numpy as np
 import calendar
 import pathlib
+import textwrap
 
 # Initiate app
 app = dash.Dash(
@@ -32,10 +33,13 @@ mapbox_access_token = open(".mapbox_token.txt").read()
 DATA_PATH = pathlib.Path(__file__).parent.joinpath("data") 
 df = pd.read_csv(DATA_PATH.joinpath("final_coords_tweets.csv")) 
 
+wrapper = textwrap.TextWrapper(width=50)
+
 # Data prep
 for i in range(len(df)):
     try:
         df['final_coords'][i] = eval(df['final_coords'][i])
+        df['full_text'][i] = "<br>".join(wrapper.wrap(text=df['full_text'][i]))
     except:
         df['final_coords'][i] = np.nan
 geo_df = df[~df['final_coords'].isna()].reset_index(drop=True)
