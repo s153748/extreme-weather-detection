@@ -144,10 +144,11 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, n_click
         fig = px.scatter_mapbox(filtered_data, 
                                 lat="lat", 
                                 lon="lon",
-                                hover_data=['full_text'],
+                                hover_name='full_text',
+                                hover_data={'lat':False,'lon':False,'user_name':True,'user_location':True,'source':True,'retweet_count':True},
                                 color_discrete_sequence=['#a5d8e6'] if style_select=='dark' else ['#457582'])
     else: # 'Hexagon map':
-        fig = ff.create_hexbin_mapbox(data_frame=filtered_data, 
+        fig = ff.create_hexbin_mapbox(filtered_data, 
                                       lat="lat", 
                                       lon="lon",
                                       nx_hexagon=25, # int(max(25,len(filtered_data)/10)), 
