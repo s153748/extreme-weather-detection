@@ -26,7 +26,7 @@ server = app.server
 app.config.suppress_callback_exceptions = True
 
 githublink = 'https://github.com/s153748/extreme-weather-detection'
-mapbox_access_token = open(".mapbox_token").read()
+mapbox_access_token = open(".mapbox_token.txt").read()
 
 # Load data
 DATA_PATH = pathlib.Path(__file__).parent.joinpath("data") 
