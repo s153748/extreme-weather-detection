@@ -60,6 +60,7 @@ graph_list = ['Point map','Hexagon map']
 style_list = ['Light','Dark','Streets','Outdoors','Satellite'] 
 loc_types = {'Geotagged coordinates':1,'Geotagged place':2,'Geoparsed from Tweet':3,'Registered user location':4}
 loc_list = list(loc_types.keys())
+cmap = {1:'#ffffcc',2:'#a1dab4',3:'#41b6c4',4:'#225ea8'}
 
 def build_control_panel():
     return html.Div(
@@ -156,6 +157,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, loc_sel
     
     types_selected = [loc_types[loc_select[i]] for i in range(len(loc_select))]
     geo_data = geo_data[geo_data['final_coords_type'].isin(types_selected)]
+    colors = [cmap[types_selected[i]] for i in range(len(types_selected))]
     
     filtered_data = geo_data[geo_data.created_at_month == month_select]
     
@@ -170,8 +172,9 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, loc_sel
                                 lon="lon",
                                 hover_name='full_text',
                                 hover_data={'lat':False,'lon':False,'user_name':True,'user_location':True,'created_at':True,'source':True,'retweet_count':True},
-                                color_discrete_sequence=['#a5d8e6'] if style_select=='dark' else ['#457582'])
-    else: # 'Hexagon map':
+                                color_discrete_sequence=['#a5d8e6'] if style_select=='dark' else ['#457582'],
+                               )
+    elif graph_select == 'Hexagon map':
         fig = ff.create_hexbin_mapbox(filtered_data, 
                                       lat="lat", 
                                       lon="lon",
@@ -181,10 +184,18 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, loc_sel
                                       min_count=1, 
                                       color_continuous_scale='teal',
                                       show_original_data=True, 
-                                      original_data_marker=dict(size=5, opacity=1, color='#a5d8e6' if style_select=='dark' else '#457582'))
-        
+                                      original_data_marker=dict(size=5, opacity=0.6, color='#a5d8e6' if style_select=='dark' else '#457582')
+                                     )
+    else: # colors of different localization methods
+            fig = px.scatter_mapbox(filtered_data, 
+                            lat="lat", 
+                            lon="lon",
+                            hover_name='full_text',
+                            hover_data={'lat':False,'lon':False,'user_name':True,'user_location':True,'created_at':True,'source':True,'retweet_count':True},
+                            color_continuous_scale=colors,
+                           )
     fig.update_layout(
-        margin=dict(l=0, r=0, t=0, b=0), 
+        margin=dict(l=0, r=0, t=20, b=0), 
         plot_bgcolor="#171b26",
         paper_bgcolor="#171b26",
         clickmode="event+select",
@@ -330,7 +341,7 @@ def update_geo_map(month_select, graph_select, style_select, loc_select, n_click
     
     figure, filtered_data = generate_geo_map(geo_df, month_select, graph_select, style_select.lower(), loc_select, n_clicks, keywords)
     
-    return figure, f'Number of relevant Tweets in selection: {len(filtered_data)}'
+    return figure, f'Relevant Tweets in selection: {len(filtered_data)}'
 
 if __name__ == '__main__':
     app.run_server()
