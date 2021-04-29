@@ -84,7 +84,6 @@ def build_control_panel():
                 className="section-title",
                 children="Configurations",
             ),
-            html.Br(),
             html.Div(
                 className="control-row-1",
                 children=[
@@ -235,14 +234,13 @@ def generate_line_chart(filtered_data):
     fig.update_traces(line=dict(width=2))
     fig.update_yaxes(
         showgrid=False,
-        visible=False,
     )
     fig.update_xaxes(
         showgrid=False,
         visible=False,
     )
     fig.update_layout(
-        margin=dict(l=10, r=10, t=27, b=0, pad=1), 
+        margin=dict(l=30, r=30, t=27, b=0), 
         plot_bgcolor="#171b26",
         paper_bgcolor="#171b26",
         font=dict(color='#737a8d',size=10))
