@@ -177,12 +177,12 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, loc_sel
                                 #color_discrete_sequence=['#a5d8e6'] if style_select=='dark' else ['#457582'],
                                 color_discrete_sequence=colors,
                                )
-        fig.update_traces(showscale=False)
+        
     elif graph_select == 'Hexagon map':
         fig = ff.create_hexbin_mapbox(filtered_data, 
                                       lat="lat", 
                                       lon="lon",
-                                      nx_hexagon=50, # int(max(25,len(filtered_data)/10)), 
+                                      nx_hexagon=100, # int(max(25,len(filtered_data)/10)), 
                                       opacity=0.6, 
                                       labels={"color": "# of Tweets"},
                                       min_count=1, 
