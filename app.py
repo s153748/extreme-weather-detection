@@ -144,7 +144,7 @@ def build_control_panel():
                 ]
            ),
            html.Br(),
-           html.Div(f'Total number of flood-relevant Tweets: {total_count}',style={'color':'#7b7d8d'}),
+           html.Div(f'Total number of Tweets: {total_count}',style={'color':'#7b7d8d'}),
            html.Div(id='counter',style={'color':'#7b7d8d'})
         ],
     )
@@ -175,16 +175,16 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, loc_sel
                                 hover_name='full_text',
                                 hover_data={'lat':False,'lon':False,'user_name':True,'user_location':True,'created_at':True,'source':True,'retweet_count':True},
                                 #color_discrete_sequence=['#a5d8e6'] if style_select=='dark' else ['#457582'],
-                                color_discrete_sequence=colors,
+                                color_continuous_scale=colors,
                                )
-        
+        fig.update(layout_coloraxis_showscale=False)
     elif graph_select == 'Hexagon map':
         fig = ff.create_hexbin_mapbox(filtered_data, 
                                       lat="lat", 
                                       lon="lon",
                                       nx_hexagon=100, # int(max(25,len(filtered_data)/10)), 
                                       opacity=0.6, 
-                                      labels={"color": "# of Tweets"},
+                                      labels={"color": "Tweets"},
                                       min_count=1, 
                                       color_continuous_scale='teal',
                                       show_original_data=True, 
@@ -307,7 +307,7 @@ app.layout = html.Div(
                     children=[
                         html.P(
                             id="line-chart-title",
-                            children="Number of Relevant Tweets"
+                            children="Number of Flood-Relevant Tweets"
                         ),
                         dcc.Graph(
                             id="line-chart",
@@ -337,7 +337,7 @@ def update_geo_map(month_select, graph_select, style_select, loc_select, n_click
     
     figure, filtered_data = generate_geo_map(geo_df, month_select, graph_select, style_select.lower(), loc_select, n_clicks, keywords)
     
-    return figure, f'Relevant Tweets in selection: {len(filtered_data)}'
+    return figure, f'Tweets in selection: {len(filtered_data)}'
 
 if __name__ == '__main__':
     app.run_server()
