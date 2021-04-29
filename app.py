@@ -58,9 +58,9 @@ time_df = geo_df.drop_duplicates(subset="Date").assign(Count=count_dates).sort_v
 # Set graph options
 graph_list = ['Point map','Hexagon map','Colored point map']
 style_list = ['Light','Dark','Streets','Outdoors','Satellite'] 
-loc_types = {'Geotagged coordinates':1,'Geotagged place':2,'Geoparsed from Tweet':3,'Registered user location':4}
+loc_types = {'Geotagged coordinates':1,'Geotagged place':2,'Geoparsed from Tweet':3,'Registered user location':4} # localization methods
 loc_list = list(loc_types.keys())
-cmap = [1:'#ffffcc',2:'#a1dab4',3:'#41b6c4',4:'#225ea8']
+cmap = {1:'#ffffcc',2:'#a1dab4',3:'#41b6c4',4:'#225ea8'} # for each localization method
 
 def build_control_panel():
     return html.Div(
@@ -155,9 +155,9 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, loc_sel
         for keyword in keywords:
             geo_data = geo_data[geo_data['full_text'].str.contains(keyword, case=False)]
     
-    types_selected = [loc_types[loc_select[i]] for i in range(len(loc_select))]
-    geo_data = geo_data[geo_data['final_coords_type'].isin(types_selected)]
-    colors = [cmap[types_selected[i]] for i in range(len(types_selected))]
+    selected = [loc_types[loc_select[i]] for i in range(len(loc_select))] 
+    geo_data = geo_data[geo_data['final_coords_type'].isin(selected)]
+    colors = [cmap[selected[i]] for i in range(len(selected))]
     
     filtered_data = geo_data[geo_data.created_at_month == month_select]
     
@@ -188,12 +188,12 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, loc_sel
                                      )
     else: # colors of different localization methods
             fig = px.scatter_mapbox(filtered_data, 
-                            lat="lat", 
-                            lon="lon",
-                            hover_name='full_text',
-                            hover_data={'lat':False,'lon':False,'user_name':True,'user_location':True,'created_at':True,'source':True,'retweet_count':True},
-                            color_continuous_scale=colors,
-                           )
+                                    lat="lat", 
+                                    lon="lon",
+                                    hover_name='full_text',
+                                    hover_data={'lat':False,'lon':False,'user_name':True,'user_location':True,'created_at':True,'source':True,'retweet_count':True},
+                                    color_continuous_scale=['#ffffcc', '#a1dab4', '#41b6c4', '#225ea8'],
+                                   )
     fig.update_layout(
         margin=dict(l=0, r=0, t=20, b=0), 
         plot_bgcolor="#171b26",
