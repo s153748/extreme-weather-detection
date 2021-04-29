@@ -14,6 +14,8 @@ import numpy as np
 import calendar
 import pathlib
 import textwrap
+import datetime
+from dateutil.relativedelta import relativedelta
 
 # Initiate app
 app = dash.Dash(
@@ -50,17 +52,28 @@ total_count = len(geo_df)
 geo_df['lat'] = [geo_df['final_coords'][i][0] for i in range(len(geo_df))]
 geo_df['lon'] = [geo_df['final_coords'][i][1] for i in range(len(geo_df))]
 
-# Find number of tweets by date
+# Group by date
 geo_df['Date'] = pd.to_datetime(geo_df['created_at']).dt.date
-count_dates = geo_df.groupby('Date').size().values
-time_df = geo_df.drop_duplicates(subset="Date").assign(Count=count_dates).sort_values(by='Date').reset_index(drop=True)
+
+# Date slider prep
+geo_df['Date'] = pd.to_datetime(geo_df['Date'])
+def unix_time(dt):
+    return (dt-datetime.utcfromtimestamp(0)).total_seconds() 
+
+def get_marks(start, end):
+    result = []
+    current = start
+    while current <= end:
+        result.append(current)
+        current += relativedelta(months=1)
+    return {int(unix_time(m)): (str(m.strftime('%Y-%m'))) for m in result}
 
 # Set graph options
 graph_list = ['Scatter map','Hexagon map']
 style_list = ['Light','Dark','Streets','Outdoors','Satellite'] 
 loc_types = {'Geotagged coordinates':1,'Geotagged place':2,'Geoparsed from Tweet':3,'Registered user location':4} # localization methods
 loc_list = list(loc_types.keys())
-cmap = {1:'#ffffcc',2:'#a1dab4',3:'#41b6c4',4:'#225ea8'} # localization method colors
+cmap = {1:'#253494',2:'#2c7fb8',3:'#41b6c4',4:'#c7e9b4'} # localization method colors
 
 def build_control_panel():
     return html.Div(
@@ -117,7 +130,7 @@ def build_control_panel():
                                 options=[{"label": i, "value": i} for i in loc_list],
                                 multi=True,
                                 value=loc_list,
-                                placeholder='Select'
+                                placeholder=''
                             )
                         ]
                     )
@@ -145,11 +158,12 @@ def build_control_panel():
            ),
            html.Br(),
            html.Div(f'Total number of Tweets: {total_count}',style={'color':'#7b7d8d'}),
-           html.Div(id='counter',style={'color':'#7b7d8d'})
+           html.Div(id='counter',style={'color':'#7b7d8d'}),
+           html.Div(id='output-range-slider',style={'color':'#7b7d8d'})
         ],
     )
 
-def generate_geo_map(geo_data, month_select, graph_select, style_select, loc_select, n_clicks, keywords):
+def generate_geo_map(geo_data, range_select, graph_select, style_select, loc_select, n_clicks, keywords):
     
     if n_clicks > 0 and keywords.strip():
         keywords = keywords.split(', ')
@@ -160,7 +174,10 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, loc_sel
     geo_data = geo_data[geo_data['final_coords_type'].isin(selected)]
     colors = [cmap[selected[i]] for i in range(len(selected))]
     
-    filtered_data = geo_data[geo_data.created_at_month == month_select]
+    start = datetime.utcfromtimestamp(range_select[0]).strftime('%Y-%m-%d')
+    end = datetime.utcfromtimestamp(range_select[1]).strftime('%Y-%m-%d')
+    geo_data = geo_data[geo_data['Date'] >= start]
+    filtered_data = geo_data[geo_data['Date'] <= end]    
     
     if len(filtered_data) == 0: # no matches
         empty=pd.DataFrame([0, 0]).T
@@ -182,7 +199,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, loc_sel
         fig = ff.create_hexbin_mapbox(filtered_data, 
                                       lat="lat", 
                                       lon="lon",
-                                      nx_hexagon=100, # int(max(25,len(filtered_data)/10)), 
+                                      nx_hexagon=75, # int(max(25,len(filtered_data)/10)), 
                                       opacity=0.6, 
                                       labels={"color": "Tweets"},
                                       min_count=1, 
@@ -191,7 +208,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, loc_sel
                                       original_data_marker=dict(size=5, opacity=0.6, color='#a5d8e6' if style_select=='dark' else '#457582')
                                      )
     fig.update_layout(
-        margin=dict(l=0, r=0, t=30, b=0), 
+        margin=dict(l=0, r=0, t=27, b=0), 
         plot_bgcolor="#171b26",
         paper_bgcolor="#171b26",
         clickmode="event+select",
@@ -199,9 +216,7 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, loc_sel
         showlegend=False,
         mapbox=go.layout.Mapbox(
             accesstoken=mapbox_access_token,
-            center=go.layout.mapbox.Center(
-                lat=filtered_data.lat.mean(), lon=filtered_data.lon.mean()
-            ),
+            center=go.layout.mapbox.Center(lat=0, lon=0),
             zoom=1,
             style=style_select,
         ),
@@ -210,37 +225,26 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, loc_sel
         
     return fig, filtered_data
 
-def generate_line_chart(time_data):
+def generate_line_chart(filtered_data):
+    
+    count_dates = filtered_data.groupby('Date').size().values
+    time_data = filtered_data.drop_duplicates(subset="Date").assign(Count=count_dates).sort_values(by='Date').reset_index(drop=True)
+    
     fig = px.line(time_data,
                   x='Date',
                   y='Count',
-                  color_discrete_sequence=['#a5d8e6'])
+                  color_discrete_sequence=['#cbd2d3'],
+                  height=200)
     fig.update_traces(line=dict(width=3))
     fig.update_yaxes(
         showgrid=False,
         showline=True,
         linecolor='#ffffff',
-        linewidth=1.5
-    )
+        linewidth=1.5)
     fig.update_xaxes(
-        showgrid=False,
-        rangeslider=dict(
-            visible=True,
-            bgcolor='#737a8d',
-            bordercolor='#737a8d',
-            thickness=0.125),
-        rangeselector=dict(
-            buttons=list([
-                dict(count=1, label="1m", step="month", stepmode="backward"),
-                dict(count=3, label="3m", step="month", stepmode="backward"),
-                dict(step="all")
-        ]))
-    )
+        showgrid=False)
     fig.update_layout(
-        plot_bgcolor="#171b26",
-        paper_bgcolor="#171b26",
-        font=dict(color='#737a8d'),
-    )
+        font=dict(color='#737a8d'))
     return fig
 
 # Set up the layout
@@ -288,33 +292,27 @@ app.layout = html.Div(
                                 ),
                             },
                         ),
-                        dcc.Slider(
-                            id='month-slider',
-                            min=geo_df['created_at_month'].min(),
-                            max=geo_df['created_at_month'].max(),
-                            value=geo_df['created_at_month'].min(),
-                            marks={int(month): f'{calendar.month_name[int(month)][:3]} {str(year)[:4]}' for year, month in zip(
-                                geo_df['created_at_year'], geo_df['created_at_month'])},
-                            step=None,
+                        dcc.RangeSlider(
+                            id='range-slider',
+                            min=unix_time(geo_df['Date'].min()),
+                            max=unix_time(geo_df['Date'].max()),
+                            value=[unix_time(geo_df['Date'].min()), unix_time(geo_df['Date'].max())],
+                            marks=get_marks(geo_df['Date'].min(),geo_df['Date'].max()),
                             updatemode='drag',
-                        )
-                    ]
-                ),
-                html.Br(),
-                html.Br(),
-                html.Div(
-                    id="line-chart-outer",
-                    children=[
-                        html.P(
-                            id="line-chart-title",
-                            children="Number of Flood-Relevant Tweets"
+                            dots=False,
                         ),
                         dcc.Graph(
                             id="line-chart",
-                            figure=generate_line_chart(time_df)
+                            figure={
+                                "data": [],
+                                "layout": dict(
+                                    plot_bgcolor="#171b26",
+                                    paper_bgcolor="#171b26",
+                                ),
+                            },
                         )
                     ]
-                )
+                ),
             ]
         )
     ]
@@ -323,9 +321,11 @@ app.layout = html.Div(
 @app.callback(
     [
         Output('geo-map', 'figure'),
+        Output('line-chart', 'figure'),
+        Output('output-range-slider', 'children'),
         Output('counter', 'children')
     ], [
-        Input('month-slider', 'value'),
+        Input('range-slider', 'value'),
         Input('graph-select', 'value'),
         Input('style-select', 'value'),
         Input('loc-select', 'value'),
@@ -333,11 +333,14 @@ app.layout = html.Div(
         State('text-search', 'value')
     ],
 )
-def update_geo_map(month_select, graph_select, style_select, loc_select, n_clicks, keywords):
+def update_geo_map(range_select, graph_select, style_select, loc_select, n_clicks, keywords):
     
-    figure, filtered_data = generate_geo_map(geo_df, month_select, graph_select, style_select.lower(), loc_select, n_clicks, keywords)
+    geo_map, filtered_data = generate_geo_map(geo_df, range_select, graph_select, style_select.lower(), loc_select, n_clicks, keywords)
+    line_chart = generate_line_chart(filtered_data)
+    start = datetime.utcfromtimestamp(range_select[0]).strftime('%Y-%m-%d')
+    end = datetime.utcfromtimestamp(range_select[1]).strftime('%Y-%m-%d')
     
-    return figure, f'Tweets in selection: {len(filtered_data)}'
+    return geo_map, line_chart, f'Period: {start} - {end}', f'Tweets in selection: {len(filtered_data)}', 
 
 if __name__ == '__main__':
     app.run_server()
