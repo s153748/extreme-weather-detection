@@ -55,6 +55,8 @@ geo_df['lon'] = [geo_df['final_coords'][i][1] for i in range(len(geo_df))]
 
 # Group by date
 geo_df['Date'] = pd.to_datetime(geo_df['created_at']).dt.date
+count_dates = geo_df.groupby('Date').size().values
+time_data = filtered_data.drop_duplicates(subset="Date").assign(Count=count_dates).sort_values(by='Date').reset_index(drop=True)
 
 # Date slider prep
 geo_df['Date'] = pd.to_datetime(geo_df['Date'])
@@ -189,8 +191,9 @@ def generate_geo_map(geo_data, range_select, graph_select, style_select, loc_sel
                                 hover_data={'lat':False,'lon':False,'user_name':True,'user_location':True,'created_at':True,'source':True,'retweet_count':True},
                                 #color_discrete_sequence=['#a5d8e6'] if style_select=='dark' else ['#457582'],
                                 color_continuous_scale=colors,
-                               )
+                                )
         fig.update(layout_coloraxis_showscale=False)
+    
     elif graph_select == 'Hexagon map':
         fig = ff.create_hexbin_mapbox(filtered_data, 
                                       lat="lat", 
@@ -204,7 +207,7 @@ def generate_geo_map(geo_data, range_select, graph_select, style_select, loc_sel
                                       original_data_marker=dict(size=5, opacity=0.6, color='#a5d8e6' if style_select=='dark' else '#457582')
                                      )
     fig.update_layout(
-        margin=dict(l=0, r=0, t=27, b=0), 
+        margin=dict(l=0, r=0, t=27, b=10), 
         plot_bgcolor="#171b26",
         paper_bgcolor="#171b26",
         clickmode="event+select",
@@ -226,7 +229,7 @@ def generate_line_chart(filtered_data):
     count_dates = filtered_data.groupby('Date').size().values
     time_data = filtered_data.drop_duplicates(subset="Date").assign(Count=count_dates).sort_values(by='Date').reset_index(drop=True)
     
-    fig = px.line(time_data,
+    fig = px.line(filtered_data,
                   x='Date',
                   y='Count',
                   color_discrete_sequence=['#cbd2d3'],
