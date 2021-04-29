@@ -101,7 +101,6 @@ def build_control_panel():
                     )
                 ]
             ),
-            html.Br(),
             html.Div(
                 className="control-row-2",
                 children=[
@@ -118,7 +117,6 @@ def build_control_panel():
                     ),
                 ],
             ),
-            html.Br(),
             html.Div(
                 className="control-row-3",
                 children=[
@@ -137,7 +135,6 @@ def build_control_panel():
                     )
                 ],
             ),
-            html.Br(),
             html.Div(
                 className="control-row-4",
                 children=[
@@ -157,7 +154,6 @@ def build_control_panel():
                     )
                 ]
            ),
-           html.Br(),
            html.Div(f'Total number of Tweets: {total_count}',style={'color':'#7b7d8d'}),
            html.Div(id='counter',style={'color':'#7b7d8d'}),
            html.Div(id='output-range-slider',style={'color':'#7b7d8d'})
@@ -235,17 +231,22 @@ def generate_line_chart(filtered_data):
                   x='Date',
                   y='Count',
                   color_discrete_sequence=['#cbd2d3'],
-                  height=200)
-    fig.update_traces(line=dict(width=3))
+                  height=150)
+    fig.update_traces(line=dict(width=2))
     fig.update_yaxes(
         showgrid=False,
-        showline=True,
-        linecolor='#ffffff',
-        linewidth=1.5)
+        visible=False,
+    )
     fig.update_xaxes(
-        showgrid=False)
+        showgrid=False,
+        visible=False,
+    )
     fig.update_layout(
-        font=dict(color='#737a8d'))
+        margin=dict(l=10, r=10, t=27, b=0, pad=1), 
+        plot_bgcolor="#171b26",
+        paper_bgcolor="#171b26",
+        font=dict(color='#737a8d',size=10))
+    
     return fig
 
 # Set up the layout
@@ -272,7 +273,7 @@ app.layout = html.Div(
             ]
         ),
         html.Div(
-            id="right-column",
+            id="center-column",
             className="six columns",
             children=[
                 html.Br(),
