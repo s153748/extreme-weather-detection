@@ -55,8 +55,6 @@ geo_df['lon'] = [geo_df['final_coords'][i][1] for i in range(len(geo_df))]
 
 # Group by date
 geo_df['Date'] = pd.to_datetime(geo_df['created_at']).dt.date
-count_dates = geo_df.groupby('Date').size().values
-time_data = filtered_data.drop_duplicates(subset="Date").assign(Count=count_dates).sort_values(by='Date').reset_index(drop=True)
 
 # Date slider prep
 geo_df['Date'] = pd.to_datetime(geo_df['Date'])
