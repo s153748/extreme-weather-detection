@@ -56,11 +56,11 @@ count_dates = geo_df.groupby('Date').size().values
 time_df = geo_df.drop_duplicates(subset="Date").assign(Count=count_dates).sort_values(by='Date').reset_index(drop=True)
 
 # Set graph options
-graph_list = ['Point','Multi-colored point','Hexagon']
+graph_list = ['Scatter map','Hexagon map']
 style_list = ['Light','Dark','Streets','Outdoors','Satellite'] 
 loc_types = {'Geotagged coordinates':1,'Geotagged place':2,'Geoparsed from Tweet':3,'Registered user location':4} # localization methods
 loc_list = list(loc_types.keys())
-cmap = {1:'#ffffcc',2:'#a1dab4',3:'#41b6c4',4:'#225ea8'} # color for each localization method
+cmap = {1:'#ffffcc',2:'#a1dab4',3:'#41b6c4',4:'#225ea8'} # localization method colors
 
 def build_control_panel():
     return html.Div(
@@ -116,7 +116,8 @@ def build_control_panel():
                                 id='loc-select',
                                 options=[{"label": i, "value": i} for i in loc_list],
                                 multi=True,
-                                value=loc_list
+                                value=loc_list,
+                                placeholder='Select'
                             )
                         ]
                     )
@@ -143,7 +144,7 @@ def build_control_panel():
                 ]
            ),
            html.Br(),
-           html.Div(f'Total number of relevant Tweets: {total_count}',style={'color':'#7b7d8d'}),
+           html.Div(f'Total number of flood-relevant Tweets: {total_count}',style={'color':'#7b7d8d'}),
            html.Div(id='counter',style={'color':'#7b7d8d'})
         ],
     )
@@ -164,39 +165,33 @@ def generate_geo_map(geo_data, month_select, graph_select, style_select, loc_sel
     if len(filtered_data) == 0: # no matches
         empty=pd.DataFrame([0, 0]).T
         empty.columns=['lat','long']
-        fig = px.scatter_mapbox(empty, lat="lat", lon="long", color_discrete_sequence=['#cbd2d3'])
+        fig = px.scatter_mapbox(empty, lat="lat", lon="long", color_discrete_sequence=['#cbd2d3'], opacity=0)
     
-    elif graph_select == 'Point':
+    elif graph_select == 'Scatter map':
         fig = px.scatter_mapbox(filtered_data, 
                                 lat="lat", 
                                 lon="lon",
+                                color='final_coords_type', # localization methods
                                 hover_name='full_text',
                                 hover_data={'lat':False,'lon':False,'user_name':True,'user_location':True,'created_at':True,'source':True,'retweet_count':True},
-                                color_discrete_sequence=['#a5d8e6'] if style_select=='dark' else ['#457582'],
+                                #color_discrete_sequence=['#a5d8e6'] if style_select=='dark' else ['#457582'],
+                                color_discrete_sequence=colors,
                                )
-    elif graph_select == 'Hexagon':
+        fig.update_traces(showscale=False)
+    elif graph_select == 'Hexagon map':
         fig = ff.create_hexbin_mapbox(filtered_data, 
                                       lat="lat", 
                                       lon="lon",
-                                      nx_hexagon=25, # int(max(25,len(filtered_data)/10)), 
+                                      nx_hexagon=50, # int(max(25,len(filtered_data)/10)), 
                                       opacity=0.6, 
-                                      labels={"color": "Relevant Tweets"},
+                                      labels={"color": "# of Tweets"},
                                       min_count=1, 
                                       color_continuous_scale='teal',
                                       show_original_data=True, 
                                       original_data_marker=dict(size=5, opacity=0.6, color='#a5d8e6' if style_select=='dark' else '#457582')
                                      )
-    else: # colors of different localization methods
-            fig = px.scatter_mapbox(filtered_data, 
-                                    lat="lat", 
-                                    lon="lon",
-                                    color='final_coords_type',
-                                    hover_name='full_text',
-                                    hover_data={'lat':False,'lon':False,'user_name':True,'user_location':True,'created_at':True,'source':True,'retweet_count':True},
-                                    color_continuous_scale=colors,
-                                   )
     fig.update_layout(
-        margin=dict(l=0, r=0, t=25, b=0), 
+        margin=dict(l=0, r=0, t=30, b=0), 
         plot_bgcolor="#171b26",
         paper_bgcolor="#171b26",
         clickmode="event+select",
@@ -266,7 +261,7 @@ app.layout = html.Div(
         ),
         html.Div(
             id="left-column",
-            className="four columns",
+            className="three columns",
             children=[
                 build_control_panel()
             ]
@@ -278,7 +273,7 @@ app.layout = html.Div(
                 html.Br(),
                 html.P(
                     id="map-title",
-                    children="Spatio-Temporal Development of Relevant Tweets"
+                    children="Spatio-Temporal Development of Flood-Relevant Tweets"
                 ),
                 html.Div( 
                     id="geo-map-outer",
