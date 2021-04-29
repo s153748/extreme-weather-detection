@@ -56,7 +56,7 @@ count_dates = geo_df.groupby('Date').size().values
 time_df = geo_df.drop_duplicates(subset="Date").assign(Count=count_dates).sort_values(by='Date').reset_index(drop=True)
 
 # Set graph options
-graph_list = ['Point map','Hexagon map']
+graph_list = ['Point map','Hexagon map','Colored point map']
 style_list = ['Light','Dark','Streets','Outdoors','Satellite'] 
 loc_types = {'Geotagged coordinates':1,'Geotagged place':2,'Geoparsed from Tweet':3,'Registered user location':4}
 loc_list = list(loc_types.keys())
