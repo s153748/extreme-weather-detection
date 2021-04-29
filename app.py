@@ -60,7 +60,7 @@ graph_list = ['Point map','Hexagon map','Colored point map']
 style_list = ['Light','Dark','Streets','Outdoors','Satellite'] 
 loc_types = {'Geotagged coordinates':1,'Geotagged place':2,'Geoparsed from Tweet':3,'Registered user location':4}
 loc_list = list(loc_types.keys())
-cmap = {1:'#ffffcc',2:'#a1dab4',3:'#41b6c4',4:'#225ea8'}
+cmap = [1:'#ffffcc',2:'#a1dab4',3:'#41b6c4',4:'#225ea8']
 
 def build_control_panel():
     return html.Div(
@@ -111,7 +111,7 @@ def build_control_panel():
                     html.Div(
                         id="loc-select-outer",
                         children=[
-                            html.Label("Select Localization Method"),
+                            html.Label("Select Localization Methods"),
                             dcc.Dropdown(
                                 id='loc-select',
                                 options=[{"label": i, "value": i} for i in loc_list],
