@@ -227,7 +227,7 @@ def generate_line_chart(filtered_data):
     count_dates = filtered_data.groupby('Date').size().values
     time_data = filtered_data.drop_duplicates(subset="Date").assign(Count=count_dates).sort_values(by='Date').reset_index(drop=True)
     
-    fig = px.line(filtered_data,
+    fig = px.line(time_data,
                   x='Date',
                   y='Count',
                   color_discrete_sequence=['#cbd2d3'],
