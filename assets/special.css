@@ -16,7 +16,7 @@ body {
 .banner {
   height: 3rem;
   margin-bottom: 0rem;
-  padding: 2rem 2rem 0rem;
+  padding: 2rem 2rem 0rem 2rem;
   display: flex;
   flex-direction: row nowrap;
   align-items: center;
