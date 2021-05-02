@@ -206,7 +206,7 @@ def generate_geo_map(geo_data, range_select, graph_select, style_select, loc_sel
                                       original_data_marker=dict(size=5, opacity=0.6, color='#a5d8e6' if style_select=='dark' else '#457582')
                                      )
     fig.update_layout(
-        margin=dict(l=0, r=0, t=27, b=10), 
+        margin=dict(l=0, r=0, t=0, b=0), 
         plot_bgcolor="#171b26",
         paper_bgcolor="#171b26",
         clickmode="event+select",
@@ -242,7 +242,7 @@ def generate_line_chart(filtered_data):
         visible=False,
     )
     fig.update_layout(
-        margin=dict(l=30, r=30, t=27, b=0), 
+        margin=dict(l=25, r=25, t=0, b=0), 
         plot_bgcolor="#171b26",
         paper_bgcolor="#171b26",
         font=dict(color='#737a8d',size=10))
