@@ -153,6 +153,7 @@ def build_control_panel():
                     )
                 ]
            ),
+           html.Br(),
            html.Div(f'Total number of Tweets: {total_count}',style={'color':'#7b7d8d'}),
            html.Div(id='counter',style={'color':'#7b7d8d'}),
            html.Div(id='output-range-slider',style={'color':'#7b7d8d'})
@@ -299,7 +300,7 @@ app.layout = html.Div(
                             max=unix_time(geo_df['Date'].max()),
                             value=[unix_time(geo_df['Date'].min()), unix_time(geo_df['Date'].max())],
                             marks=get_marks(geo_df['Date'].min(),geo_df['Date'].max()),
-                            updatemode='drag',
+                            updatemode='mouseup',
                             dots=False,
                         ),
                         dcc.Graph(
