@@ -32,18 +32,7 @@ DATA_PATH = pathlib.Path(__file__).parent.joinpath("data")
 df = pd.read_csv(DATA_PATH.joinpath("final_tweets.csv")) 
 
 # Data prep
-for i in range(len(df)):
-    try:
-        df['final_coords'][i] = eval(df['final_coords'][i])
-    except:
-        df['final_coords'][i] = np.nan
-df = df[~df['final_coords'].isna()].reset_index(drop=True)
 total_count = len(df)
-
-# Group by date
-df['date'] = pd.to_datetime(df['created_at']).dt.date
-
-# Date slider prep
 df['date'] = pd.to_datetime(df['date'])
 def unix_time(dt):
     return (dt-datetime.utcfromtimestamp(0)).total_seconds() 
