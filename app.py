@@ -20,11 +20,7 @@ from dateutil.relativedelta import relativedelta
 
 # Initiate app
 app = dash.Dash(
-    __name__,
-    meta_tags=[{
-            "name": "viewport",
-            "content": "width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no",
-    }],
+    __name__, meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"}]
 )
 server = app.server
 app.config.suppress_callback_exceptions = True
@@ -189,22 +185,21 @@ def generate_geo_map(geo_data, range_select, graph_select, style_select, loc_sel
                                 hover_name='full_text',
                                 hover_data={'lat':False,'lon':False,'user_name':True,'user_location':True,'created_at':True,'source':True,'retweet_count':True},
                                 #color_discrete_sequence=['#a5d8e6'] if style_select=='dark' else ['#457582'],
-                                color_continuous_scale=colors,
-                                )
+                                #color_continuous_scale=colors,
+                                color_discrete_map=cmap)
         fig.update(layout_coloraxis_showscale=False)
     
     elif graph_select == 'Hexagon map':
         fig = ff.create_hexbin_mapbox(filtered_data, 
                                       lat="lat", 
                                       lon="lon",
-                                      nx_hexagon=75, # int(max(25,len(filtered_data)/10)), 
+                                      nx_hexagon=60, # int(max(25,len(filtered_data)/10)), 
                                       opacity=0.6, 
                                       labels={"color": "Tweets"},
                                       min_count=1, 
                                       color_continuous_scale='teal',
                                       show_original_data=True, 
-                                      original_data_marker=dict(size=5, opacity=0.6, color='#a5d8e6' if style_select=='dark' else '#457582')
-                                     )
+                                      original_data_marker=dict(size=5, opacity=0.6, color='#a5d8e6' if style_select=='dark' else '#457582'))
     fig.update_layout(
         margin=dict(l=0, r=0, t=0, b=0), 
         plot_bgcolor="#171b26",
@@ -212,14 +207,11 @@ def generate_geo_map(geo_data, range_select, graph_select, style_select, loc_sel
         clickmode="event+select",
         hovermode="closest",
         showlegend=False,
-        mapbox=go.layout.Mapbox(
-            accesstoken=mapbox_access_token,
-            center=go.layout.mapbox.Center(lat=0, lon=0),
-            zoom=1,
-            style=style_select,
-        ),
-        font=dict(color='#737a8d')
-    )
+        mapbox=go.layout.Mapbox(accesstoken=mapbox_access_token,
+                                center=go.layout.mapbox.Center(lat=0, lon=0),
+                                zoom=1,
+                                style=style_select),
+        font=dict(color='#737a8d'))
         
     return fig, filtered_data
 
@@ -227,25 +219,18 @@ def generate_line_chart(filtered_data):
     
     count_dates = filtered_data.groupby('Date').size().values
     time_data = filtered_data.drop_duplicates(subset="Date").assign(Count=count_dates).sort_values(by='Date').reset_index(drop=True)
-    
     fig = px.line(time_data,
                   x='Date',
                   y='Count',
                   color_discrete_sequence=['#cbd2d3'],
-                  height=150)
+                  height=100)
     fig.update_traces(line=dict(width=2))
-    fig.update_yaxes(
-        showgrid=False,
-    )
-    fig.update_xaxes(
-        showgrid=False,
-        visible=False,
-    )
-    fig.update_layout(
-        margin=dict(l=25, r=25, t=0, b=0), 
-        plot_bgcolor="#171b26",
-        paper_bgcolor="#171b26",
-        font=dict(color='#737a8d',size=10))
+    fig.update_yaxes(showgrid=False)
+    fig.update_xaxes(showgrid=False, visible=False)
+    fig.update_layout(margin=dict(l=25, r=25, t=0, b=0), 
+                      plot_bgcolor="#171b26",
+                      paper_bgcolor="#171b26",
+                      font=dict(color='#737a8d',size=10))
     
     return fig
 
