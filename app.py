@@ -16,6 +16,8 @@ import calendar
 import datetime
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import nltk 
+from nltk import FreqDist
 
 # Initiate app
 app = dash.Dash(
@@ -34,6 +36,7 @@ df = pd.read_csv(DATA_PATH.joinpath("final_tweets.csv"))
 # Data prep
 total_count = len(df)
 df['date'] = pd.to_datetime(df['date'])
+df['hashtags'] = [literal_eval(s) for s in df['hashtags']]
 
 # Set graph options
 graph_list = ['Scatter map','Hexagon map']
@@ -160,7 +163,7 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, loc_selec
                                 lon="lon",
                                 color='localization', 
                                 hover_name='full_text',
-                                hover_data={'lat':False,'lon':False,'user_name':True,'localization':True,'user_location':True,'created_at':True,'source':True,'retweet_count':True},
+                                hover_data={'lat':False,'lon':False,'localization':True,'user_location':True,'user_name':True,'created_at':True,'source':True,'retweet_count':True},
                                 color_discrete_map={'Geotagged coordinates':'#253494','Geotagged place':'#2c7fb8','Geoparsed from Tweet':'#41b6c4','Registered user location':'#c7e9b4'})   
     
     elif graph_select == 'Hexagon map':
@@ -169,7 +172,7 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, loc_selec
                                       lon="lon",
                                       nx_hexagon=50, # int(max(25,len(filtered_data)/10)), 
                                       opacity=0.6, 
-                                      labels={"color": "Count"},
+                                      labels={"color": "count"},
                                       min_count=1, 
                                       color_continuous_scale='teal',
                                       show_original_data=True, 
@@ -183,7 +186,7 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, loc_selec
         showlegend=False,
         mapbox=go.layout.Mapbox(accesstoken=mapbox_access_token,
                                 center=go.layout.mapbox.Center(lat=40.4168, lon=-3.7037),
-                                zoom=0.9,
+                                zoom=0.5,
                                 style=style_select),
         font=dict(color='#737a8d'))
         
@@ -192,19 +195,37 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, loc_selec
 def generate_line_chart(filtered_df):
     
     count_dates = filtered_df.groupby('date').size().values
-    time_df = filtered_df.drop_duplicates(subset='date').assign(Count=count_dates).sort_values(by='date').reset_index(drop=True)
+    time_df = filtered_df.drop_duplicates(subset='date').assign(count=count_dates).sort_values(by='date').reset_index(drop=True)
     fig = px.line(time_df,
                   x='date',
-                  y='Count',
+                  y='count',
                   color_discrete_sequence=['#cbd2d3'],
-                  height=90)
+                  height=80)
     fig.update_traces(line=dict(width=2))
     fig.update_yaxes(showgrid=False)
-    fig.update_xaxes(showgrid=False, visible=False)
+    fig.update_xaxes(showgrid=False)
     fig.update_layout(margin=dict(l=10, r=10, t=0, b=0), 
                       plot_bgcolor="#171b26",
                       paper_bgcolor="#171b26",
                       font=dict(color='#737a8d',size=10))
+    
+    return fig
+
+def generate_treemap(filtered_df):
+    
+    k = 25
+    hashtag_list = [hashtag for sublist in filtered_df['hashtags'].tolist() for hashtag in sublist]
+    freq_df = pd.DataFrame(list(FreqDist(hashtag_list).items()), columns = ["hashtag","occurrence"]) 
+    freq_df = freq_df.sort_values('occurrence',ascending=False)
+    fig = go.Figure(go.Treemap(
+                        labels=freq_df['hashtag'][:k].tolist(),
+                        values=freq_df['occurrence'][:k].tolist(),
+                        parents=['']*k,
+                        marker_colorscale=px.colors.sequential.Teal,
+                        hovertemplate='<b>%{label} </b> <br> occurrences: %{value}<extra></extra>',
+                   )
+    )
+    fig.update_layout(margin=dict(l=0, r=0, t=0, b=0))
     
     return fig
 
@@ -264,15 +285,33 @@ app.layout = html.Div(
                         dcc.Graph(
                             id="line-chart",
                             figure={
-                                "data": [],
-                                "layout": dict(
-                                    plot_bgcolor="#171b26",
-                                    paper_bgcolor="#171b26",
-                                ),
+                                "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26"),
                             },
                         )
                     ]
                 ),
+            ]
+        ),
+        html.Div(
+            id="right-column",
+            className="six columns",
+            children=[
+                html.Br(),
+                html.P(
+                    id="treemap-title",
+                    children="Top hashtags"
+                ),
+                html.Div( 
+                    id="treemap-outer",
+                    children=[
+                        dcc.Graph(
+                            id='treemap',
+                            figure={
+                                "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26"),
+                            },
+                        )
+                    ]
+                )
             ]
         )
     ]
@@ -282,6 +321,7 @@ app.layout = html.Div(
     [
         Output('geo-map', 'figure'),
         Output('line-chart', 'figure'),
+        Output('treemap', 'figure'),
         Output('output-range-slider', 'children'),
         Output('counter', 'children')
     ], [
@@ -297,8 +337,9 @@ def update_geo_map(range_select, graph_select, style_select, loc_select, n_click
     
     geo_map, filtered_df, start, end = generate_geo_map(df, range_select, graph_select, style_select.lower(), loc_select, n_clicks, keywords)
     line_chart = generate_line_chart(filtered_df)
+    treemap = generate_treemap(filtered_df)
     
-    return geo_map, line_chart, f'Period: {start} - {end}', f'Tweets in selection: {len(filtered_df)}', 
+    return geo_map, line_chart, treemap, f'Period: {start} - {end}', f'Tweets in selection: {len(filtered_df)}', 
 
 if __name__ == '__main__':
     app.run_server()
