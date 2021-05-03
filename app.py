@@ -34,6 +34,12 @@ df = pd.read_csv(DATA_PATH.joinpath("final_tweets.csv"))
 # Data prep
 total_count = len(df)
 df['date'] = pd.to_datetime(df['date'])
+
+# Set graph options
+graph_list = ['Scatter map','Hexagon map']
+style_list = ['Light','Dark','Streets','Outdoors','Satellite'] 
+loc_list = df.localization.unique()
+
 def unix_time(dt):
     return (dt-datetime.utcfromtimestamp(0)).total_seconds() 
 
@@ -44,11 +50,6 @@ def get_marks(start, end):
         result.append(current)
         current += relativedelta(months=1)
     return {int(unix_time(m)): (str(m.strftime('%Y-%m'))) for m in result}
-
-# Set graph options
-graph_list = ['Scatter map','Hexagon map']
-style_list = ['Light','Dark','Streets','Outdoors','Satellite'] 
-loc_list = df.localization.unique()
 
 def build_control_panel():
     return html.Div(
@@ -159,7 +160,7 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, loc_selec
                                 lon="lon",
                                 color='localization', 
                                 hover_name='full_text',
-                                hover_data={'lat':False,'lon':False,'user_name':True,'user_location':True,'created_at':True,'source':True,'retweet_count':True},
+                                hover_data={'lat':False,'lon':False,'user_name':True,'localization':True,'user_location':True,'created_at':True,'source':True,'retweet_count':True},
                                 color_discrete_map={'Geotagged coordinates':'#253494','Geotagged place':'#2c7fb8','Geoparsed from Tweet':'#41b6c4','Registered user location':'#c7e9b4'})   
     
     elif graph_select == 'Hexagon map':
@@ -181,17 +182,17 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, loc_selec
         hovermode="closest",
         showlegend=False,
         mapbox=go.layout.Mapbox(accesstoken=mapbox_access_token,
-                                center=go.layout.mapbox.Center(lat=0, lon=0),
-                                zoom=1,
+                                center=go.layout.mapbox.Center(lat=40.4168, lon=-3.7037),
+                                zoom=0.9,
                                 style=style_select),
         font=dict(color='#737a8d'))
         
     return fig, geo_df, start, end
 
-def generate_line_chart(df):
+def generate_line_chart(filtered_df):
     
-    count_dates = df.groupby('date').size().values
-    time_df = df.drop_duplicates(subset="date").assign(Count=count_dates).sort_values(by='date').reset_index(drop=True)
+    count_dates = filtered_df.groupby('date').size().values
+    time_df = filtered_df.drop_duplicates(subset='date').assign(Count=count_dates).sort_values(by='date').reset_index(drop=True)
     fig = px.line(time_df,
                   x='date',
                   y='Count',
@@ -295,7 +296,7 @@ app.layout = html.Div(
 def update_geo_map(range_select, graph_select, style_select, loc_select, n_clicks, keywords):
     
     geo_map, filtered_df, start, end = generate_geo_map(df, range_select, graph_select, style_select.lower(), loc_select, n_clicks, keywords)
-    line_chart, start, end = generate_line_chart(filtered_df)
+    line_chart = generate_line_chart(filtered_df)
     
     return geo_map, line_chart, f'Period: {start} - {end}', f'Tweets in selection: {len(filtered_df)}', 
 
