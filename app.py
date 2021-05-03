@@ -294,10 +294,10 @@ app.layout = html.Div(
 )
 def update_geo_map(range_select, graph_select, style_select, loc_select, n_clicks, keywords):
     
-    geo_map, filtered_df, start, end = generate_geo_map(geo_df, range_select, graph_select, style_select.lower(), loc_select, n_clicks, keywords)
+    geo_map, filtered_df, start, end = generate_geo_map(df, range_select, graph_select, style_select.lower(), loc_select, n_clicks, keywords)
     line_chart, start, end = generate_line_chart(filtered_df)
     
-    return geo_map, line_chart, f'Period: {start} - {end}', f'Tweets in selection: {len(filtered_data)}', 
+    return geo_map, line_chart, f'Period: {start} - {end}', f'Tweets in selection: {len(filtered_df)}', 
 
 if __name__ == '__main__':
     app.run_server()
