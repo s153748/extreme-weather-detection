@@ -12,7 +12,6 @@ from ast import literal_eval
 import pandas as pd
 import numpy as np
 import pathlib
-import textwrap
 import calendar
 import datetime
 from datetime import datetime
@@ -30,30 +29,22 @@ mapbox_access_token = open(".mapbox_token.txt").read()
 
 # Load data
 DATA_PATH = pathlib.Path(__file__).parent.joinpath("data") 
-df = pd.read_csv(DATA_PATH.joinpath("final_coords_tweets.csv")) 
-
-wrapper = textwrap.TextWrapper(width=50)
+df = pd.read_csv(DATA_PATH.joinpath("final_tweets.csv")) 
 
 # Data prep
 for i in range(len(df)):
     try:
         df['final_coords'][i] = eval(df['final_coords'][i])
-        df['full_text'][i] = "<br>".join(wrapper.wrap(text=df['full_text'][i]))
     except:
         df['final_coords'][i] = np.nan
-geo_df = df[~df['final_coords'].isna()].reset_index(drop=True)
-geo_df = geo_df[geo_df['relevant'] == 1].reset_index(drop=True)
-total_count = len(geo_df)
-
-# Get coordinates
-geo_df['lat'] = [geo_df['final_coords'][i][0] for i in range(len(geo_df))]
-geo_df['lon'] = [geo_df['final_coords'][i][1] for i in range(len(geo_df))]
+df = df[~df['final_coords'].isna()].reset_index(drop=True)
+total_count = len(df)
 
 # Group by date
-geo_df['Date'] = pd.to_datetime(geo_df['created_at']).dt.date
+df['date'] = pd.to_datetime(df['created_at']).dt.date
 
 # Date slider prep
-geo_df['Date'] = pd.to_datetime(geo_df['Date'])
+df['date'] = pd.to_datetime(df['date'])
 def unix_time(dt):
     return (dt-datetime.utcfromtimestamp(0)).total_seconds() 
 
@@ -68,9 +59,7 @@ def get_marks(start, end):
 # Set graph options
 graph_list = ['Scatter map','Hexagon map']
 style_list = ['Light','Dark','Streets','Outdoors','Satellite'] 
-loc_types = {'Geotagged coordinates':1,'Geotagged place':2,'Geoparsed from Tweet':3,'Registered user location':4} # localization methods
-loc_list = list(loc_types.keys())
-cmap = {1:'#253494',2:'#2c7fb8',3:'#41b6c4',4:'#c7e9b4'} # localization method colors
+loc_list = df.localization.unique()
 
 def build_control_panel():
     return html.Div(
@@ -156,46 +145,41 @@ def build_control_panel():
         ],
     )
 
-def generate_geo_map(geo_data, range_select, graph_select, style_select, loc_select, n_clicks, keywords):
+def generate_geo_map(geo_df, range_select, graph_select, style_select, loc_select, n_clicks, keywords):
     
     if n_clicks > 0 and keywords.strip():
         keywords = keywords.split(', ')
         for keyword in keywords:
-            geo_data = geo_data[geo_data['full_text'].str.contains(keyword, case=False)]
+            geo_df = geo_df[geo_df['full_text'].str.contains(keyword, case=False)]
     
-    selected = [loc_types[loc_select[i]] for i in range(len(loc_select))] 
-    geo_data = geo_data[geo_data['final_coords_type'].isin(selected)]
-    colors = [cmap[selected[i]] for i in range(len(selected))]
+    geo_df = geo_df[geo_df['localization'].isin(loc_select)]
     
     start = datetime.utcfromtimestamp(range_select[0]).strftime('%Y-%m-%d')
     end = datetime.utcfromtimestamp(range_select[1]).strftime('%Y-%m-%d')
-    geo_data = geo_data[geo_data['Date'] >= start]
-    filtered_data = geo_data[geo_data['Date'] <= end]    
+    geo_df = geo_df[geo_df['date'] >= start]
+    geo_df = geo_df[geo_df['date'] <= end]
     
-    if len(filtered_data) == 0: # no matches
+    if len(geo_df) == 0: # no matches
         empty=pd.DataFrame([0, 0]).T
         empty.columns=['lat','long']
         fig = px.scatter_mapbox(empty, lat="lat", lon="long", color_discrete_sequence=['#cbd2d3'], opacity=0)
     
     elif graph_select == 'Scatter map':
-        fig = px.scatter_mapbox(filtered_data, 
+        fig = px.scatter_mapbox(geo_df, 
                                 lat="lat", 
                                 lon="lon",
-                                color='final_coords_type', # localization methods
+                                color='localiztion', 
                                 hover_name='full_text',
                                 hover_data={'lat':False,'lon':False,'user_name':True,'user_location':True,'created_at':True,'source':True,'retweet_count':True},
-                                #color_discrete_sequence=['#a5d8e6'] if style_select=='dark' else ['#457582'],
-                                #color_continuous_scale=colors,
-                                color_discrete_map=cmap)
-        fig.update(layout_coloraxis_showscale=False)
+                                color_discrete_map={'Geotagged coordinates':'#253494','Geotagged place':'#2c7fb8','Geoparsed from Tweet':'#41b6c4','Registered user location':'#c7e9b4'})   
     
     elif graph_select == 'Hexagon map':
-        fig = ff.create_hexbin_mapbox(filtered_data, 
+        fig = ff.create_hexbin_mapbox(geo_df, 
                                       lat="lat", 
                                       lon="lon",
-                                      nx_hexagon=60, # int(max(25,len(filtered_data)/10)), 
+                                      nx_hexagon=50, # int(max(25,len(filtered_data)/10)), 
                                       opacity=0.6, 
-                                      labels={"color": "Tweets"},
+                                      labels={"color": "Count"},
                                       min_count=1, 
                                       color_continuous_scale='teal',
                                       show_original_data=True, 
@@ -213,21 +197,21 @@ def generate_geo_map(geo_data, range_select, graph_select, style_select, loc_sel
                                 style=style_select),
         font=dict(color='#737a8d'))
         
-    return fig, filtered_data
+    return fig, geo_df, start, end
 
-def generate_line_chart(filtered_data):
+def generate_line_chart(df):
     
-    count_dates = filtered_data.groupby('Date').size().values
-    time_data = filtered_data.drop_duplicates(subset="Date").assign(Count=count_dates).sort_values(by='Date').reset_index(drop=True)
-    fig = px.line(time_data,
-                  x='Date',
+    count_dates = df.groupby('date').size().values
+    time_df = df.drop_duplicates(subset="date").assign(Count=count_dates).sort_values(by='date').reset_index(drop=True)
+    fig = px.line(time_df,
+                  x='date',
                   y='Count',
                   color_discrete_sequence=['#cbd2d3'],
-                  height=100)
+                  height=90)
     fig.update_traces(line=dict(width=2))
     fig.update_yaxes(showgrid=False)
     fig.update_xaxes(showgrid=False, visible=False)
-    fig.update_layout(margin=dict(l=25, r=25, t=0, b=0), 
+    fig.update_layout(margin=dict(l=10, r=10, t=0, b=0), 
                       plot_bgcolor="#171b26",
                       paper_bgcolor="#171b26",
                       font=dict(color='#737a8d',size=10))
@@ -281,12 +265,11 @@ app.layout = html.Div(
                         ),
                         dcc.RangeSlider(
                             id='range-slider',
-                            min=unix_time(geo_df['Date'].min()),
-                            max=unix_time(geo_df['Date'].max()),
-                            value=[unix_time(geo_df['Date'].min()), unix_time(geo_df['Date'].max())],
-                            marks=get_marks(geo_df['Date'].min(),geo_df['Date'].max()),
+                            min=unix_time(df['date'].min()),
+                            max=unix_time(df['date'].max()),
+                            value=[unix_time(df['date'].min()), unix_time(df['date'].max())],
+                            marks=get_marks(df['date'].min(),df['date'].max()),
                             updatemode='mouseup',
-                            dots=False,
                         ),
                         dcc.Graph(
                             id="line-chart",
@@ -322,10 +305,8 @@ app.layout = html.Div(
 )
 def update_geo_map(range_select, graph_select, style_select, loc_select, n_clicks, keywords):
     
-    geo_map, filtered_data = generate_geo_map(geo_df, range_select, graph_select, style_select.lower(), loc_select, n_clicks, keywords)
-    line_chart = generate_line_chart(filtered_data)
-    start = datetime.utcfromtimestamp(range_select[0]).strftime('%Y-%m-%d')
-    end = datetime.utcfromtimestamp(range_select[1]).strftime('%Y-%m-%d')
+    geo_map, filtered_df, start, end = generate_geo_map(geo_df, range_select, graph_select, style_select.lower(), loc_select, n_clicks, keywords)
+    line_chart, start, end = generate_line_chart(filtered_df)
     
     return geo_map, line_chart, f'Period: {start} - {end}', f'Tweets in selection: {len(filtered_data)}', 
 
