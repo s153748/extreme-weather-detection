@@ -46,10 +46,6 @@ body {
     min-height: calc(100vh - 5.5rem);
 }
 
-#center-column, #right-column {
-    background-color: #171b26;
-}
-
 .geo-map > div, .line-chart > div, .treemap > div {
     height: 100% !important;
     width: 100% !important;
@@ -57,10 +53,6 @@ body {
 
 .draglayer {
     cursor: pointer !important;
-}
-
-#graph-select-outer, #style-select-outer, #loc-select-outer, #text-search-outer {
-  width: 100%;
 }
 
 *.Select-control, Select--single, .Select-multi-value-wrapper, .Select-value, .Select-value-label {
@@ -84,6 +76,10 @@ span.Select-clear-zone {
 .Select-menu-outer div:hover {
   color: white !important;
   cursor: pointer;
+}
+
+#graph-select-outer, #style-select-outer, #loc-select-outer, #text-search-outer {
+  width: 100%;
 }
 
 #graph-select-outer > label, #style-select-outer > label, #loc-select-outer > label, #text-search-outer > label {
