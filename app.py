@@ -184,7 +184,6 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
                                 hover_name='full_text',
                                 hover_data={'lat':False,'lon':False,'localization':True,'user_location':True,'user_name':True,'created_at':True,'source':True,'retweet_count':True},
                                 color_discrete_sequence=colors)
-        fig.update_coloraxes(colorbar_title_text=color_select)
 
     elif graph_select == 'Hexagon map':
         fig = ff.create_hexbin_mapbox(geo_df, 
@@ -210,23 +209,24 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
         
     return fig, geo_df, start, end
 
-def generate_line_chart(filtered_df):
+def generate_histogram(filtered_df, range_select):
     
     count_dates = filtered_df.groupby('date').size().values
     time_df = filtered_df.drop_duplicates(subset='date').assign(count=count_dates).sort_values(by='date').reset_index(drop=True)
-    fig = px.line(time_df,
-                  x='date',
-                  y='count',
-                  color_discrete_sequence=['#cbd2d3'],
-                  height=80)
-    fig.update_traces(line=dict(width=2))
-    fig.update_yaxes(showgrid=False)
-    fig.update_xaxes(showgrid=False)
-    fig.update_layout(margin=dict(l=10, r=10, t=0, b=0), 
+    fig = px.histogram(time_df, 
+                       x="date", 
+                       y="count",
+                       range_x=[range_select[0],range_select[1]],
+                       nbins=len(time_df)**2,
+                       height=150)
+    fig.update_xaxes(showgrid=False,title='Date',tickformat="%d %b %Y")
+    fig.update_yaxes(showgrid=False,title='Count')
+    fig.update_layout(margin=dict(l=10, r=10, t=10, b=10), 
                       plot_bgcolor="#171b26",
                       paper_bgcolor="#171b26",
-                      font=dict(color='#737a8d',size=10))
-    
+                      font=dict(color='#737a8d',size=10),
+                      bargap=0.05)
+
     return fig
 
 def generate_treemap(filtered_df):
@@ -301,7 +301,7 @@ app.layout = html.Div(
                             updatemode='mouseup',
                         ),
                         dcc.Graph(
-                            id="line-chart",
+                            id="histogram",
                             figure={
                                 "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26"),
                             },
@@ -339,7 +339,7 @@ app.layout = html.Div(
 @app.callback(
     [
         Output('geo-map', 'figure'),
-        Output('line-chart', 'figure'),
+        Output('histogram', 'figure'),
         Output('treemap', 'figure'),
         Output('output-range-slider', 'children'),
         Output('counter', 'children')
@@ -353,10 +353,10 @@ app.layout = html.Div(
         State('text-search', 'value')
     ],
 )
-def update_geo_map(range_select, graph_select, style_select, color_select, loc_select, n_clicks, keywords):
+def update_visualizations(range_select, graph_select, style_select, color_select, loc_select, n_clicks, keywords):
     
     geo_map, filtered_df, start, end = generate_geo_map(df, range_select, graph_select, style_select.lower(), color_select, loc_select, n_clicks, keywords)
-    line_chart = generate_line_chart(filtered_df)
+    line_chart = generate_histogram(filtered_df, range_select)
     treemap = generate_treemap(filtered_df)
     
     return geo_map, line_chart, treemap, f'Period: {start} - {end}', f'Tweets in selection: {len(filtered_df)}'
