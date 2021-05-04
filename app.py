@@ -44,7 +44,7 @@ graph_list = ['Scatter map','Hexagon map']
 style_list = ['Light','Dark','Streets','Outdoors','Satellite'] 
 color_list = ['Localization','Retweeted']
 loc_list = df.localization.unique()
-colors = ['#003f5c', '#7a5195', '#ef5675', '#ffa600']
+colors = ['#003f5c', '#ef5675', '#ffa600', '#7a5195']
 
 def unix_time(dt):
     return (dt-datetime.utcfromtimestamp(0)).total_seconds() 
@@ -196,38 +196,36 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
                                       color_continuous_scale='GnBu')
 
     fig.update_layout(
-        margin=dict(l=5, r=0, t=0, b=0),
+        margin=dict(l=15, r=0, t=0, b=0),
         plot_bgcolor="#171b26",
         paper_bgcolor="#171b26",
         clickmode="event+select",
         hovermode="closest",
         mapbox=go.layout.Mapbox(accesstoken=mapbox_access_token,
                                 center=go.layout.mapbox.Center(lat=40.4168, lon=-3.7037),
-                                zoom=0.6,
                                 style=style_select),
         font=dict(color='#737a8d'))
         
     return fig, geo_df, start, end
 
-def generate_histogram(filtered_df, start, end):
+def generate_barchart(filtered_df, start, end):
     
     count_dates = filtered_df.groupby('date').size().values
     time_df = filtered_df.drop_duplicates(subset='date').assign(count=count_dates).sort_values(by='date').reset_index(drop=True)
-    fig = px.histogram(time_df, 
-                       x="date", 
-                       y="count",
-                       range_x=[start,end],
-                       nbins=len(time_df)**2,
-                       height=100,
-                       color_discrete_sequence=['#cbd2d3'],)
+    fig = px.bar(time_df, 
+                 x="date", 
+                 y="count",
+                 range_x=[start,end],
+                 height=100,
+                 color_discrete_sequence=['#cbd2d3'])
     fig.update_traces(hovertemplate ='<b>%{x} </b><br>Count: %{y}') 
     fig.update_xaxes(showgrid=False,title='Date',tickformat="%d %b")
     fig.update_yaxes(showgrid=False,title='Count')
-    fig.update_layout(margin=dict(l=5, r=5, t=5, b=5), 
+    fig.update_layout(margin=dict(l=5, r=0, t=5, b=5), 
                       bargap=0.05,
                       plot_bgcolor="#171b26",
                       paper_bgcolor="#171b26",
-                      font=dict(color='#7b7d8d',size=10)) # '#737a8d'
+                      font=dict(color='#7b7d8d',size=10)) 
     return fig
 
 def generate_treemap(filtered_df):
@@ -292,13 +290,13 @@ app.layout = html.Div(
                         dcc.RangeSlider(
                             id='range-slider',
                             min=unix_time(df['date'].min()),
-                            max=unix_time(df['date'].max())+1202400,
-                            value=[unix_time(df['date'].min()), unix_time(df['date'].max())+1202400],
+                            max=unix_time(df['date'].max())+601200,
+                            value=[unix_time(df['date'].min()), unix_time(df['date'].max())+601200],
                             marks=get_marks(df['date'].min(),df['date'].max()),
                             updatemode='mouseup',
                         ),
                         dcc.Graph(
-                            id="histogram",
+                            id="barchart",
                             figure={
                                 "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26"),
                             },
@@ -336,7 +334,7 @@ app.layout = html.Div(
 @app.callback(
     [
         Output('geo-map', 'figure'),
-        Output('histogram', 'figure'),
+        Output('barchart', 'figure'),
         Output('treemap', 'figure'),
         Output('output-range-slider', 'children'),
         Output('counter', 'children')
@@ -353,10 +351,12 @@ app.layout = html.Div(
 def update_visualizations(range_select, graph_select, style_select, color_select, loc_select, n_clicks, keywords):
     
     geo_map, filtered_df, start, end = generate_geo_map(df, range_select, graph_select, style_select.lower(), color_select, loc_select, n_clicks, keywords)
-    line_chart = generate_histogram(filtered_df, start, end)
+    line_chart = generate_barchart(filtered_df, start, end)
     treemap = generate_treemap(filtered_df)
+    period = f'Period: {start.strftime("%b %d, %Y")} - {end.strftime("%b %d, %Y")}'
+    selection = f'Tweets in selection: {len(filtered_df)}'
     
-    return geo_map, line_chart, treemap, f'Period: {start} - {end}', f'Tweets in selection: {len(filtered_df)}'
+    return geo_map, line_chart, treemap, period, selection
 
 if __name__ == '__main__':
     app.run_server()
