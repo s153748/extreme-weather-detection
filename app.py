@@ -44,7 +44,7 @@ graph_list = ['Scatter map','Hexagon map']
 style_list = ['Light','Dark','Streets','Outdoors','Satellite'] 
 color_list = ['Localization','Retweeted']
 loc_list = df.localization.unique()
-colors = ['#003f5c', '#ef5675', '#ffa600', '#7a5195']
+colors = ['#003f5c', '#ffa600', '#ef5675', '#7a5195']
 
 def unix_time(dt):
     return (dt-datetime.utcfromtimestamp(0)).total_seconds() 
@@ -188,7 +188,7 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
                                       color_continuous_scale='GnBu')
 
     fig.update_layout(
-        margin=dict(l=15, r=0, t=0, b=0),
+        margin=dict(l=10, r=0, t=0, b=0),
         plot_bgcolor="#171b26",
         paper_bgcolor="#171b26",
         clickmode="event+select",
@@ -208,17 +208,23 @@ def generate_barchart(filtered_df, start, end):
     fig = px.bar(time_df, 
                  x="date", 
                  y="count",
-                 range_x=[start,end],
-                 height=100,
-                 color_discrete_sequence=['#cbd2d3'])
-    fig.update_traces(hovertemplate ='<b>%{x} </b><br>Count: %{y}') 
-    fig.update_xaxes(showgrid=False,title='Date',tickformat="%b %d, %Y")
-    fig.update_yaxes(showgrid=False,title='Count')
-    fig.update_layout(margin=dict(l=5, r=0, t=5, b=5), 
+                 height=150,
+                 color_discrete_sequence=['#cbd2d3'],
+                 text='count')
+    fig.update_traces(hovertemplate ='<b>%{x} </b><br>Count: %{y}',
+                      textposition='outside')
+    fig.update_xaxes(showgrid=False,
+                     title='Date',
+                     tickformat="%b %d, %Y")
+    fig.update_yaxes(showgrid=False,
+                     title='Count')
+    fig.update_layout(margin=dict(l=10, r=10, t=20, b=10), 
                       bargap=0.05,
                       plot_bgcolor="#171b26",
                       paper_bgcolor="#171b26",
-                      font=dict(color='#7b7d8d',size=10)) 
+                      font=dict(color='#7b7d8d',size=12),
+                      uniformtext_minsize=7, 
+                      uniformtext_mode='hide')
     return fig
 
 def generate_treemap(filtered_df):
