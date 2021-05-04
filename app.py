@@ -162,7 +162,8 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, loc_selec
         fig = px.scatter_mapbox(geo_df, 
                                 lat="lat", 
                                 lon="lon",
-                                color='localization', 
+                                color='localization',
+                                labels={"color": ""},
                                 hover_name='full_text',
                                 hover_data={'lat':False,'lon':False,'localization':True,'user_location':True,'user_name':True,'created_at':True,'source':True,'retweet_count':True},
                                 #color_discrete_sequence=px.colors.sequential.GnBu)
