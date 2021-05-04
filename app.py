@@ -179,7 +179,7 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, loc_selec
                                       labels={"color": "count"},
                                       min_count=1, 
                                       color_continuous_scale='teal',
-                                      show_original_data=True, 
+                                      show_original_data=False, 
                                       original_data_marker=dict(size=5, opacity=0.6, color='#a5d8e6' if style_select=='dark' else '#457582'))
     fig.update_layout(
         margin=dict(l=0, r=0, t=0, b=0),
