@@ -353,7 +353,7 @@ def update_visualizations(range_select, graph_select, style_select, color_select
     geo_map, filtered_df, start, end = generate_geo_map(df, range_select, graph_select, style_select.lower(), color_select, loc_select, n_clicks, keywords)
     line_chart = generate_barchart(filtered_df, start, end)
     treemap = generate_treemap(filtered_df)
-    period = f'Period: {start.strftime("%b %d, %Y")} - {end.strftime("%b %d, %Y")}'
+    period = f'Period: {pd.to_datetime(start).strftime("%b %d, %Y")} - {pd.to_datetime(end).strftime("%b %d, %Y")}'
     selection = f'Tweets in selection: {len(filtered_df)}'
     
     return geo_map, line_chart, treemap, period, selection
