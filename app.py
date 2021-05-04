@@ -49,14 +49,6 @@ colors = ['#003f5c', '#ef5675', '#ffa600', '#7a5195']
 def unix_time(dt):
     return (dt-datetime.utcfromtimestamp(0)).total_seconds() 
 
-def get_marks(start, end):
-    result = []
-    current = start
-    while current <= end:
-        result.append(current)
-        current += relativedelta(months=1)
-    return {int(unix_time(m)): (str(m.strftime('%b %Y'))) for m in result}
-
 def build_control_panel():
     return html.Div(
         id="control-panel",
@@ -203,6 +195,7 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
         hovermode="closest",
         mapbox=go.layout.Mapbox(accesstoken=mapbox_access_token,
                                 center=go.layout.mapbox.Center(lat=40.4168, lon=-3.7037),
+                                zoom=0.6,
                                 style=style_select),
         font=dict(color='#737a8d'))
         
@@ -219,7 +212,7 @@ def generate_barchart(filtered_df, start, end):
                  height=100,
                  color_discrete_sequence=['#cbd2d3'])
     fig.update_traces(hovertemplate ='<b>%{x} </b><br>Count: %{y}') 
-    fig.update_xaxes(showgrid=False,title='Date',tickformat="%d %b")
+    fig.update_xaxes(showgrid=False,title='Date',tickformat="%b %d, %Y")
     fig.update_yaxes(showgrid=False,title='Count')
     fig.update_layout(margin=dict(l=5, r=0, t=5, b=5), 
                       bargap=0.05,
@@ -290,10 +283,11 @@ app.layout = html.Div(
                         dcc.RangeSlider(
                             id='range-slider',
                             min=unix_time(df['date'].min()),
-                            max=unix_time(df['date'].max())+601200,
-                            value=[unix_time(df['date'].min()), unix_time(df['date'].max())+601200],
-                            marks=get_marks(df['date'].min(),df['date'].max()),
+                            max=unix_time(df['date'].max()), #+601200
+                            value=[unix_time(df['date'].min()), unix_time(df['date'].max())], #+601200
+                            #marks=get_marks(df['date'].min(),df['date'].max()),
                             updatemode='mouseup',
+                            #dots=False,
                         ),
                         dcc.Graph(
                             id="barchart",
