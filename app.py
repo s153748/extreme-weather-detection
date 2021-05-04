@@ -294,7 +294,7 @@ app.layout = html.Div(
                             min=unix_time(df['date'].min()),
                             max=unix_time(df['date'].max())+1202400,
                             value=[unix_time(df['date'].min()), unix_time(df['date'].max())+1202400],
-                            marks=get_marks(df['date'].min(),df['date'].max()+1202400),
+                            marks=get_marks(df['date'].min(),df['date'].max()),
                             updatemode='mouseup',
                         ),
                         dcc.Graph(
