@@ -356,7 +356,7 @@ app.layout = html.Div(
 def update_visualizations(range_select, graph_select, style_select, color_select, loc_select, n_clicks, keywords):
     
     geo_map, filtered_df, start, end = generate_geo_map(df, range_select, graph_select, style_select.lower(), color_select, loc_select, n_clicks, keywords)
-    line_chart = generate_histogram(filtered_df, range_select)
+    line_chart = generate_histogram(filtered_df, start, end)
     treemap = generate_treemap(filtered_df)
     
     return geo_map, line_chart, treemap, f'Period: {start} - {end}', f'Tweets in selection: {len(filtered_df)}'
