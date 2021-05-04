@@ -44,6 +44,7 @@ graph_list = ['Scatter map','Hexagon map']
 style_list = ['Light','Dark','Streets','Outdoors','Satellite'] 
 color_list = ['Localization','Retweeted']
 loc_list = df.localization.unique()
+colors = ['#003f5c', '#7a5195', '#ef5675', '#ffa600]
 
 def unix_time(dt):
     return (dt-datetime.utcfromtimestamp(0)).total_seconds() 
@@ -179,12 +180,11 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
         fig = px.scatter_mapbox(geo_df, 
                                 lat="lat", 
                                 lon="lon",
-                                color=color_select,
+                                color=color_select.lower(),
                                 hover_name='full_text',
                                 hover_data={'lat':False,'lon':False,'localization':True,'user_location':True,'user_name':True,'created_at':True,'source':True,'retweet_count':True},
-                                color_discrete_sequence=px.colors.qualitative.T10)
-                                #color_discrete_map={'Geotagged coordinates':'#253494','Geotagged place':'#2c7fb8','Geoparsed from Tweet':'#41b6c4','Registered user location':'#c7e9b4'})   
-        fig.update(layout_coloraxis_showscale=True)
+                                color_discrete_sequence=colors)
+        fig.update_coloraxes(colorbar_title_text=color_select)
 
     elif graph_select == 'Hexagon map':
         fig = ff.create_hexbin_mapbox(geo_df, 
@@ -355,7 +355,7 @@ app.layout = html.Div(
 )
 def update_geo_map(range_select, graph_select, style_select, color_select, loc_select, n_clicks, keywords):
     
-    geo_map, filtered_df, start, end = generate_geo_map(df, range_select, graph_select, style_select.lower(), color_select.lower(), loc_select, n_clicks, keywords)
+    geo_map, filtered_df, start, end = generate_geo_map(df, range_select, graph_select, style_select.lower(), color_select, loc_select, n_clicks, keywords)
     line_chart = generate_line_chart(filtered_df)
     treemap = generate_treemap(filtered_df)
     
