@@ -165,7 +165,8 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, loc_selec
                                 color='localization', 
                                 hover_name='full_text',
                                 hover_data={'lat':False,'lon':False,'localization':True,'user_location':True,'user_name':True,'created_at':True,'source':True,'retweet_count':True},
-                                color_discrete_map={'Geotagged coordinates':'#253494','Geotagged place':'#2c7fb8','Geoparsed from Tweet':'#41b6c4','Registered user location':'#c7e9b4'})   
+                                color_discrete_sequence=px.colors.sequential.YlGnBu)
+                                #color_discrete_map={'Geotagged coordinates':'#253494','Geotagged place':'#2c7fb8','Geoparsed from Tweet':'#41b6c4','Registered user location':'#c7e9b4'})   
         fig.update(layout_coloraxis_showscale=True)
 
     elif graph_select == 'Hexagon map':
