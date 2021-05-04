@@ -44,7 +44,7 @@ graph_list = ['Scatter map','Hexagon map']
 style_list = ['Light','Dark','Streets','Outdoors','Satellite'] 
 color_list = ['Localization','Retweeted']
 loc_list = df.localization.unique()
-colors = ['#003f5c', '#7a5195', '#ef5675', '#ffa600]
+colors = ['#003f5c', '#7a5195', '#ef5675', '#ffa600']
 
 def unix_time(dt):
     return (dt-datetime.utcfromtimestamp(0)).total_seconds() 
