@@ -78,11 +78,11 @@ span.Select-clear-zone {
   cursor: pointer;
 }
 
-#graph-select-outer, #style-select-outer, #loc-select-outer, #text-search-outer {
+#graph-select-outer, #style-select-outer, #color-select-outer, #loc-select-outer, #text-search-outer {
   width: 100%;
 }
 
-#graph-select-outer > label, #style-select-outer > label, #loc-select-outer > label, #text-search-outer > label {
+#graph-select-outer > label, #style-select-outer > label, #color-select-outer > label, #loc-select-outer > label, #text-search-outer > label {
   margin-bottom: 2px;
   color: #7b7d8d;
 }
