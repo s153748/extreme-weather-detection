@@ -209,14 +209,14 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
         
     return fig, geo_df, start, end
 
-def generate_histogram(filtered_df, range_select):
+def generate_histogram(filtered_df, start, end):
     
     count_dates = filtered_df.groupby('date').size().values
     time_df = filtered_df.drop_duplicates(subset='date').assign(count=count_dates).sort_values(by='date').reset_index(drop=True)
     fig = px.histogram(time_df, 
                        x="date", 
                        y="count",
-                       range_x=[range_select[0],range_select[1]],
+                       range_x=[start,end],
                        nbins=len(time_df)**2,
                        height=150)
     fig.update_xaxes(showgrid=False,title='Date',tickformat="%d %b %Y")
