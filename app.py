@@ -220,10 +220,10 @@ def generate_histogram(filtered_df, start, end):
                        nbins=len(time_df)**2,
                        height=100,
                        color_discrete_sequence=['#cbd2d3'],)
-    fig.update_traces(hovertemplate ='Date: %{x} <br>Count: %{y}') 
-    fig.update_xaxes(showgrid=False,title=None,tickformat="%d %b")
+    fig.update_traces(hovertemplate ='<b>%{x} </b><br>Count: %{y}') 
+    fig.update_xaxes(showgrid=False,title='Date',tickformat="%d %b")
     fig.update_yaxes(showgrid=False,title='Count')
-    fig.update_layout(margin=dict(l=5, r=0, t=0, b=5), 
+    fig.update_layout(margin=dict(l=5, r=5, t=5, b=5), 
                       bargap=0.05,
                       plot_bgcolor="#171b26",
                       paper_bgcolor="#171b26",
@@ -241,7 +241,7 @@ def generate_treemap(filtered_df):
                         values=freq_df['occurrence'][:k].tolist(),
                         parents=['']*k,
                         marker_colorscale=px.colors.sequential.Teal,
-                        hovertemplate='<b>%{label} </b> <br> occurrences: %{value}<extra></extra>',
+                        hovertemplate='<b>%{label} </b> <br>Occurrences: %{value}<extra></extra>',
                    )
     )
     fig.update_layout(margin=dict(l=0, r=0, t=0, b=0))
@@ -286,19 +286,15 @@ app.layout = html.Div(
                         dcc.Graph(
                             id="geo-map",
                             figure={
-                                "data": [],
-                                "layout": dict(
-                                    plot_bgcolor="#171b26",
-                                    paper_bgcolor="#171b26",
-                                ),
+                                "data": [], "layout": dict(plot_bgcolor="#171b26",paper_bgcolor="#171b26"),
                             },
                         ),
                         dcc.RangeSlider(
                             id='range-slider',
                             min=unix_time(df['date'].min()),
-                            max=unix_time(df['date'].max())+2584800,
-                            value=[unix_time(df['date'].min()), unix_time(df['date'].max())],
-                            marks=get_marks(df['date'].min(),df['date'].max()),
+                            max=unix_time(df['date'].max())+1202400,
+                            value=[unix_time(df['date'].min()), unix_time(df['date'].max())+1202400],
+                            marks=get_marks(df['date'].min(),df['date'].max()+1202400),
                             updatemode='mouseup',
                         ),
                         dcc.Graph(
