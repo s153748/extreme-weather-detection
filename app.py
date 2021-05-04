@@ -296,7 +296,7 @@ app.layout = html.Div(
                         dcc.RangeSlider(
                             id='range-slider',
                             min=unix_time(df['date'].min()),
-                            max=unix_time(Timestamp('2013-07-15 00:00:00')), # df['date'].max()
+                            max=unix_time(df['date'].max())+133920.0,
                             value=[unix_time(df['date'].min()), unix_time(df['date'].max())],
                             marks=get_marks(df['date'].min(),df['date'].max()),
                             updatemode='mouseup',
