@@ -46,7 +46,7 @@ body {
     min-height: calc(100vh - 5.5rem);
 }
 
-.geo-map > div, .line-chart > div, .treemap > div {
+.geo-map > div, .line-chart > div, {
     height: 100% !important;
     width: 100% !important;
 }
