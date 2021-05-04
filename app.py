@@ -213,7 +213,7 @@ def generate_line_chart(filtered_df):
 
 def generate_treemap(filtered_df):
     
-    k = 25
+    k = 20
     hashtag_list = [hashtag for sublist in filtered_df['hashtags'].tolist() for hashtag in sublist]
     freq_df = pd.DataFrame(list(FreqDist(hashtag_list).items()), columns = ["hashtag","occurrence"]) 
     freq_df = freq_df.sort_values('occurrence',ascending=False)
@@ -254,7 +254,7 @@ app.layout = html.Div(
         ),
         html.Div(
             id="center-column",
-            className="six columns",
+            className="twelve columns",
             children=[
                 html.Br(),
                 html.P(
@@ -294,7 +294,7 @@ app.layout = html.Div(
         ),
         html.Div(
             id="right-column",
-            className="six columns",
+            className="twelve columns",
             children=[
                 html.Br(),
                 html.P(
@@ -307,7 +307,7 @@ app.layout = html.Div(
                         dcc.Graph(
                             id='treemap',
                             figure={
-                                "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26", width=200, height=150),
+                                "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26", width=400, height=200),
                             },
                         )
                     ]
