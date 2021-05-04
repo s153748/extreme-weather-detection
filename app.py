@@ -254,7 +254,7 @@ app.layout = html.Div(
         ),
         html.Div(
             id="center-column",
-            className="twelve columns",
+            className="six columns",
             children=[
                 html.Br(),
                 html.P(
@@ -294,7 +294,7 @@ app.layout = html.Div(
         ),
         html.Div(
             id="right-column",
-            className="twelve columns",
+            className="six columns",
             children=[
                 html.Br(),
                 html.P(
