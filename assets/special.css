@@ -50,7 +50,7 @@ body {
     background-color: #171b26;
 }
 
-.geo-map > div, .line-chart > div {
+.geo-map > div, .line-chart > div, .treemap > div {
     height: 100% !important;
     width: 100% !important;
 }
@@ -59,7 +59,7 @@ body {
     cursor: pointer !important;
 }
 
-#graph-select-outer, #graph-style-outer, #text-outer {
+#graph-select-outer, #style-select-outer, #loc-select-outer, #text-search-outer {
   width: 100%;
 }
 
@@ -91,7 +91,7 @@ span.Select-clear-zone {
   color: #7b7d8d;
 }
 
-.section-title, #map-title {
+.section-title, #map-title, #treemap-title {
   font-size: 16px;
   font-weight: bold;
   display: block;
