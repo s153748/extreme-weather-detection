@@ -100,11 +100,11 @@ def build_control_panel():
                 className="control-row-3",
                 children=[
                     html.Div(
-                        id="style-select-outer",
+                        id="color-select-outer",
                         children=[
                             html.Label("Color by"),
                             dcc.Dropdown(
-                                id="style-select",
+                                id="color-select",
                                 options=[{"label": i, "value": i} for i in color_list],
                                 value=color_list[0],
                             ),
