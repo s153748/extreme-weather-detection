@@ -37,7 +37,7 @@ df = pd.read_csv(DATA_PATH.joinpath("final_tweets.csv"))
 total_count = len(df)
 df['date'] = pd.to_datetime(df['date'])
 df['hashtags'] = [literal_eval(s) for s in df['hashtags']]
-df["localization"] = df["localization"].astype(str)
+df['localization'] = df['localization'].astype(str)
 
 # Set graph options
 graph_list = ['Scatter map','Hexagon map']
@@ -55,7 +55,7 @@ def get_marks(start, end):
     while current <= end:
         result.append(current)
         current += relativedelta(months=1)
-    return {int(unix_time(m)): (str(m.strftime('%Y-%m'))) for m in result}
+    return {int(unix_time(m)): (str(m.strftime('%b %Y'))) for m in result}
 
 def build_control_panel():
     return html.Div(
@@ -203,7 +203,7 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
         hovermode="closest",
         mapbox=go.layout.Mapbox(accesstoken=mapbox_access_token,
                                 center=go.layout.mapbox.Center(lat=40.4168, lon=-3.7037),
-                                zoom=0.6,
+                                zoom=0.7,
                                 style=style_select),
         font=dict(color='#737a8d'))
         
@@ -214,19 +214,17 @@ def generate_histogram(filtered_df, start, end):
     count_dates = filtered_df.groupby('date').size().values
     time_df = filtered_df.drop_duplicates(subset='date').assign(count=count_dates).sort_values(by='date').reset_index(drop=True)
     fig = px.histogram(time_df, 
-                       x="date", 
-                       y="count",
-                       range_x=[start,end],
-                       nbins=len(time_df)**2,
-                       height=150)
-    fig.update_xaxes(showgrid=False,title='Date',tickformat="%d %b %Y")
-    fig.update_yaxes(showgrid=False,title='Count')
+                   x="date", 
+                   y="count",
+                   range_x=[start,end],
+                   nbins=len(time_df)**2,
+                   height=150)
+    fig.update_xaxes(showgrid=False,title=None,tickformat="%d %b")
+    fig.update_yaxes(showgrid=False,title='Tweet count')
     fig.update_layout(margin=dict(l=10, r=10, t=10, b=10), 
                       plot_bgcolor="#171b26",
                       paper_bgcolor="#171b26",
-                      font=dict(color='#737a8d',size=10),
-                      bargap=0.05)
-
+                      font=dict(color='#737a8d',size=10))
     return fig
 
 def generate_treemap(filtered_df):
@@ -326,7 +324,7 @@ app.layout = html.Div(
                         dcc.Graph(
                             id='treemap',
                             figure={
-                                "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26", width=300, height=200),
+                                "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26"),
                             },
                         )
                     ]
