@@ -191,12 +191,12 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
                                       lon="lon",
                                       nx_hexagon=60, # int(max(25,len(geo_df)/10)), 
                                       opacity=0.6, 
-                                      labels={"color": "count"},
+                                      labels={"color": "Count"},
                                       min_count=1, 
-                                      color_continuous_scale='GnBu',
-                                      show_original_data=False)
+                                      color_continuous_scale='GnBu')
+
     fig.update_layout(
-        margin=dict(l=0, r=0, t=0, b=0),
+        margin=dict(l=5, r=0, t=0, b=0),
         plot_bgcolor="#171b26",
         paper_bgcolor="#171b26",
         clickmode="event+select",
@@ -214,17 +214,19 @@ def generate_histogram(filtered_df, start, end):
     count_dates = filtered_df.groupby('date').size().values
     time_df = filtered_df.drop_duplicates(subset='date').assign(count=count_dates).sort_values(by='date').reset_index(drop=True)
     fig = px.histogram(time_df, 
-                   x="date", 
-                   y="count",
-                   range_x=[start,end],
-                   nbins=len(time_df)**2,
-                   height=150)
+                       x="date", 
+                       y="count",
+                       range_x=[start,end],
+                       nbins=len(time_df)**2,
+                       height=100,
+                       color_discrete_sequence=['#cbd2d3'],)
+    fig.update_traces(hovertemplate ='Date: %{x} <br>Count: %{y}') 
     fig.update_xaxes(showgrid=False,title=None,tickformat="%d %b")
-    fig.update_yaxes(showgrid=False,title='Tweet count')
-    fig.update_layout(margin=dict(l=10, r=10, t=10, b=10), 
+    fig.update_yaxes(showgrid=False,title='Count')
+    fig.update_layout(margin=dict(l=5, r=0, t=0, b=5), 
                       plot_bgcolor="#171b26",
                       paper_bgcolor="#171b26",
-                      font=dict(color='#737a8d',size=10))
+                      font=dict(color='#737a8d',size=12))
     return fig
 
 def generate_treemap(filtered_df):
