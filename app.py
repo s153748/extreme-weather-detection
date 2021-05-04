@@ -290,8 +290,14 @@ app.layout = html.Div(
                         )
                     ]
                 ),
+                html.Div(
+                    children=[
+                        html.Br(),
+                    ]
+                )
             ]
         ),
+        html.Br(),
         html.Div(
             id="right-column",
             className="six columns",
@@ -307,7 +313,7 @@ app.layout = html.Div(
                         dcc.Graph(
                             id='treemap',
                             figure={
-                                "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26", width=200, height=180),
+                                "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26", width=300, height=200),
                             },
                         )
                     ]
