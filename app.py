@@ -291,6 +291,7 @@ app.layout = html.Div(
                     ]
                 ),
                 html.Div(
+                    id="fill",
                     children=[
                         html.Br(),
                     ]
@@ -316,6 +317,12 @@ app.layout = html.Div(
                                 "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26", width=300, height=200),
                             },
                         )
+                    ]
+                ),
+                html.Div(
+                    id="fill2",
+                    children=[
+                        html.Br(),
                     ]
                 )
             ]
