@@ -190,7 +190,7 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
                                       lat="lat", 
                                       lon="lon",
                                       nx_hexagon=60, # int(max(25,len(geo_df)/10)), 
-                                      opacity=0.6, 
+                                      opacity=0.7, 
                                       labels={"color": "Count"},
                                       min_count=1, 
                                       color_continuous_scale='GnBu')
@@ -203,7 +203,7 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
         hovermode="closest",
         mapbox=go.layout.Mapbox(accesstoken=mapbox_access_token,
                                 center=go.layout.mapbox.Center(lat=40.4168, lon=-3.7037),
-                                zoom=0.7,
+                                zoom=0.6,
                                 style=style_select),
         font=dict(color='#737a8d'))
         
@@ -224,9 +224,10 @@ def generate_histogram(filtered_df, start, end):
     fig.update_xaxes(showgrid=False,title=None,tickformat="%d %b")
     fig.update_yaxes(showgrid=False,title='Count')
     fig.update_layout(margin=dict(l=5, r=0, t=0, b=5), 
+                      bargap=0.05,
                       plot_bgcolor="#171b26",
                       paper_bgcolor="#171b26",
-                      font=dict(color='#737a8d',size=12))
+                      font=dict(color='#7b7d8d',size=10)) # '#737a8d'
     return fig
 
 def generate_treemap(filtered_df):
@@ -295,7 +296,7 @@ app.layout = html.Div(
                         dcc.RangeSlider(
                             id='range-slider',
                             min=unix_time(df['date'].min()),
-                            max=unix_time(df['date'].max()),
+                            max=unix_time(Timestamp('2013-07-15 00:00:00')), # df['date'].max()
                             value=[unix_time(df['date'].min()), unix_time(df['date'].max())],
                             marks=get_marks(df['date'].min(),df['date'].max()),
                             updatemode='mouseup',
