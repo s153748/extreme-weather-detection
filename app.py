@@ -290,12 +290,6 @@ app.layout = html.Div(
                         )
                     ]
                 ),
-                html.Div(
-                    id="fill",
-                    children=[
-                        html.Br(),
-                    ]
-                )
             ]
         ),
         html.Br(),
@@ -319,12 +313,6 @@ app.layout = html.Div(
                         )
                     ]
                 ),
-                html.Div(
-                    id="fill2",
-                    children=[
-                        html.Br(),
-                    ]
-                )
             ]
         )
     ]
