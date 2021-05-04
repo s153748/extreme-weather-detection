@@ -42,6 +42,7 @@ df["localization"] = df["localization"].astype(str)
 # Set graph options
 graph_list = ['Scatter map','Hexagon map']
 style_list = ['Light','Dark','Streets','Outdoors','Satellite'] 
+color_list = ['Localization','Retweeted']
 loc_list = df.localization.unique()
 
 def unix_time(dt):
@@ -69,7 +70,7 @@ def build_control_panel():
                     html.Div(
                         id="graph-select-outer",
                         children=[
-                            html.Label("Select Graph Type"),
+                            html.Label("Graph Type"),
                             dcc.Dropdown(
                                 id="graph-select",
                                 options=[{"label": i, "value": i} for i in graph_list],
@@ -85,7 +86,7 @@ def build_control_panel():
                     html.Div(
                         id="style-select-outer",
                         children=[
-                            html.Label("Select Map Style"),
+                            html.Label("Map Style"),
                             dcc.Dropdown(
                                 id="style-select",
                                 options=[{"label": i, "value": i} for i in style_list],
@@ -99,9 +100,25 @@ def build_control_panel():
                 className="control-row-3",
                 children=[
                     html.Div(
+                        id="style-select-outer",
+                        children=[
+                            html.Label("Color by"),
+                            dcc.Dropdown(
+                                id="style-select",
+                                options=[{"label": i, "value": i} for i in color_list],
+                                value=color_list[0],
+                            ),
+                        ],
+                    ),
+                ],
+            ),
+            html.Div(
+                className="control-row-4",
+                children=[
+                    html.Div(
                         id="loc-select-outer",
                         children=[
-                            html.Label("Select Localization Methods"),
+                            html.Label("Localization"),
                             dcc.Dropdown(
                                 id='loc-select',
                                 options=[{"label": i, "value": i} for i in loc_list],
@@ -114,12 +131,12 @@ def build_control_panel():
                 ],
             ),
             html.Div(
-                className="control-row-4",
+                className="control-row-5",
                 children=[
                     html.Div(
                         id="text-search-outer",
                         children=[
-                            html.Label("Filter on Keywords"),
+                            html.Label("Keywords"),
                             dcc.Textarea(
                                 id='text-search',
                                 value='',
@@ -139,7 +156,7 @@ def build_control_panel():
         ],
     )
 
-def generate_geo_map(geo_df, range_select, graph_select, style_select, loc_select, n_clicks, keywords):
+def generate_geo_map(geo_df, range_select, graph_select, style_select, color_select, loc_select, n_clicks, keywords):
     
     if n_clicks > 0 and keywords.strip():
         keywords = keywords.split(', ')
@@ -162,35 +179,32 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, loc_selec
         fig = px.scatter_mapbox(geo_df, 
                                 lat="lat", 
                                 lon="lon",
-                                color='localization',
-                                labels={"color": ""},
+                                color=color_select,
                                 hover_name='full_text',
                                 hover_data={'lat':False,'lon':False,'localization':True,'user_location':True,'user_name':True,'created_at':True,'source':True,'retweet_count':True},
-                                #color_discrete_sequence=px.colors.sequential.GnBu)
-                                color_discrete_map={'Geotagged coordinates':'#253494','Geotagged place':'#2c7fb8','Geoparsed from Tweet':'#41b6c4','Registered user location':'#c7e9b4'})   
+                                color_discrete_sequence=px.colors.qualitative.T10)
+                                #color_discrete_map={'Geotagged coordinates':'#253494','Geotagged place':'#2c7fb8','Geoparsed from Tweet':'#41b6c4','Registered user location':'#c7e9b4'})   
         fig.update(layout_coloraxis_showscale=True)
 
     elif graph_select == 'Hexagon map':
         fig = ff.create_hexbin_mapbox(geo_df, 
                                       lat="lat", 
                                       lon="lon",
-                                      nx_hexagon=50, # int(max(25,len(filtered_data)/10)), 
+                                      nx_hexagon=60, # int(max(25,len(geo_df)/10)), 
                                       opacity=0.6, 
                                       labels={"color": "count"},
                                       min_count=1, 
-                                      color_continuous_scale='teal',
-                                      show_original_data=False, 
-                                      original_data_marker=dict(size=5, opacity=0.6, color='#a5d8e6' if style_select=='dark' else '#457582'))
+                                      color_continuous_scale='GnBu',
+                                      show_original_data=False)
     fig.update_layout(
         margin=dict(l=0, r=0, t=0, b=0),
         plot_bgcolor="#171b26",
         paper_bgcolor="#171b26",
         clickmode="event+select",
         hovermode="closest",
-        #showlegend=False,
         mapbox=go.layout.Mapbox(accesstoken=mapbox_access_token,
                                 center=go.layout.mapbox.Center(lat=40.4168, lon=-3.7037),
-                                zoom=0.5,
+                                zoom=0.6,
                                 style=style_select),
         font=dict(color='#737a8d'))
         
@@ -333,18 +347,19 @@ app.layout = html.Div(
         Input('range-slider', 'value'),
         Input('graph-select', 'value'),
         Input('style-select', 'value'),
+        Input('color-select', 'value'),
         Input('loc-select', 'value'),
         Input('search-button', 'n_clicks'),
         State('text-search', 'value')
     ],
 )
-def update_geo_map(range_select, graph_select, style_select, loc_select, n_clicks, keywords):
+def update_geo_map(range_select, graph_select, style_select, color_select, loc_select, n_clicks, keywords):
     
-    geo_map, filtered_df, start, end = generate_geo_map(df, range_select, graph_select, style_select.lower(), loc_select, n_clicks, keywords)
+    geo_map, filtered_df, start, end = generate_geo_map(df, range_select, graph_select, style_select.lower(), color_select.lower(), loc_select, n_clicks, keywords)
     line_chart = generate_line_chart(filtered_df)
     treemap = generate_treemap(filtered_df)
     
-    return geo_map, line_chart, treemap, f'Period: {start} - {end}', f'Tweets in selection: {len(filtered_df)}', 
+    return geo_map, line_chart, treemap, f'Period: {start} - {end}', f'Tweets in selection: {len(filtered_df)}'
 
 if __name__ == '__main__':
     app.run_server()
