@@ -37,6 +37,7 @@ df = pd.read_csv(DATA_PATH.joinpath("final_tweets.csv"))
 total_count = len(df)
 df['date'] = pd.to_datetime(df['date'])
 df['hashtags'] = [literal_eval(s) for s in df['hashtags']]
+df["localization"] = df["localization"].astype(str)
 
 # Set graph options
 graph_list = ['Scatter map','Hexagon map']
@@ -165,7 +166,8 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, loc_selec
                                 hover_name='full_text',
                                 hover_data={'lat':False,'lon':False,'localization':True,'user_location':True,'user_name':True,'created_at':True,'source':True,'retweet_count':True},
                                 color_discrete_map={'Geotagged coordinates':'#253494','Geotagged place':'#2c7fb8','Geoparsed from Tweet':'#41b6c4','Registered user location':'#c7e9b4'})   
-    
+        fig.update(layout_coloraxis_showscale=True)
+
     elif graph_select == 'Hexagon map':
         fig = ff.create_hexbin_mapbox(geo_df, 
                                       lat="lat", 
