@@ -278,60 +278,6 @@ app.layout = dbc.Container([
                             ),
                         ],
                     ),
-                ], 
-                    xs=12, sm=12, md=7, lg=7, xl=7
-                ),
-                dbc.Col([
-                    html.Div(
-                        children=[
-                            html.Div(f'Total number of Tweets: {total_count}',style={'color':'#7b7d8d','fontsize':'9px'}),
-                            html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px'}),
-                            html.Br(),
-                            html.P(
-                                id="treemap-title",
-                                children="Hashtags"
-                            ),
-                            html.Div( 
-                                id="treemap-outer",
-                                children=[
-                                    dcc.Graph(
-                                        id='treemap',
-                                        figure={
-                                            "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26"),
-                                        },
-                                    ),
-                                ],
-                            ),
-                        ],
-                    ),
-                ], 
-                    xs=12, sm=12, md=2, lg=2, xl=2
-                ),
-                dbc.Col([
-                    html.Div(
-                        children=[
-                            html.P(
-                                id="tweets-title",
-                                children="Tweets"
-                            ),
-                            html.Div(
-                                id="tweets-outer",
-                                children=[
-                                    dcc.Textarea(
-                                        id='tweet-text',
-                                        value='',
-                                        style={'width':'100%','height':'5px','background-color':'#171b26','opacity':0.5,'color':'#ffffff'},
-                                        draggable=False,
-                                        placeholder='Selected tweets to come...'
-                                    ),
-                                ],
-                            ), 
-                        ],
-                    ),
-                ], 
-                    xs=12, sm=12, md=3, lg=3, xl=3
-                ),
-                dbc.Col([
                     html.Div([
                         dcc.RangeSlider(
                             id='range-slider',
@@ -352,8 +298,50 @@ app.layout = dbc.Container([
                         ),
                     ]),
                 ], 
-                    xs=12, sm=12, md=12, lg=12, xl=12
-                )
+                    xs=12, sm=12, md=7, lg=7, xl=7
+                ),
+                dbc.Col([
+                    html.Div(
+                        children=[
+                            html.Div(f'Total number of Tweets: {total_count}',style={'color':'#7b7d8d','fontsize':'9px'}),
+                            html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px'}),
+                            html.Br(),
+                            html.P(
+                                id="tweets-title",
+                                children="Tweets"
+                            ),
+                            html.Div(
+                                id="tweets-outer",
+                                children=[
+                                    dcc.Textarea(
+                                        id='tweet-text',
+                                        value='',
+                                        style={'width':'100%','height':'5px','background-color':'#171b26','opacity':0.5,'color':'#ffffff'},
+                                        draggable=False,
+                                        placeholder='Selected Tweets to be displayed here with scroll down...'
+                                    ),
+                                ],
+                            ), 
+                            html.P(
+                                id="treemap-title",
+                                children="Hashtags"
+                            ),
+                            html.Div( 
+                                id="treemap-outer",
+                                children=[
+                                    dcc.Graph(
+                                        id='treemap',
+                                        figure={
+                                            "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26"),
+                                        },
+                                    ),
+                                ],
+                            ),
+                        ],
+                    ),
+                ], 
+                    xs=12, sm=12, md=2, lg=2, xl=2
+                ),
             ])
         ], 
             xs=12, sm=12, md=10, lg=10, xl=10
