@@ -191,6 +191,7 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
                                 zoom=0.6,
                                 style=style_select),
         font=dict(color='#737a8d'))
+    fig.update_traces(uirevision='constant',selector=dict(type='scattermapbox'))
         
     return fig, geo_df, start, end
 
