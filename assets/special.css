@@ -44,6 +44,7 @@ body {
     flex-direction: column;
     align-items: flex-start;
     min-height: calc(100vh - 5.5rem);
+    max-width: 175px;
 }
 
 #center-column {
@@ -63,7 +64,7 @@ body {
     flex-direction: column;
     align-items: flex-start;
     min-height: calc(100vh - 5.5rem);
-    max-width: 200px;
+    max-width: 175px;
 }
 
 .geo-map > div, .barchart > div, .treemap > div {
