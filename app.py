@@ -298,7 +298,7 @@ app.layout = dbc.Container([
                         ),
                     ]),
                 ], 
-                    xs=12, sm=12, md=7, lg=7, xl=7
+                    xs=12, sm=12, md=8, lg=8, xl=8
                 ),
                 dbc.Col([
                     html.Div(
@@ -340,11 +340,11 @@ app.layout = dbc.Container([
                         ],
                     ),
                 ], 
-                    xs=12, sm=12, md=2, lg=2, xl=2
+                    xs=12, sm=12, md=3, lg=3, xl=3
                 ),
             ])
         ], 
-            xs=12, sm=12, md=10, lg=10, xl=10
+            xs=12, sm=12, md=12, lg=12, xl=12
         )
     ], no_gutters=False, justify='start')
 
