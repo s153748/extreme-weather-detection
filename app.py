@@ -334,7 +334,7 @@ app.layout = dbc.Container([
                             #marks=get_marks(df['date'].min(),df['date'].max()),
                             updatemode='mouseup',
                         ), 
-                    ], 
+                    ]), 
                     html.Div(id='output-range-slider',style={'color':'#7b7d8d','fontsize':'9px'}),
                     html.Div([
                         dcc.Graph(
@@ -345,7 +345,7 @@ app.layout = dbc.Container([
                         ),
                     ]),
                 ], xs=12, sm=12, md=12, lg=12, xl=12
-                )
+                ),  
             ], xs=12, sm=12, md=10, lg=10, xl=10
             )
     ], no_gutters=False, justify='start')
