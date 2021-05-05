@@ -137,13 +137,10 @@ def build_control_panel():
                                 placeholder='e.g. Floods, Queensland'
                             ),
                             html.Button('Search', id='search-button', n_clicks=0),
-                        ]
-                    )
-                ]
+                        ],
+                    ),
+                ],
            ),
-           html.Br(),
-           html.Div(f'Total number of Tweets: {total_count}',style={'color':'#7b7d8d'}),
-           html.Div(id='counter',style={'color':'#7b7d8d'}),
         ],
     )
 
@@ -295,7 +292,7 @@ app.layout = html.Div(
                                 updatemode='mouseup',
                             ), 
                         ], style={'height':'20px', 'margin-bottom':'1px'}),
-                        html.Div(id='output-range-slider',style={'color':'#7b7d8d','fontsize':'10px'}),
+                        html.Div(id='output-range-slider',style={'color':'#7b7d8d','fontsize':'9px'}),
                     ],
                 ),
                 html.Div(
@@ -313,11 +310,19 @@ app.layout = html.Div(
         ),
         html.Div(
             id="right-column",
-            className="six columns",
+            className="three columns",
             children=[
+                html.Br(),
+                html.Div(f'Total number of Tweets: {total_count}',style={'color':'#7b7d8d','fontsize':'9px'}),
+                html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px'}),
+                html.Br(),
                 html.Div(
                     className="right-row-1",
                     children=[
+                        html.P(
+                            id="tweets-title",
+                            children="Tweets"
+                        ),
                         html.Div(
                             id="tweet-text-outer",
                             children=[
@@ -337,7 +342,7 @@ app.layout = html.Div(
                     children=[
                         html.P(
                             id="treemap-title",
-                            children="Top hashtags"
+                            children="Hashtags"
                         ),
                         html.Div( 
                             id="treemap-outer",
