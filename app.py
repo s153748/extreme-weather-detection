@@ -270,7 +270,7 @@ app.layout = dbc.Container([
                             dcc.Graph(
                                 id="geo-map",
                                 figure={
-                                    "data": [], "layout": dict(plot_bgcolor="#171b26",paper_bgcolor="#171b26"),
+                                    "data": [], "layout": dict(uirevision=True, plot_bgcolor="#171b26",paper_bgcolor="#171b26"),
                                 },
                             ),
                         ],
@@ -281,7 +281,6 @@ app.layout = dbc.Container([
                             min=unix_time(df['date'].min()),
                             max=unix_time(df['date'].max()), 
                             value=[unix_time(df['date'].min()), unix_time(df['date'].max())], 
-                            #marks=get_marks(df['date'].min(),df['date'].max()),
                             updatemode='mouseup',
                         ), 
                     ], style={'height':'20px','margin-bottom':'1px'}),
