@@ -15,7 +15,6 @@ import pathlib
 import calendar
 import datetime
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
 import nltk 
 from nltk import FreqDist
 
@@ -145,7 +144,6 @@ def build_control_panel():
            html.Br(),
            html.Div(f'Total number of Tweets: {total_count}',style={'color':'#7b7d8d'}),
            html.Div(id='counter',style={'color':'#7b7d8d'}),
-           html.Div(id='output-range-slider',style={'color':'#7b7d8d'})
         ],
     )
 
@@ -188,7 +186,7 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
                                       color_continuous_scale='GnBu')
 
     fig.update_layout(
-        margin=dict(l=10, r=0, t=0, b=0),
+        margin=dict(l=0, r=0, t=0, b=0),
         plot_bgcolor="#171b26",
         paper_bgcolor="#171b26",
         clickmode="event+select",
@@ -208,23 +206,20 @@ def generate_barchart(filtered_df, start, end):
     fig = px.bar(time_df, 
                  x="date", 
                  y="count",
-                 height=150,
+                 height=140,
                  color_discrete_sequence=['#cbd2d3'],
                  text='count')
-    fig.update_traces(hovertemplate ='<b>%{x} </b><br>Count: %{y}',
-                      textposition='outside')
+    fig.update_traces(hovertemplate ='<b>%{x} </b><br>Count: %{y}')
     fig.update_xaxes(showgrid=False,
                      title='Date',
                      tickformat="%b %d, %Y")
     fig.update_yaxes(showgrid=False,
                      title='Count')
-    fig.update_layout(margin=dict(l=10, r=10, t=20, b=10), 
+    fig.update_layout(margin=dict(l=10, r=0, t=10, b=10), 
                       bargap=0.05,
                       plot_bgcolor="#171b26",
                       paper_bgcolor="#171b26",
-                      font=dict(color='#7b7d8d',size=12),
-                      uniformtext_minsize=7, 
-                      uniformtext_mode='hide')
+                      font=dict(color='#7b7d8d',size=12))
     return fig
 
 def generate_treemap(filtered_df):
@@ -293,8 +288,8 @@ app.layout = html.Div(
                             value=[unix_time(df['date'].min()), unix_time(df['date'].max())], #+601200
                             #marks=get_marks(df['date'].min(),df['date'].max()),
                             updatemode='mouseup',
-                            #dots=False,
                         ),
+                        html.Div(id='output-range-slider',style={'color':'#7b7d8d'}),
                         dcc.Graph(
                             id="barchart",
                             figure={
@@ -326,6 +321,18 @@ app.layout = html.Div(
                         )
                     ]
                 ),
+                html.Div(
+                    id="tweet-text-outer",
+                        children=[
+                            dcc.Textarea(
+                                id='tweet-text',
+                                value='',
+                                style={'width': '100%', 'height': "1 px", 'background-color': '#171b26', 'opacity': 0.5, 'color': '#ffffff'},
+                                draggable=False,
+                                placeholder='Selected tweets comes here...'
+                            ),
+                        ]
+                )
             ]
         )
     ]
