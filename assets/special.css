@@ -44,7 +44,7 @@ body {
     flex-direction: column;
     align-items: flex-start;
     min-height: calc(100vh - 5.5rem);
-    max-width: 300px;
+    max-width: 250px;
 }
 
 #center-column {
@@ -54,7 +54,7 @@ body {
     flex-direction: column;
     align-items: flex-start;
     min-height: calc(100vh - 5.5rem);
-    min-width: 700px;
+    min-width: 750px;
 }
 
 #right-column {
