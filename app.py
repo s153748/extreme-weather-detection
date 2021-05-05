@@ -137,11 +137,11 @@ def build_control_panel():
                                 placeholder='e.g. Floods, Queensland'
                             ),
                             html.Button('Search', id='search-button', n_clicks=0),
-                        ],
-                    ),
-                ],
-           ),
-        ],
+                        ]
+                    )
+                ]
+           )
+        ]
     )
 
 def generate_geo_map(geo_df, range_select, graph_select, style_select, color_select, loc_select, n_clicks, keywords):
@@ -236,25 +236,29 @@ def generate_treemap(filtered_df):
 
 # Set up the layout
 app.layout = dbc.Container([
+    
     dbc.Row(
         dbc.Col(
             html.Div(
-            id="banner",
-            className="banner mb-4",
-            children=[
-                html.H6("Extreme Weather Event Detection"),
-                html.A([
-                    html.Img(
-                        src=app.get_asset_url("GitHub-Mark-Light-64px.png")
-                    )
-                ], href=githublink)
-            ],
-        ), xs=12, sm=12, md=12, lg=12, xl=12
+                id="banner",
+                className="banner mb-4",
+                children=[
+                    html.H6("Extreme Weather Event Detection"),
+                    html.A([
+                        html.Img(
+                            src=app.get_asset_url("GitHub-Mark-Light-64px.png")
+                        )
+                    ], href=githublink)
+                ],
+            ), 
+            xs=12, sm=12, md=12, lg=12, xl=12
+        )
     ),
     dbc.Row([
         dbc.Col([
             build_control_panel()
-        ], xs=12, sm=12, md=2, lg=2, xl=2
+        ], 
+            xs=12, sm=12, md=2, lg=2, xl=2
         ),
         dbc.Col([
             dbc.Row([
@@ -274,7 +278,8 @@ app.layout = dbc.Container([
                             ),
                         ],
                     ),
-                ], xs=12, sm=12, md=7, lg=7, xl=7
+                ], 
+                    xs=12, sm=12, md=7, lg=7, xl=7
                 ),
                 dbc.Col([
                     html.Div(
@@ -299,7 +304,8 @@ app.layout = dbc.Container([
                             ),
                         ],
                     ),
-                ], xs=12, sm=12, md=2, lg=2, xl=2
+                ], 
+                    xs=12, sm=12, md=2, lg=2, xl=2
                 ),
                 dbc.Col([
                     html.Div(
@@ -322,7 +328,8 @@ app.layout = dbc.Container([
                             ), 
                         ],
                     ),
-                ], xs=12, sm=12, md=3, lg=3, xl=3
+                ], 
+                    xs=12, sm=12, md=3, lg=3, xl=3
                 ),
                 dbc.Col([
                     html.Div([
@@ -344,12 +351,15 @@ app.layout = dbc.Container([
                             },
                         ),
                     ]),
-                ], xs=12, sm=12, md=12, lg=12, xl=12
+                ], 
+                    xs=12, sm=12, md=12, lg=12, xl=12
                 )
             ])
-        ], xs=12, sm=12, md=10, lg=10, xl=10
+        ], 
+            xs=12, sm=12, md=10, lg=10, xl=10
         )
     ], no_gutters=False, justify='start')
+
 ], fluid=True)
 
 @app.callback(
