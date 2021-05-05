@@ -232,7 +232,7 @@ def generate_treemap(filtered_df):
                         hovertemplate='<b>%{label} </b> <br>Occurrences: %{value}<extra></extra>',
                    )
     )
-    fig.update_layout(margin=dict(l=0, r=0, t=0, b=0), width=250, height=200)
+    fig.update_layout(margin=dict(l=0, r=0, t=0, b=0), width=300, height=200)
     
     return fig
 
@@ -261,7 +261,7 @@ app.layout = html.Div(
         ),
         html.Div(
             id="center-column",
-            className="three columns",
+            className="six columns",
             children=[
                 html.Div(
                     className="center-row-1",
@@ -315,7 +315,7 @@ app.layout = html.Div(
                 html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px'}),
                 html.Br(),
                 html.Div(
-                    className="right-row-1",
+                    className="right-row-3",
                     children=[
                         html.P(
                             id="tweets-title",
@@ -327,7 +327,7 @@ app.layout = html.Div(
                                 dcc.Textarea(
                                     id='tweet-text',
                                     value='',
-                                    style={'width':'100%','height':'3 px','background-color':'#171b26','opacity':0.5,'color':'#ffffff'},
+                                    style={'width':'100%','height':'5px','background-color':'#171b26','opacity':0.5,'color':'#ffffff'},
                                     draggable=False,
                                     placeholder='Selected tweets comes here...'
                                 ),
@@ -336,7 +336,7 @@ app.layout = html.Div(
                     ],
                 ),
                 html.Div(
-                    className="right-row-2",
+                    className="right-row-4",
                     children=[
                         html.P(
                             id="treemap-title",
