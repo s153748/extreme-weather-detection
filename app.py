@@ -277,7 +277,7 @@ app.layout = html.Div(
                                     "data": [], "layout": dict(plot_bgcolor="#171b26",paper_bgcolor="#171b26"),
                                 },
                             ),
-                        ], style={'margin-bottom':'0px'}),
+                        ], style={'min-width':'700px','margin-bottom':'1px'}),
                         html.Div([
                             dcc.RangeSlider(
                                 id='range-slider',
