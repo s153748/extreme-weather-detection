@@ -266,7 +266,6 @@ app.layout = html.Div(
                 html.Div(
                     className="center-row-1",
                     children=[
-                        html.Br(),
                         html.P(
                             id="map-title",
                             children="Spatio-Temporal Development of Flood-Relevant Tweets"
@@ -312,7 +311,6 @@ app.layout = html.Div(
             id="right-column",
             className="three columns",
             children=[
-                html.Br(),
                 html.Div(f'Total number of Tweets: {total_count}',style={'color':'#7b7d8d','fontsize':'9px'}),
                 html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px'}),
                 html.Br(),
