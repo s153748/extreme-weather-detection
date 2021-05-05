@@ -261,10 +261,10 @@ app.layout = html.Div(
         ),
         html.Div(
             id="center-column",
-            className="six columns",
+            className="three columns",
             children=[
                 html.Div(
-                    className="center-row-1",
+                    className="center-row",
                     children=[
                         html.P(
                             id="map-title",
@@ -292,16 +292,14 @@ app.layout = html.Div(
                             ), 
                         ], style={'height':'20px', 'margin-bottom':'1px'}),
                         html.Div(id='output-range-slider',style={'color':'#7b7d8d','fontsize':'9px'}),
-                    ],
-                ),
-                html.Div(
-                    className="center-row-2",
-                    children=[
-                        dcc.Graph(
-                            id="barchart",
-                            figure={
-                                "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26"),
-                            },
+                        html.Div([
+                                dcc.Graph(
+                                    id="barchart",
+                                    figure={
+                                        "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26"),
+                                    },
+                                ),
+                            ],
                         ),
                     ],
                 ),
@@ -315,7 +313,7 @@ app.layout = html.Div(
                 html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px'}),
                 html.Br(),
                 html.Div(
-                    className="right-row-3",
+                    className="right-row",
                     children=[
                         html.P(
                             id="tweets-title",
@@ -333,11 +331,6 @@ app.layout = html.Div(
                                 ),
                             ],
                         ),
-                    ],
-                ),
-                html.Div(
-                    className="right-row-4",
-                    children=[
                         html.P(
                             id="treemap-title",
                             children="Hashtags"
