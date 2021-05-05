@@ -3,7 +3,6 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
-from dash.exceptions import PreventUpdate
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
@@ -20,10 +19,11 @@ from nltk import FreqDist
 
 # Initiate app
 app = dash.Dash(
-    __name__, meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"}]
+    __name__, external_stylesheets=[dbc.themes.BOOTSTRAP],
+    meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"}]
 )
-server = app.server
-app.config.suppress_callback_exceptions = True
+#server = app.server
+#app.config.suppress_callback_exceptions = True
 
 githublink = 'https://github.com/s153748/extreme-weather-detection'
 mapbox_access_token = open(".mapbox_token.txt").read()
@@ -132,7 +132,7 @@ def build_control_panel():
                             dcc.Textarea(
                                 id='text-search',
                                 value='',
-                                style={'width': '100%', 'height': "1 px", 'background-color': '#171b26', 'opacity': 0.5, 'color': '#ffffff'},
+                                style={'width':'100%','height':'1px','background-color':'#171b26','opacity':0.5,'color':'#ffffff'},
                                 draggable=False,
                                 placeholder='e.g. Floods, Queensland'
                             ),
@@ -197,7 +197,6 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
     return fig, geo_df, start, end
 
 def generate_barchart(filtered_df, start, end):
-    
     count_dates = filtered_df.groupby('date').size().values
     time_df = filtered_df.drop_duplicates(subset='date').assign(count=count_dates).sort_values(by='date').reset_index(drop=True)
     fig = px.bar(time_df, 
@@ -219,7 +218,6 @@ def generate_barchart(filtered_df, start, end):
     return fig
 
 def generate_treemap(filtered_df):
-    
     k = 20
     hashtag_list = [hashtag for sublist in filtered_df['hashtags'].tolist() for hashtag in sublist]
     freq_df = pd.DataFrame(list(FreqDist(hashtag_list).items()), columns = ["hashtag","occurrence"]) 
@@ -232,17 +230,17 @@ def generate_treemap(filtered_df):
                         hovertemplate='<b>%{label} </b> <br>Occurrences: %{value}<extra></extra>',
                    )
     )
-    fig.update_layout(margin=dict(l=0, r=0, t=0, b=0), width=300, height=200)
+    fig.update_layout(margin=dict(l=0, r=0, t=0, b=0)) 
     
     return fig
 
 # Set up the layout
-app.layout = html.Div(
-    id="app-container",
-    children=[
-        html.Div(
+app.layout = dbc.Container([
+    dbc.Row(
+        dbc.Col(
+            html.Div(
             id="banner",
-            className="banner",
+            className="banner mb-4",
             children=[
                 html.H6("Extreme Weather Event Detection"),
                 html.A([
@@ -250,105 +248,109 @@ app.layout = html.Div(
                         src=app.get_asset_url("GitHub-Mark-Light-64px.png")
                     )
                 ], href=githublink)
-            ]
+            ],
+        ), xs=12, sm=12, md=12, lg=12, xl=12
+    ),
+    dbc.Row([
+        dbc.Col([
+            build_control_panel()
+        ], xs=12, sm=12, md=2, lg=2, xl=2
         ),
-        html.Div(
-            id="left-column",
-            className="three columns",
-            children=[
-                build_control_panel()
-            ]
-        ),
-        html.Div(
-            id="center-column",
-            className="three columns",
-            children=[
-                html.Div(
-                    className="center-row",
-                    children=[
-                        html.P(
-                            id="map-title",
-                            children="Spatio-Temporal Development of Flood-Relevant Tweets"
-                        ),
-                        html.Div([
+        dbc.Col([
+            dbc.Row([
+                dbc.Col([
+                    html.P(
+                        id="map-title",
+                        children="Spatio-Temporal Development of Flood-Relevant Tweets"
+                    ),
+                    html.Div(
+                        id="geo-map-outer",
+                        children=[
                             dcc.Graph(
                                 id="geo-map",
                                 figure={
                                     "data": [], "layout": dict(plot_bgcolor="#171b26",paper_bgcolor="#171b26"),
                                 },
                             ),
-                        ], style={'min-width':'700px','margin-bottom':'1px'}),
-                        html.Div([
-                            dcc.RangeSlider(
-                                id='range-slider',
-                                min=unix_time(df['date'].min()),
-                                max=unix_time(df['date'].max()), 
-                                value=[unix_time(df['date'].min()), unix_time(df['date'].max())], 
-                                #marks=get_marks(df['date'].min(),df['date'].max()),
-                                updatemode='mouseup',
+                        ],
+                    ),
+                ], xs=12, sm=12, md=7, lg=7, xl=7
+                ),
+                dbc.Col([
+                    html.Div(
+                        children=[
+                            html.Div(f'Total number of Tweets: {total_count}',style={'color':'#7b7d8d','fontsize':'9px'}),
+                            html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px'}),
+                            html.Br(),
+                            html.P(
+                                id="treemap-title",
+                                children="Hashtags"
+                            ),
+                            html.Div( 
+                                id="treemap-outer",
+                                children=[
+                                    dcc.Graph(
+                                        id='treemap',
+                                        figure={
+                                            "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26"),
+                                        },
+                                    ),
+                                ],
+                            ),
+                        ],
+                    ),
+                ], xs=12, sm=12, md=2, lg=2, xl=2
+                ),
+                dbc.Col([
+                    html.Div(
+                        children=[
+                            html.P(
+                                id="tweets-title",
+                                children="Tweets"
+                            ),
+                            html.Div(
+                                id="tweets-outer",
+                                children=[
+                                    dcc.Textarea(
+                                        id='tweet-text',
+                                        value='',
+                                        style={'width':'100%','height':'5px','background-color':'#171b26','opacity':0.5,'color':'#ffffff'},
+                                        draggable=False,
+                                        placeholder='Selected tweets to come...'
+                                    ),
+                                ],
                             ), 
-                        ], style={'height':'20px', 'margin-bottom':'1px'}),
-                        html.Div(id='output-range-slider',style={'color':'#7b7d8d','fontsize':'9px'}),
-                        html.Div([
-                                dcc.Graph(
-                                    id="barchart",
-                                    figure={
-                                        "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26"),
-                                    },
-                                ),
-                            ],
-                        ),
-                    ],
+                        ],
+                    ),
+                ], xs=12, sm=12, md=3, lg=3, xl=3
                 ),
-            ],
-        ),
-        html.Div(
-            id="right-column",
-            className="three columns",
-            children=[
-                html.Div(f'Total number of Tweets: {total_count}',style={'color':'#7b7d8d','fontsize':'9px'}),
-                html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px'}),
-                html.Br(),
-                html.Div(
-                    className="right-row",
-                    children=[
-                        html.P(
-                            id="tweets-title",
-                            children="Tweets"
+                dbc.Col([
+                    html.Div([
+                        dcc.RangeSlider(
+                            id='range-slider',
+                            min=unix_time(df['date'].min()),
+                            max=unix_time(df['date'].max()), 
+                            value=[unix_time(df['date'].min()), unix_time(df['date'].max())], 
+                            #marks=get_marks(df['date'].min(),df['date'].max()),
+                            updatemode='mouseup',
+                        ), 
+                    ], 
+                    html.Div(id='output-range-slider',style={'color':'#7b7d8d','fontsize':'9px'}),
+                    html.Div([
+                        dcc.Graph(
+                            id="barchart",
+                            figure={
+                                "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26"),
+                            },
                         ),
-                        html.Div(
-                            id="tweet-text-outer",
-                            children=[
-                                dcc.Textarea(
-                                    id='tweet-text',
-                                    value='',
-                                    style={'width':'100%','height':'5px','background-color':'#171b26','opacity':0.5,'color':'#ffffff'},
-                                    draggable=False,
-                                    placeholder='Selected tweets comes here...'
-                                ),
-                            ],
-                        ),
-                        html.P(
-                            id="treemap-title",
-                            children="Hashtags"
-                        ),
-                        html.Div( 
-                            id="treemap-outer",
-                            children=[
-                                dcc.Graph(
-                                    id='treemap',
-                                    figure={
-                                        "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26"),
-                                    },
-                                ),
-                            ],
-                        ),
-                    ],
-                ),
-            ],
-        ),
-    ],
-)
+                    ]),
+                ], xs=12, sm=12, md=12, lg=12, xl=12
+                )
+            ], xs=12, sm=12, md=10, lg=10, xl=10
+            )
+    ], no_gutters=False, justify='start')
+], fluid=True)
+
 @app.callback(
     [
         Output('geo-map', 'figure'),
