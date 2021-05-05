@@ -37,14 +37,14 @@ body {
   width: auto;
 }
 
-#left-column, #right-column {
+#left-column {
     margin-top: 25px;
     padding: 0rem 0rem;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     min-height: calc(100vh - 5.5rem);
-    max-width: 200px;
+    max-width: 300px;
 }
 
 #center-column {
@@ -55,6 +55,16 @@ body {
     align-items: flex-start;
     min-height: calc(100vh - 5.5rem);
     min-width: 700px;
+}
+
+#right-column {
+    margin-top: 25px;
+    padding: 0rem 0rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: calc(100vh - 5.5rem);
+    max-width: 200px;
 }
 
 .geo-map > div, .barchart > div, .treemap > div {
