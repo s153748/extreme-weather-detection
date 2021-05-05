@@ -15,8 +15,8 @@ body {
 
 .banner {
   height: 3rem;
-  margin-bottom: 0rem;
-  padding: 2rem 2rem 0rem 2.8rem;
+  margin-top: 1rem;
+  /*padding: 2rem 2rem 0rem 2.8rem;*/
   display: flex;
   flex-direction: row nowrap;
   align-items: center;
@@ -25,7 +25,7 @@ body {
 
 .banner h6 {
   font-family: 'Open Sans', sans-serif;
-  font-size: 1.7rem;
+  font-size: 1.5rem;
   font-weight: 500;
   line-height: 1;
   text-transform: uppercase;
@@ -44,30 +44,9 @@ body {
     flex-direction: column;
     align-items: flex-start;
     min-height: calc(100vh - 5.5rem);
-    max-width: 250px;
 }
 
-#center-column {
-    margin-top: 25px;
-    padding: 0rem 0rem 0rem 0rem;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    min-height: calc(100vh - 5.5rem);
-    min-width: 750px;
-}
-
-#right-column {
-    margin-top: 25px;
-    padding: 0rem 0rem;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    min-height: calc(100vh - 5.5rem);
-    max-width: 200px;
-}
-
-.geo-map > div, .barchart > div, .treemap > div {
+.geo-map > div, .line-chart > div, {
     height: 100% !important;
     width: 100% !important;
 }
@@ -108,7 +87,7 @@ span.Select-clear-zone {
   color: #7b7d8d;
 }
 
-.section-title, #map-title, #treemap-title, #tweets-title {
+.section-title, #map-title, #treemap-title, #tweets-title{
   font-size: 16px;
   font-weight: bold;
   display: block;
