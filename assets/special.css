@@ -25,7 +25,7 @@ body {
 
 .banner h6 {
   font-family: 'Open Sans', sans-serif;
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-weight: 500;
   line-height: 1;
   text-transform: uppercase;
@@ -39,12 +39,12 @@ body {
 
 #left-column {
     margin-top: 25px;
-    padding: 0rem 0rem 0rem 2.8rem;
+    padding: 0rem 0rem 0rem 1rem;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     min-height: calc(100vh - 5.5rem);
-    max-width: 175px;
+    max-width: 150px;
 }
 
 #center-column {
@@ -64,7 +64,7 @@ body {
     flex-direction: column;
     align-items: flex-start;
     min-height: calc(100vh - 5.5rem);
-    max-width: 175px;
+    max-width: 150px;
 }
 
 .geo-map > div, .barchart > div, .treemap > div {
@@ -104,7 +104,7 @@ span.Select-clear-zone {
 }
 
 #graph-select-outer > label, #style-select-outer > label, #color-select-outer > label, #loc-select-outer > label, #text-search-outer > label {
-  margin-bottom: 1.5px;
+  margin-bottom: 2px;
   color: #7b7d8d;
 }
 
