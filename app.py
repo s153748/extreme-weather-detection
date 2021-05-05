@@ -200,7 +200,7 @@ def generate_barchart(filtered_df, start, end):
     fig = px.bar(time_df, 
                  x="date", 
                  y="count",
-                 height=100,
+                 height=120,
                  color_discrete_sequence=['#cbd2d3'])
     fig.update_traces(hovertemplate ='<b>%{x} </b><br>Count: %{y}')
     fig.update_xaxes(showgrid=False,
@@ -228,7 +228,7 @@ def generate_treemap(filtered_df):
                         hovertemplate='<b>%{label} </b> <br>Occurrences: %{value}<extra></extra>',
                    )
     )
-    fig.update_layout(margin=dict(l=0, r=0, t=0, b=0)) 
+    fig.update_layout(margin=dict(l=0, r=0, t=0, b=0), height=300) 
     
     return fig
 
@@ -284,8 +284,8 @@ app.layout = dbc.Container([
                             #marks=get_marks(df['date'].min(),df['date'].max()),
                             updatemode='mouseup',
                         ), 
-                    ], style={'height':'20px', 'margin-bottom':'1px'}),
-                    html.Div(id='output-range-slider',style={'color':'#7b7d8d','fontsize':'9px'}),
+                    ], style={'height':'20px','margin-bottom':'1px'}),
+                    html.Div(id='output-range-slider',style={'color':'#7b7d8d','fontsize':'9px','margin-bottom':'1px'}),
                     html.Div([
                         dcc.Graph(
                             id="barchart",
@@ -295,7 +295,7 @@ app.layout = dbc.Container([
                         ),
                     ]),
                 ], 
-                    xs=12, sm=12, md=8, lg=8, xl=8
+                    xs=12, sm=12, md=9, lg=9, xl=9
                 ),
                 dbc.Col([
                     html.Div(
@@ -337,7 +337,7 @@ app.layout = dbc.Container([
                         ],
                     ),
                 ], 
-                    xs=12, sm=12, md=4, lg=4, xl=4
+                    xs=12, sm=12, md=3, lg=3, xl=3
                 ),
             ])
         ], 
