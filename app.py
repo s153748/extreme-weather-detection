@@ -270,7 +270,7 @@ app.layout = dbc.Container([
                             dcc.Graph(
                                 id="geo-map",
                                 figure={
-                                    "data": [], "layout": dict(uirevision=True, plot_bgcolor="#171b26",paper_bgcolor="#171b26"),
+                                    "data": [], "layout": dict(uirevision='constant', plot_bgcolor="#171b26",paper_bgcolor="#171b26"),
                                 },
                             ),
                         ],
@@ -299,7 +299,6 @@ app.layout = dbc.Container([
                 dbc.Col([
                     html.Div(
                         children=[
-                            #html.Div(f'Total number of Tweets: {total_count}',style={'color':'#7b7d8d','fontsize':'9px'}),
                             html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px'}),
                             html.Br(),
                             html.P(
