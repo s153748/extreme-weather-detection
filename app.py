@@ -264,7 +264,7 @@ app.layout = html.Div(
         ),
         html.Div(
             id="center-column",
-            className="six columns",
+            className="three columns",
             children=[
                 html.Div(
                     className="center-row-1",
@@ -283,17 +283,20 @@ app.layout = html.Div(
                                         "data": [], "layout": dict(plot_bgcolor="#171b26",paper_bgcolor="#171b26"),
                                     },
                                 ),
-                                dcc.RangeSlider(
-                                    id='range-slider',
-                                    min=unix_time(df['date'].min()),
-                                    max=unix_time(df['date'].max()), 
-                                    value=[unix_time(df['date'].min()), unix_time(df['date'].max())], 
-                                    #marks=get_marks(df['date'].min(),df['date'].max()),
-                                    updatemode='mouseup',
-                                ),
-                                html.Div(id='output-range-slider',style={'color':'#7b7d8d'}),
                             ],
                         ),
+                        html.Div([
+                            dcc.RangeSlider(
+                                id='range-slider',
+                                min=unix_time(df['date'].min()),
+                                max=unix_time(df['date'].max()), 
+                                value=[unix_time(df['date'].min()), unix_time(df['date'].max())], 
+                                #marks=get_marks(df['date'].min(),df['date'].max()),
+                                updatemode='mouseup',
+                            ), 
+                            style={'height':'20px', 'margin-bottom':'1px'},
+                        ]),
+                        html.Div(id='output-range-slider',style={'color':'#7b7d8d','fontsize':'10px'}),
                     ],
                 ),
                 html.Div(
