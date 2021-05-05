@@ -187,11 +187,11 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
         clickmode="event+select",
         hovermode="closest",
         mapbox=go.layout.Mapbox(accesstoken=mapbox_access_token,
-                                center=go.layout.mapbox.Center(lat=40.4168, lon=-3.7037),
-                                zoom=0.6,
+        #                        center=go.layout.mapbox.Center(lat=40.4168, lon=-3.7037),
+        #                        zoom=0.6,
                                 style=style_select),
         font=dict(color='#737a8d'))
-    fig.update_traces(uirevision='constant',selector=dict(type='scattermapbox'))
+    fig.update_traces(uirevision='constant') 
         
     return fig, geo_df, start, end
 
