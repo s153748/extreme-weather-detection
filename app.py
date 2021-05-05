@@ -284,7 +284,7 @@ app.layout = dbc.Container([
                             #marks=get_marks(df['date'].min(),df['date'].max()),
                             updatemode='mouseup',
                         ), 
-                    ]), 
+                    ], style={'height':'20px', 'margin-bottom':'1px'}),
                     html.Div(id='output-range-slider',style={'color':'#7b7d8d','fontsize':'9px'}),
                     html.Div([
                         dcc.Graph(
@@ -300,7 +300,7 @@ app.layout = dbc.Container([
                 dbc.Col([
                     html.Div(
                         children=[
-                            html.Div(f'Total number of Tweets: {total_count}',style={'color':'#7b7d8d','fontsize':'9px'}),
+                            #html.Div(f'Total number of Tweets: {total_count}',style={'color':'#7b7d8d','fontsize':'9px'}),
                             html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px'}),
                             html.Br(),
                             html.P(
@@ -313,7 +313,7 @@ app.layout = dbc.Container([
                                     dcc.Textarea(
                                         id='tweet-text',
                                         value='',
-                                        style={'width':'100%','height':'5px','background-color':'#171b26','opacity':0.5,'color':'#ffffff'},
+                                        style={'width':'100%','height':'20px','background-color':'#171b26','opacity':0.5,'color':'#ffffff'},
                                         draggable=False,
                                         placeholder='Selected Tweets to be displayed here with scroll down...'
                                     ),
@@ -369,7 +369,7 @@ def update_visuals(range_select, graph_select, style_select, color_select, loc_s
     line_chart = generate_barchart(filtered_df, start, end)
     treemap = generate_treemap(filtered_df)
     period = f'{pd.to_datetime(start).strftime("%b %d, %Y")} - {pd.to_datetime(end).strftime("%b %d, %Y")}'
-    selection = f'Tweets in selection: {len(filtered_df)}'
+    selection = f'Tweets in selection: {len(filtered_df)} / {total_count}'
     
     return geo_map, line_chart, treemap, period, selection
 
