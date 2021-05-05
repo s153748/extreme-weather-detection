@@ -46,11 +46,22 @@ body {
     min-height: calc(100vh - 5.5rem);
 }
 
-#right-column {
+#center-column {
+    margin-top: 25px;
     padding: 0rem 0rem;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;
+    min-height: calc(100vh - 5.5rem);
+    min-width: 600px;
+}
+
+#right-column {
+    margin-top: 25px;
+    padding: 0rem 0rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     min-height: calc(100vh - 5.5rem);
 }
 
