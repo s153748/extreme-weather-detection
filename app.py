@@ -206,20 +206,19 @@ def generate_barchart(filtered_df, start, end):
     fig = px.bar(time_df, 
                  x="date", 
                  y="count",
-                 height=140,
-                 color_discrete_sequence=['#cbd2d3'],
-                 text='count')
+                 height=100,
+                 color_discrete_sequence=['#cbd2d3'])
     fig.update_traces(hovertemplate ='<b>%{x} </b><br>Count: %{y}')
     fig.update_xaxes(showgrid=False,
                      title='Date',
                      tickformat="%b %d, %Y")
     fig.update_yaxes(showgrid=False,
                      title='Count')
-    fig.update_layout(margin=dict(l=10, r=0, t=10, b=10), 
+    fig.update_layout(margin=dict(l=10, r=0, t=0, b=10), 
                       bargap=0.05,
                       plot_bgcolor="#171b26",
                       paper_bgcolor="#171b26",
-                      font=dict(color='#7b7d8d',size=12))
+                      font=dict(color='#7b7d8d',size=10))
     return fig
 
 def generate_treemap(filtered_df):
@@ -236,7 +235,7 @@ def generate_treemap(filtered_df):
                         hovertemplate='<b>%{label} </b> <br>Occurrences: %{value}<extra></extra>',
                    )
     )
-    fig.update_layout(margin=dict(l=0, r=0, t=0, b=0))
+    fig.update_layout(margin=dict(l=0, r=0, t=0, b=0), width=250, height=200)
     
     return fig
 
@@ -287,8 +286,8 @@ app.layout = html.Div(
                                 dcc.RangeSlider(
                                     id='range-slider',
                                     min=unix_time(df['date'].min()),
-                                    max=unix_time(df['date'].max()), #+601200
-                                    value=[unix_time(df['date'].min()), unix_time(df['date'].max())], #+601200
+                                    max=unix_time(df['date'].max()), 
+                                    value=[unix_time(df['date'].min()), unix_time(df['date'].max())], 
                                     #marks=get_marks(df['date'].min(),df['date'].max()),
                                     updatemode='mouseup',
                                 ),
@@ -310,13 +309,29 @@ app.layout = html.Div(
                 ),
             ],
         ),
-        html.Br(),
         html.Div(
             id="right-column",
             className="six columns",
             children=[
                 html.Div(
                     className="right-row-1",
+                    children=[
+                        html.Div(
+                            id="tweet-text-outer",
+                            children=[
+                                dcc.Textarea(
+                                    id='tweet-text',
+                                    value='',
+                                    style={'width':'100%','height':'3 px','background-color':'#171b26','opacity':0.5,'color':'#ffffff'},
+                                    draggable=False,
+                                    placeholder='Selected tweets comes here...'
+                                ),
+                            ],
+                        ),
+                    ],
+                ),
+                html.Div(
+                    className="right-row-2",
                     children=[
                         html.P(
                             id="treemap-title",
@@ -330,23 +345,6 @@ app.layout = html.Div(
                                     figure={
                                         "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26"),
                                     },
-                                ),
-                            ],
-                        ),
-                    ],
-                ),
-                html.Div(
-                    className="right-row-2",
-                    children=[
-                        html.Div(
-                            id="tweet-text-outer",
-                            children=[
-                                dcc.Textarea(
-                                    id='tweet-text',
-                                    value='',
-                                    style={'width':'100%','height':'3 px','background-color':'#171b26','opacity':0.5,'color':'#ffffff'},
-                                    draggable=False,
-                                    placeholder='Selected tweets comes here...'
                                 ),
                             ],
                         ),
