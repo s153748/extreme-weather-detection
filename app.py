@@ -267,77 +267,95 @@ app.layout = html.Div(
             id="center-column",
             className="six columns",
             children=[
-                html.Br(),
-                html.P(
-                    id="map-title",
-                    children="Spatio-Temporal Development of Flood-Relevant Tweets"
-                ),
-                html.Div( 
-                    id="geo-map-outer",
+                html.Div(
+                    className="center-row-1",
                     children=[
-                        dcc.Graph(
-                            id="geo-map",
-                            figure={
-                                "data": [], "layout": dict(plot_bgcolor="#171b26",paper_bgcolor="#171b26"),
-                            },
+                        html.Br(),
+                        html.P(
+                            id="map-title",
+                            children="Spatio-Temporal Development of Flood-Relevant Tweets"
                         ),
-                        dcc.RangeSlider(
-                            id='range-slider',
-                            min=unix_time(df['date'].min()),
-                            max=unix_time(df['date'].max()), #+601200
-                            value=[unix_time(df['date'].min()), unix_time(df['date'].max())], #+601200
-                            #marks=get_marks(df['date'].min(),df['date'].max()),
-                            updatemode='mouseup',
+                        html.Div( 
+                            id="geo-map-outer",
+                            children=[
+                                dcc.Graph(
+                                    id="geo-map",
+                                    figure={
+                                        "data": [], "layout": dict(plot_bgcolor="#171b26",paper_bgcolor="#171b26"),
+                                    },
+                                ),
+                                dcc.RangeSlider(
+                                    id='range-slider',
+                                    min=unix_time(df['date'].min()),
+                                    max=unix_time(df['date'].max()), #+601200
+                                    value=[unix_time(df['date'].min()), unix_time(df['date'].max())], #+601200
+                                    #marks=get_marks(df['date'].min(),df['date'].max()),
+                                    updatemode='mouseup',
+                                ),
+                                html.Div(id='output-range-slider',style={'color':'#7b7d8d'}),
+                            ],
                         ),
-                        html.Div(id='output-range-slider',style={'color':'#7b7d8d'}),
+                    ],
+                ),
+                html.Div(
+                    className="center-row-2",
+                    children=[
                         dcc.Graph(
                             id="barchart",
                             figure={
                                 "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26"),
                             },
-                        )
-                    ]
+                        ),
+                    ],
                 ),
-            ]
+            ],
         ),
         html.Br(),
         html.Div(
             id="right-column",
             className="six columns",
             children=[
-                html.Br(),
-                html.P(
-                    id="treemap-title",
-                    children="Top hashtags"
-                ),
-                html.Div( 
-                    id="treemap-outer",
+                html.Div(
+                    className="right-row-1",
                     children=[
-                        dcc.Graph(
-                            id='treemap',
-                            figure={
-                                "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26"),
-                            },
-                        )
-                    ]
+                        html.P(
+                            id="treemap-title",
+                            children="Top hashtags"
+                        ),
+                        html.Div( 
+                            id="treemap-outer",
+                            children=[
+                                dcc.Graph(
+                                    id='treemap',
+                                    figure={
+                                        "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26"),
+                                    },
+                                ),
+                            ],
+                        ),
+                    ],
                 ),
                 html.Div(
-                    id="tweet-text-outer",
-                        children=[
-                            dcc.Textarea(
-                                id='tweet-text',
-                                value='',
-                                style={'width': '100%', 'height': "1 px", 'background-color': '#171b26', 'opacity': 0.5, 'color': '#ffffff'},
-                                draggable=False,
-                                placeholder='Selected tweets comes here...'
-                            ),
-                        ]
-                )
-            ]
-        )
-    ]
+                    className="right-row-2",
+                    children=[
+                        html.Div(
+                            id="tweet-text-outer",
+                            children=[
+                                dcc.Textarea(
+                                    id='tweet-text',
+                                    value='',
+                                    style={'width':'100%','height':'3 px','background-color':'#171b26','opacity':0.5,'color':'#ffffff'},
+                                    draggable=False,
+                                    placeholder='Selected tweets comes here...'
+                                ),
+                            ],
+                        ),
+                    ],
+                ),
+            ],
+        ),
+    ],
 )
-
 @app.callback(
     [
         Output('geo-map', 'figure'),
@@ -355,12 +373,12 @@ app.layout = html.Div(
         State('text-search', 'value')
     ],
 )
-def update_visualizations(range_select, graph_select, style_select, color_select, loc_select, n_clicks, keywords):
+def update_visuals(range_select, graph_select, style_select, color_select, loc_select, n_clicks, keywords):
     
     geo_map, filtered_df, start, end = generate_geo_map(df, range_select, graph_select, style_select.lower(), color_select, loc_select, n_clicks, keywords)
     line_chart = generate_barchart(filtered_df, start, end)
     treemap = generate_treemap(filtered_df)
-    period = f'Period: {pd.to_datetime(start).strftime("%b %d, %Y")} - {pd.to_datetime(end).strftime("%b %d, %Y")}'
+    period = f'Selected period: {pd.to_datetime(start).strftime("%b %d, %Y")} - {pd.to_datetime(end).strftime("%b %d, %Y")}'
     selection = f'Tweets in selection: {len(filtered_df)}'
     
     return geo_map, line_chart, treemap, period, selection
