@@ -270,17 +270,14 @@ app.layout = html.Div(
                             id="map-title",
                             children="Spatio-Temporal Development of Flood-Relevant Tweets"
                         ),
-                        html.Div( 
-                            id="geo-map-outer",
-                            children=[
-                                dcc.Graph(
-                                    id="geo-map",
-                                    figure={
-                                        "data": [], "layout": dict(plot_bgcolor="#171b26",paper_bgcolor="#171b26"),
-                                    },
-                                ),
-                            ],
-                        ),
+                        html.Div([
+                            dcc.Graph(
+                                id="geo-map",
+                                figure={
+                                    "data": [], "layout": dict(plot_bgcolor="#171b26",paper_bgcolor="#171b26"),
+                                },
+                            ),
+                        ], style={'margin-bottom':'0px'}),
                         html.Div([
                             dcc.RangeSlider(
                                 id='range-slider',
