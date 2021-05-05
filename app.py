@@ -295,7 +295,7 @@ app.layout = dbc.Container([
                         ),
                     ]),
                 ], 
-                    xs=12, sm=12, md=7, lg=7, xl=7
+                    xs=12, sm=12, md=8, lg=8, xl=8
                 ),
                 dbc.Col([
                     html.Div(
@@ -337,7 +337,7 @@ app.layout = dbc.Container([
                         ],
                     ),
                 ], 
-                    xs=12, sm=12, md=3, lg=3, xl=3
+                    xs=12, sm=12, md=4, lg=4, xl=4
                 ),
             ])
         ], 
@@ -368,7 +368,7 @@ def update_visuals(range_select, graph_select, style_select, color_select, loc_s
     geo_map, filtered_df, start, end = generate_geo_map(df, range_select, graph_select, style_select.lower(), color_select, loc_select, n_clicks, keywords)
     line_chart = generate_barchart(filtered_df, start, end)
     treemap = generate_treemap(filtered_df)
-    period = f'Selected period: {pd.to_datetime(start).strftime("%b %d, %Y")} - {pd.to_datetime(end).strftime("%b %d, %Y")}'
+    period = f'{pd.to_datetime(start).strftime("%b %d, %Y")} - {pd.to_datetime(end).strftime("%b %d, %Y")}'
     selection = f'Tweets in selection: {len(filtered_df)}'
     
     return geo_map, line_chart, treemap, period, selection
