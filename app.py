@@ -22,8 +22,6 @@ app = dash.Dash(
     __name__, external_stylesheets=[dbc.themes.BOOTSTRAP],
     meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"}]
 )
-#server = app.server
-#app.config.suppress_callback_exceptions = True
 
 githublink = 'https://github.com/s153748/extreme-weather-detection'
 mapbox_access_token = open(".mapbox_token.txt").read()
@@ -236,7 +234,6 @@ def generate_treemap(filtered_df):
 
 # Set up the layout
 app.layout = dbc.Container([
-    
     dbc.Row(
         dbc.Col(
             html.Div(
@@ -298,7 +295,7 @@ app.layout = dbc.Container([
                         ),
                     ]),
                 ], 
-                    xs=12, sm=12, md=8, lg=8, xl=8
+                    xs=12, sm=12, md=7, lg=7, xl=7
                 ),
                 dbc.Col([
                     html.Div(
@@ -344,10 +341,9 @@ app.layout = dbc.Container([
                 ),
             ])
         ], 
-            xs=12, sm=12, md=12, lg=12, xl=12
+            xs=12, sm=12, md=10, lg=10, xl=10
         )
     ], no_gutters=False, justify='start')
-
 ], fluid=True)
 
 @app.callback(
