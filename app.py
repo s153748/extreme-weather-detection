@@ -135,7 +135,8 @@ def build_control_panel():
                                 placeholder='e.g. Floods, Queensland'
                             ),
                             html.Button('Search', id='search-button', n_clicks=0),
-                            html.Br()
+                            html.Br(),
+                            html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px','margin-top':'20px'}),
                         ]
                     )
                 ]
@@ -274,7 +275,6 @@ app.layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             build_control_panel(),
-            html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px'}),
         ], 
             xs=12, sm=12, md=2, lg=2, xl=2
         ),
@@ -378,7 +378,7 @@ def update_visuals(range_select, graph_select, style_select, color_select, loc_s
     treemap = generate_treemap(filtered_df)
     table = generate_table(filtered_df)
     period = f'Selected period: {pd.to_datetime(start).strftime("%b %d, %Y")} - {pd.to_datetime(end).strftime("%b %d, %Y")}'
-    counter = f'Tweets in selection: {len(filtered_df)} / {total_count}'
+    counter = f'Tweets in selection:\n{len(filtered_df)}/{total_count}'
     
     return geo_map, line_chart, treemap, table, period, counter
 
