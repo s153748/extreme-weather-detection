@@ -29,7 +29,6 @@ mapbox_access_token = open(".mapbox_token.txt").read()
 # Load data
 DATA_PATH = pathlib.Path(__file__).parent.joinpath("data") 
 df = pd.read_csv(DATA_PATH.joinpath("final_tweets.csv")) 
-
 # Data prep
 total_count = len(df)
 df['date'] = pd.to_datetime(df['date'])
@@ -168,8 +167,9 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
                                 color=color_select.lower(),
                                 hover_name='full_text',
                                 hover_data={'lat':False,'lon':False,'localization':True,'user_location':True,'user_name':True,'created_at':True,'source':True,'retweet_count':True},
-                                color_discrete_sequence=colors)
-
+                                color_discrete_sequence=colors,
+                                custom_data=['tweet_id'])
+        
     elif graph_select == 'Hexagon map':
         fig = ff.create_hexbin_mapbox(geo_df, 
                                       lat="lat", 
@@ -178,7 +178,8 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
                                       opacity=0.7, 
                                       labels={"color": "Count"},
                                       min_count=1, 
-                                      color_continuous_scale='GnBu')
+                                      color_continuous_scale='GnBu',
+                                      custom_data=['tweet_id'])
 
     fig.update_layout(
         margin=dict(l=0, r=0, t=0, b=0),
@@ -187,11 +188,10 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
         clickmode="event+select",
         hovermode="closest",
         mapbox=go.layout.Mapbox(accesstoken=mapbox_access_token,
-        #                        center=go.layout.mapbox.Center(lat=40.4168, lon=-3.7037),
-        #                        zoom=0.6,
+                                center=go.layout.mapbox.Center(lat=40.4168, lon=-3.7037),
+                                zoom=0.6,
                                 style=style_select),
         font=dict(color='#737a8d'))
-    fig.update_traces(uirevision='constant') 
         
     return fig, geo_df, start, end
 
@@ -233,7 +233,20 @@ def generate_treemap(filtered_df):
     
     return fig
 
-# Set up the layout
+def generate_table(filtered_df):
+    text_df = filtered_df[['full_text']]
+    text_df.rename(columns={'full_text':'Tweets'},inplace=True)
+    table = dash_table.DataTable( 
+        id="tweets-table",
+        columns=[{"name": i, "id": i} for i in text_df.columns],
+        data=text_df.to_dict('records'),
+        page_size=5,
+        style_cell={'textAlign': 'left',"background-color":"#242a3b","color":"#7b7d8d"},
+        style_as_list_view=False,
+        style_header={"background-color":"#1f2536","padding":"0px 5px"},
+    )
+    return table
+
 app.layout = dbc.Container([
     dbc.Row(
         dbc.Col(
@@ -268,12 +281,12 @@ app.layout = dbc.Container([
                     html.Div(
                         id="geo-map-outer",
                         children=[
-                            dcc.Graph(
+                            dcc.Loading(children=dcc.Graph(
                                 id="geo-map",
                                 figure={
-                                    "data": [], "layout": dict(uirevision='constant', plot_bgcolor="#171b26",paper_bgcolor="#171b26"),
+                                    "data": [], "layout": dict(plot_bgcolor="#171b26",paper_bgcolor="#171b26"),
                                 },
-                            ),
+                            )),
                         ],
                     ),
                     html.Div([
@@ -287,12 +300,12 @@ app.layout = dbc.Container([
                     ], style={'height':'20px','margin-bottom':'1px'}),
                     html.Div(id='output-range-slider',style={'color':'#7b7d8d','fontsize':'9px','margin-bottom':'1px'}),
                     html.Div([
-                        dcc.Graph(
+                        dcc.Loading(children=dcc.Graph(
                             id="barchart",
                             figure={
                                 "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26"),
                             },
-                        ),
+                        )),
                     ]),
                 ], 
                     xs=12, sm=12, md=9, lg=9, xl=9
@@ -303,34 +316,24 @@ app.layout = dbc.Container([
                             html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px'}),
                             html.Br(),
                             html.P(
-                                id="tweets-title",
-                                children="Tweets"
+                                id="treemap-title",
+                                children="Textual content"
                             ),
                             html.Div(
-                                id="tweets-outer",
-                                children=[
-                                    dcc.Textarea(
-                                        id='tweet-text',
-                                        value='',
-                                        style={'width':'100%','height':'20px','background-color':'#171b26','opacity':0.5,'color':'#ffffff'},
-                                        draggable=False,
-                                        placeholder='Selected Tweets to be displayed here with scroll down...'
-                                    ),
-                                ],
-                            ), 
-                            html.P(
-                                id="treemap-title",
-                                children="Hashtags"
-                            ),
-                            html.Div( 
                                 id="treemap-outer",
                                 children=[
-                                    dcc.Graph(
+                                    dcc.Loading(children=dcc.Graph(
                                         id='treemap',
                                         figure={
                                             "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26"),
                                         },
-                                    ),
+                                    )),
+                                ],
+                            ),
+                            html.Div(
+                                id="tweets-outer",
+                                children=[
+                                    dcc.Loading(children=html.Div(id="tweets-table")),
                                 ],
                             ),
                         ],
@@ -350,6 +353,7 @@ app.layout = dbc.Container([
         Output('geo-map', 'figure'),
         Output('barchart', 'figure'),
         Output('treemap', 'figure'),
+        Output('tweets-table', 'children'),
         Output('output-range-slider', 'children'),
         Output('counter', 'children')
     ], [
@@ -367,10 +371,11 @@ def update_visuals(range_select, graph_select, style_select, color_select, loc_s
     geo_map, filtered_df, start, end = generate_geo_map(df, range_select, graph_select, style_select.lower(), color_select, loc_select, n_clicks, keywords)
     line_chart = generate_barchart(filtered_df, start, end)
     treemap = generate_treemap(filtered_df)
+    table = generate_table(filtered_df)
     period = f'{pd.to_datetime(start).strftime("%b %d, %Y")} - {pd.to_datetime(end).strftime("%b %d, %Y")}'
-    selection = f'Tweets in selection: {len(filtered_df)} / {total_count}'
+    counter = f'Tweets in selection: {len(filtered_df)} / {total_count}'
     
-    return geo_map, line_chart, treemap, period, selection
+    return geo_map, line_chart, treemap, table, period, counter
 
 if __name__ == '__main__':
     app.run_server()
