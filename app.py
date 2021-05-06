@@ -135,6 +135,7 @@ def build_control_panel():
                                 placeholder='e.g. Floods, Queensland'
                             ),
                             html.Button('Search', id='search-button', n_clicks=0),
+                            html.Br()
                         ]
                     )
                 ]
@@ -230,8 +231,10 @@ def generate_treemap(filtered_df):
                         hovertemplate='<b>%{label} </b> <br>Count: %{value}<extra></extra>',
                    )
     )
-    fig.update_layout(margin=dict(l=0, r=0, t=0, b=10), height=200) 
-    
+    fig.update_layout(margin=dict(l=0, r=0, t=0, b=20), 
+                      height=225,
+                      plot_bgcolor="#171b26",
+                      paper_bgcolor="#171b26") 
     return fig
 
 def generate_table(filtered_df):
@@ -242,9 +245,8 @@ def generate_table(filtered_df):
         columns=[{"name": i, "id": i} for i in text_df.columns],
         data=text_df.to_dict('records'),
         page_size=5,
-        style_table={'overflowX':'auto'},
-        style_cell={'whiteSpace':'normal','height':'auto',
-                    'minWidth':'250px','width':'250px','maxWidth':'250px',
+        style_table={'overflowX':'auto','overflowY':'auto'},
+        style_cell={'whiteSpace':'normal','height':'auto','width':'250px',
                     "background-color":"#242a3b","color":"#7b7d8d"},
         style_as_list_view=False,
         style_header={"background-color":"#1f2536","padding":"0px 5px"},
