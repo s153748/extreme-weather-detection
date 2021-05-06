@@ -169,7 +169,7 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
                                 hover_name='full_text',
                                 hover_data={'lat':False,'lon':False,'localization':True,'user_location':True,'user_name':True,'created_at':True,'source':True,'retweet_count':True},
                                 color_discrete_sequence=colors,
-                                custom_data=['tweet_id'])
+                                )
         
     elif graph_select == 'Hexagon map':
         fig = ff.create_hexbin_mapbox(geo_df, 
@@ -180,7 +180,7 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
                                       labels={"color": "Count"},
                                       min_count=1, 
                                       color_continuous_scale='GnBu',
-                                      custom_data=['tweet_id'])
+                                      )
 
     fig.update_layout(
         margin=dict(l=0, r=0, t=0, b=0),
@@ -220,17 +220,17 @@ def generate_barchart(filtered_df, start, end):
 def generate_treemap(filtered_df):
     k = 20
     hashtag_list = [hashtag for sublist in filtered_df['hashtags'].tolist() for hashtag in sublist]
-    freq_df = pd.DataFrame(list(FreqDist(hashtag_list).items()), columns = ["hashtag","occurrence"]) 
-    freq_df = freq_df.sort_values('occurrence',ascending=False)
+    freq_df = pd.DataFrame(list(FreqDist(hashtag_list).items()), columns = ["hashtag","count"]) 
+    freq_df = freq_df.sort_values('count',ascending=False)
     fig = go.Figure(go.Treemap(
                         labels=freq_df['hashtag'][:k].tolist(),
-                        values=freq_df['occurrence'][:k].tolist(),
+                        values=freq_df['count'][:k].tolist(),
                         parents=['']*k,
                         marker_colorscale=px.colors.sequential.Teal,
-                        hovertemplate='<b>%{label} </b> <br>Occurrences: %{value}<extra></extra>',
+                        hovertemplate='<b>%{label} </b> <br>Count: %{value}<extra></extra>',
                    )
     )
-    fig.update_layout(margin=dict(l=0, r=0, t=0, b=0), height=200) 
+    fig.update_layout(margin=dict(l=0, r=0, t=0, b=10), height=200) 
     
     return fig
 
@@ -241,7 +241,7 @@ def generate_table(filtered_df):
         id="tweets-table",
         columns=[{"name": i, "id": i} for i in text_df.columns],
         data=text_df.to_dict('records'),
-        page_size=3,
+        page_size=5,
         style_table={'overflowX':'auto'},
         style_cell={'whiteSpace':'normal','height':'auto',
                     'minWidth':'250px','width':'250px','maxWidth':'250px',
@@ -271,7 +271,8 @@ app.layout = dbc.Container([
     ),
     dbc.Row([
         dbc.Col([
-            build_control_panel()
+            build_control_panel(),
+            html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px'}),
         ], 
             xs=12, sm=12, md=2, lg=2, xl=2
         ),
@@ -338,7 +339,6 @@ app.layout = dbc.Container([
                                     dcc.Loading(children=html.Div(id="tweets-table")),
                                 ],
                             ),
-                            html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px'}),
                         ],
                     ),
                 ], 
@@ -375,7 +375,7 @@ def update_visuals(range_select, graph_select, style_select, color_select, loc_s
     line_chart = generate_barchart(filtered_df, start, end)
     treemap = generate_treemap(filtered_df)
     table = generate_table(filtered_df)
-    period = f'{pd.to_datetime(start).strftime("%b %d, %Y")} - {pd.to_datetime(end).strftime("%b %d, %Y")}'
+    period = f'Selected period: {pd.to_datetime(start).strftime("%b %d, %Y")} - {pd.to_datetime(end).strftime("%b %d, %Y")}'
     counter = f'Tweets in selection: {len(filtered_df)} / {total_count}'
     
     return geo_map, line_chart, treemap, table, period, counter
