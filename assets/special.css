@@ -16,7 +16,6 @@ body {
 .banner {
   height: 3rem;
   margin-top: 1rem;
-  /*padding: 2rem 2rem 0rem 2.8rem;*/
   display: flex;
   flex-direction: row nowrap;
   align-items: center;
@@ -100,7 +99,7 @@ span.Select-clear-zone {
   border-bottom-color: #171b26 !important;
   border-left-color: #171b26 !important;
   border-right-color: #171b26 !important;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 #tweets-outer > p {
