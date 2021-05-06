@@ -93,6 +93,21 @@ span.Select-clear-zone {
   display: block;
 }
 
+.dash-spreadsheet-container .dash-spreadsheet-inner th, td {
+  text-align: center !important;
+  font-family: "Open Sans", sans-serif !important;
+  border-top-color: #171b26 !important;
+  border-bottom-color: #171b26 !important;
+  border-left-color: #171b26 !important;
+  border-right-color: #171b26 !important;
+  font-size: 11px;
+}
+
+#tweets-outer > p {
+  font-weight: bold;
+  margin: 20px 0px;
+}
+
 .mapboxgl-canvas, .mapboxgl-map {
   min-width: 100%;
 }
