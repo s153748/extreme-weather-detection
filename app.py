@@ -242,7 +242,10 @@ def generate_table(filtered_df):
         columns=[{"name": i, "id": i} for i in text_df.columns],
         data=text_df.to_dict('records'),
         page_size=5,
-        style_cell={'textAlign': 'left',"background-color":"#242a3b","color":"#7b7d8d"},
+        style_table={'overflowX':'auto'}
+        style_cell={'whiteSpace':'normal','height':'auto',
+                    'minWidth':'300px','width':'300px','maxWidth':'300px',
+                    "background-color":"#242a3b","color":"#7b7d8d"},
         style_as_list_view=False,
         style_header={"background-color":"#1f2536","padding":"0px 5px"},
     )
