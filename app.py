@@ -331,6 +331,7 @@ app.layout = dbc.Container([
                                     )),
                                 ],
                             ),
+                            html.Br(),
                             html.Div(
                                 id="tweets-outer",
                                 children=[
