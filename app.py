@@ -230,7 +230,7 @@ def generate_treemap(filtered_df):
                         hovertemplate='<b>%{label} </b> <br>Occurrences: %{value}<extra></extra>',
                    )
     )
-    fig.update_layout(margin=dict(l=0, r=0, t=0, b=0), height=300) 
+    fig.update_layout(margin=dict(l=0, r=0, t=0, b=0), height=200) 
     
     return fig
 
@@ -244,7 +244,7 @@ def generate_table(filtered_df):
         page_size=3,
         style_table={'overflowX':'auto'},
         style_cell={'whiteSpace':'normal','height':'auto',
-                    'minWidth':'300px','width':'300px','maxWidth':'300px',
+                    'minWidth':'250px','width':'250px','maxWidth':'250px',
                     "background-color":"#242a3b","color":"#7b7d8d"},
         style_as_list_view=False,
         style_header={"background-color":"#1f2536","padding":"0px 5px"},
@@ -317,8 +317,6 @@ app.layout = dbc.Container([
                 dbc.Col([
                     html.Div(
                         children=[
-                            html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px'}),
-                            html.Br(),
                             html.P(
                                 id="treemap-title",
                                 children="Textual content"
@@ -334,13 +332,13 @@ app.layout = dbc.Container([
                                     )),
                                 ],
                             ),
-                            html.Br(),
                             html.Div(
                                 id="tweets-outer",
                                 children=[
                                     dcc.Loading(children=html.Div(id="tweets-table")),
                                 ],
                             ),
+                            html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px'}),
                         ],
                     ),
                 ], 
