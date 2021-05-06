@@ -135,7 +135,6 @@ def build_control_panel():
                                 placeholder='e.g. Floods, Queensland'
                             ),
                             html.Button('Search', id='search-button', n_clicks=0),
-                            html.Br(),
                             html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px','margin-top':'20px'}),
                         ]
                     )
@@ -171,18 +170,18 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
                                 hover_name='full_text',
                                 hover_data={'lat':False,'lon':False,'localization':True,'user_location':True,'user_name':True,'created_at':True,'source':True,'retweet_count':True},
                                 color_discrete_sequence=colors,
-                                )
+        )
         
     elif graph_select == 'Hexagon map':
         fig = ff.create_hexbin_mapbox(geo_df, 
                                       lat="lat", 
                                       lon="lon",
-                                      nx_hexagon=60, # int(max(25,len(geo_df)/10)), 
+                                      nx_hexagon=70, # int(max(25,len(geo_df)/10)), 
                                       opacity=0.7, 
                                       labels={"color": "Count"},
                                       min_count=1, 
                                       color_continuous_scale='GnBu',
-                                      )
+        )
 
     fig.update_layout(
         margin=dict(l=0, r=0, t=0, b=0),
@@ -229,11 +228,9 @@ def generate_treemap(filtered_df):
                         values=freq_df['count'][:k].tolist(),
                         parents=['']*k,
                         marker_colorscale=px.colors.sequential.Teal,
-                        hovertemplate='<b>%{label} </b> <br>Count: %{value}<extra></extra>',
-                   )
-    )
+                        hovertemplate='<b>%{label} </b> <br>Count: %{value}<extra></extra>'))
     fig.update_layout(margin=dict(l=0, r=0, t=0, b=20), 
-                      height=225,
+                      height=240,
                       plot_bgcolor="#171b26",
                       paper_bgcolor="#171b26") 
     return fig
@@ -246,9 +243,7 @@ def generate_table(filtered_df):
         columns=[{"name": i, "id": i} for i in text_df.columns],
         data=text_df.to_dict('records'),
         page_size=5,
-        style_table={'overflowX':'auto','overflowY':'auto'},
-        style_cell={'whiteSpace':'normal','height':'auto','width':'250px',
-                    "background-color":"#242a3b","color":"#7b7d8d"},
+        style_cell={'whiteSpace':'normal','height':'auto','width':'250px',"background-color":"#242a3b","color":"#7b7d8d"},
         style_as_list_view=False,
         style_header={"background-color":"#1f2536","padding":"0px 5px"},
     )
@@ -322,7 +317,7 @@ app.layout = dbc.Container([
                         children=[
                             html.P(
                                 id="treemap-title",
-                                children="Textual content"
+                                children="Content"
                             ),
                             html.Div(
                                 id="treemap-outer",
@@ -378,7 +373,8 @@ def update_visuals(range_select, graph_select, style_select, color_select, loc_s
     treemap = generate_treemap(filtered_df)
     table = generate_table(filtered_df)
     period = f'Selected period: {pd.to_datetime(start).strftime("%b %d, %Y")} - {pd.to_datetime(end).strftime("%b %d, %Y")}'
-    counter = f'Tweets in selection:\n{len(filtered_df)}/{total_count}'
+    pct = np.round(len(filtered_df)/total_count*100,1)
+    counter = f'Tweets in selection: {len(filtered_df)} ({pct} %)'
     
     return geo_map, line_chart, treemap, table, period, counter
 
