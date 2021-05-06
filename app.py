@@ -241,8 +241,8 @@ def generate_table(filtered_df):
         id="tweets-table",
         columns=[{"name": i, "id": i} for i in text_df.columns],
         data=text_df.to_dict('records'),
-        page_size=5,
-        style_table={'overflowX':'auto'}
+        page_size=3,
+        style_table={'overflowX':'auto'},
         style_cell={'whiteSpace':'normal','height':'auto',
                     'minWidth':'300px','width':'300px','maxWidth':'300px',
                     "background-color":"#242a3b","color":"#7b7d8d"},
