@@ -86,7 +86,7 @@ span.Select-clear-zone {
   color: #7b7d8d;
 }
 
-.section-title, #map-title, #treemap-title, #tweets-title{
+.section-title, #map-title, #treemap-title, #tweets-title {
   font-size: 16px;
   font-weight: bold;
   display: block;
@@ -105,6 +105,7 @@ span.Select-clear-zone {
 #tweets-outer > p {
   font-weight: bold;
   margin: 20px 0px;
+  overflow: auto;
 }
 
 .mapboxgl-canvas, .mapboxgl-map {
