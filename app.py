@@ -30,6 +30,7 @@ mapbox_access_token = open(".mapbox_token.txt").read()
 # Load data
 DATA_PATH = pathlib.Path(__file__).parent.joinpath("data") 
 df = pd.read_csv(DATA_PATH.joinpath("final_tweets.csv")) 
+
 # Data prep
 total_count = len(df)
 df['date'] = pd.to_datetime(df['date'])
@@ -374,7 +375,7 @@ def update_visuals(range_select, graph_select, style_select, color_select, loc_s
     table = generate_table(filtered_df)
     period = f'Selected period: {pd.to_datetime(start).strftime("%b %d, %Y")} - {pd.to_datetime(end).strftime("%b %d, %Y")}'
     pct = np.round(len(filtered_df)/total_count*100,1)
-    counter = f'Tweets in selection: {len(filtered_df)} ({pct} %)'
+    counter = f'Tweets in selection: {len(filtered_df)} ({pct}%)' if pct < 100 else f'Tweets in selection: {len(filtered_df)}'
     
     return geo_map, line_chart, treemap, table, period, counter
 
