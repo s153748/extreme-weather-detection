@@ -177,7 +177,7 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
         fig = ff.create_hexbin_mapbox(geo_df, 
                                       lat="lat", 
                                       lon="lon",
-                                      nx_hexagon=70, # int(max(25,len(geo_df)/10)), 
+                                      nx_hexagon=100, # int(max(25,len(geo_df)/10)), 
                                       opacity=0.7, 
                                       labels={"color": "Count"},
                                       min_count=1, 
@@ -192,7 +192,7 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
         hovermode="closest",
         mapbox=go.layout.Mapbox(accesstoken=mapbox_access_token,
                                 center=go.layout.mapbox.Center(lat=40.4168, lon=-3.7037),
-                                zoom=0.6,
+                                zoom=0.66,
                                 style=style_select),
         font=dict(color='#737a8d'))
         
@@ -243,7 +243,8 @@ def generate_table(filtered_df):
         id="tweets-table",
         columns=[{"name": i, "id": i} for i in text_df.columns],
         data=text_df.to_dict('records'),
-        page_size=5,
+        page_size=20,
+        style_table={'overflowY': 'scroll'},
         style_cell={'whiteSpace':'normal','height':'auto','width':'250px',"background-color":"#242a3b","color":"#7b7d8d"},
         style_as_list_view=False,
         style_header={"background-color":"#1f2536","padding":"0px 5px"},
