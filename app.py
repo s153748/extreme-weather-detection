@@ -192,7 +192,7 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
         hovermode="closest",
         mapbox=go.layout.Mapbox(accesstoken=mapbox_access_token,
                                 center=go.layout.mapbox.Center(lat=40.4168, lon=-3.7037),
-                                zoom=0.66,
+                                zoom=0.65,
                                 style=style_select),
         font=dict(color='#737a8d'))
         
@@ -247,7 +247,7 @@ def generate_table(filtered_df):
         style_table={'overflowY': 'scroll'},
         style_cell={'whiteSpace':'normal','height':'auto','width':'250px',"background-color":"#242a3b","color":"#7b7d8d"},
         style_as_list_view=False,
-        style_header={"background-color":"#1f2536","padding":"0px 5px"},
+        style_header={"background-color":"#1f2536",'fontWeight':'bold',"padding":"0px 5px"},
     )
     return table
 
