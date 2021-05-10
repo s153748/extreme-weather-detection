@@ -243,7 +243,7 @@ def generate_table(filtered_df):
         id="tweets-table",
         columns=[{"name": i, "id": i} for i in text_df.columns],
         data=text_df.to_dict('records'),
-        #page_size=20,
+        page_size=5,
         #style_table={'overflowY': 'scroll'},
         style_cell={'whiteSpace':'normal','height':'auto','width':'250px',"background-color":"#242a3b","color":"#7b7d8d"},
         style_as_list_view=False,
