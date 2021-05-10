@@ -105,6 +105,7 @@ span.Select-clear-zone {
 #tweets-outer > p {
   font-weight: bold;
   margin: 20px 0px;
+  max-width: 200px;
   overflow: auto;
 }
 
