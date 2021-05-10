@@ -93,11 +93,13 @@ def build_control_panel():
                     html.Div(
                         id="color-select-outer",
                         children=[
-                            html.Label("Color by"),
-                            dcc.Dropdown(
+                            html.Label("Filter by"),
+                            #dcc.Dropdown(
+                            dcc.RadioItems(
                                 id="color-select",
                                 options=[{"label": i, "value": i} for i in color_list],
                                 value=color_list[0],
+                                labelStyle={"display": "inline-block"},
                             ),
                         ],
                     ),
@@ -109,7 +111,7 @@ def build_control_panel():
                     html.Div(
                         id="loc-select-outer",
                         children=[
-                            html.Label("Localization"),
+                            html.Label("Localization Method"),
                             dcc.Dropdown(
                                 id='loc-select',
                                 options=[{"label": i, "value": i} for i in loc_list],
