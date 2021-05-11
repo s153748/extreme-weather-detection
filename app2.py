@@ -51,7 +51,7 @@ style_list = ['Light','Dark','Streets','Outdoors','Satellite']
 color_list = ['Localization','Retweeted']
 loc_list = df.localization.unique()
 retweet_list = df.retweeted.unique()
-colors = ['#003f5c', '#ffa600', '#ef5675', '#7a5195']
+colors = ['#ef5675', '#7a5195', '#ffa600', '#003f5c']
 
 # Create global chart template
 layout = dict(
