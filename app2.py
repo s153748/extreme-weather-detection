@@ -241,7 +241,7 @@ def generate_geo_map(geo_df, graph_select, style_select, color_select, graph_lay
                 type="scattermapbox",
                 lat=dff["lat"],
                 lon=dff["lon"],
-                name=loc_list if color_select=='localization' else retweet_list,
+                name=loc_list[i] if color_select=='localization' else retweet_list[i],
                 customdata=tweet,
                 hoverinfo="text",
                 text='<b>'+tweet+'</b><br>localization: '+localization+'<br>user_name: '+user_name+'<br>created_at: '+created_at+'<br>source: '+source+'<br>retweet_count: '+retweet_count,
