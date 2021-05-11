@@ -226,6 +226,11 @@ def generate_barchart(df, range_select, loc_select, n_clicks, keywords):
 
 def generate_geo_map(geo_df, graph_select, style_select, color_select, graph_layout):
     
+    if color_select=='localization':
+        name=loc_list
+    else:
+        name=retweet_list
+    
     if graph_select == 'Scatter map':
         traces = []
         i = 0
@@ -241,7 +246,7 @@ def generate_geo_map(geo_df, graph_select, style_select, color_select, graph_lay
                 type="scattermapbox",
                 lat=dff["lat"],
                 lon=dff["lon"],
-                name=loc_list[i] if color_select=='localization' else retweet_list[i] if color_select=='retweeted',
+                name=name[i],
                 customdata=tweet,
                 hoverinfo="text",
                 text='<b>'+tweet+'</b><br>localization: '+localization+'<br>user_name: '+user_name+'<br>created_at: '+created_at+'<br>source: '+source+'<br>retweet_count: '+retweet_count,
