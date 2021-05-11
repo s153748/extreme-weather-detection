@@ -31,6 +31,21 @@ mapbox_access_token = open(".mapbox_token.txt").read()
 DATA_PATH = pathlib.Path(__file__).parent.joinpath("data") 
 df = pd.read_csv(DATA_PATH.joinpath("final_tweets.csv")) 
 
+# Initiate app
+app = JupyterDash(
+    __name__, external_stylesheets=[dbc.themes.BOOTSTRAP],
+    meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"}]
+)
+
+server = app.server
+app.config.suppress_callback_exceptions = True
+
+githublink = 'https://github.com/s153748/extreme-weather-detection'
+mapbox_access_token = 'pk.eyJ1IjoiczE1Mzc0OCIsImEiOiJja25wcDlwdjYxcWJmMnFueDhhbHdreTlmIn0.DXfj5S2H91AZEPG1JnHbxg'
+
+# Load data
+df = pd.read_csv("data/final_tweets.csv")
+
 # Data prep
 total_count = len(df)
 df['date'] = pd.to_datetime(df['date'])
@@ -93,13 +108,11 @@ def build_control_panel():
                     html.Div(
                         id="color-select-outer",
                         children=[
-                            html.Label("Filter by"),
-                            #dcc.Dropdown(
-                            dcc.RadioItems(
+                            html.Label("Color by"),
+                            dcc.Dropdown(
                                 id="color-select",
                                 options=[{"label": i, "value": i} for i in color_list],
                                 value=color_list[0],
-                                labelStyle={"display": "inline-block"},
                             ),
                         ],
                     ),
@@ -111,7 +124,7 @@ def build_control_panel():
                     html.Div(
                         id="loc-select-outer",
                         children=[
-                            html.Label("Localization Method"),
+                            html.Label("Localization"),
                             dcc.Dropdown(
                                 id='loc-select',
                                 options=[{"label": i, "value": i} for i in loc_list],
@@ -147,24 +160,24 @@ def build_control_panel():
     )
 
 def generate_geo_map(geo_df, range_select, graph_select, style_select, color_select, loc_select, n_clicks, keywords):
-    
+
     if n_clicks > 0 and keywords.strip():
         keywords = keywords.split(', ')
         for keyword in keywords:
             geo_df = geo_df[geo_df['full_text'].str.contains(keyword, case=False)]
-    
+
     geo_df = geo_df[geo_df['localization'].isin(loc_select)]
-    
+
     start = datetime.utcfromtimestamp(range_select[0]).strftime('%Y-%m-%d')
     end = datetime.utcfromtimestamp(range_select[1]).strftime('%Y-%m-%d')
     geo_df = geo_df[geo_df['date'] >= start]
     geo_df = geo_df[geo_df['date'] <= end]
-    
+
     if len(geo_df) == 0: # no matches
         empty=pd.DataFrame([0, 0]).T
         empty.columns=['lat','long']
         fig = px.scatter_mapbox(empty, lat="lat", lon="long", color_discrete_sequence=['#cbd2d3'], opacity=0)
-    
+
     elif graph_select == 'Scatter map':
         fig = px.scatter_mapbox(geo_df, 
                                 lat="lat", 
@@ -174,12 +187,12 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
                                 hover_data={'lat':False,'lon':False,'localization':True,'user_location':True,'user_name':True,'created_at':True,'source':True,'retweet_count':True},
                                 color_discrete_sequence=colors,
         )
-        
+
     elif graph_select == 'Hexagon map':
         fig = ff.create_hexbin_mapbox(geo_df, 
                                       lat="lat", 
                                       lon="lon",
-                                      nx_hexagon=100, # int(max(25,len(geo_df)/10)), 
+                                      nx_hexagon=int(max(25,len(geo_df)/20)), 
                                       opacity=0.7, 
                                       labels={"color": "Count"},
                                       min_count=1, 
@@ -194,13 +207,13 @@ def generate_geo_map(geo_df, range_select, graph_select, style_select, color_sel
         hovermode="closest",
         mapbox=go.layout.Mapbox(accesstoken=mapbox_access_token,
                                 center=go.layout.mapbox.Center(lat=40.4168, lon=-3.7037),
-                                zoom=0.65,
+                                zoom=0.6,
                                 style=style_select),
         font=dict(color='#737a8d'))
-        
+
     return fig, geo_df, start, end
 
-def generate_barchart(filtered_df, start, end):
+def generate_barchart(filtered_df):
     count_dates = filtered_df.groupby('date').size().values
     time_df = filtered_df.drop_duplicates(subset='date').assign(count=count_dates).sort_values(by='date').reset_index(drop=True)
     fig = px.bar(time_df, 
@@ -371,16 +384,16 @@ app.layout = dbc.Container([
     ],
 )
 def update_visuals(range_select, graph_select, style_select, color_select, loc_select, n_clicks, keywords):
-    
-    geo_map, filtered_df, start, end = generate_geo_map(df, range_select, graph_select, style_select.lower(), color_select, loc_select, n_clicks, keywords)
-    line_chart = generate_barchart(filtered_df, start, end)
+
+    geomap, filtered_df, start, end = generate_geo_map(df, range_select, graph_select, style_select.lower(), color_select, loc_select, n_clicks, keywords)
+    barchart = generate_barchart(filtered_df)
     treemap = generate_treemap(filtered_df)
     table = generate_table(filtered_df)
     period = f'Selected period: {pd.to_datetime(start).strftime("%b %d, %Y")} - {pd.to_datetime(end).strftime("%b %d, %Y")}'
     pct = np.round(len(filtered_df)/total_count*100,1)
     counter = f'Tweets in selection: {len(filtered_df)} ({pct}%)' if pct < 100 else f'Tweets in selection: {len(filtered_df)}'
-    
-    return geo_map, line_chart, treemap, table, period, counter
+
+    return geomap, barchart, treemap, table, period, counter
 
 if __name__ == '__main__':
     app.run_server()
