@@ -249,7 +249,7 @@ def generate_geo_map(geo_df, graph_select, style_select, color_select, graph_lay
                 name=name[i],
                 customdata=tweet,
                 hoverinfo="text",
-                text='<b>'+tweet+'</b><br>localization: '+localization+'<br>user_name: '+user_name+'<br>created_at: '+created_at+'<br>source: '+source+'<br>retweet_count: '+retweet_count,
+                text='<b>'+tweet+'</b><br>localization: '+localization+'<br>user_name: '+user_name+'<br>created_at: '+created_at+'<br>source: '+source+'<br>retweet_count: '+retweet_count+'<br>',
                 marker=dict(size=4, opacity=0.7, color=colors[i]),
             )
             traces.append(trace)
