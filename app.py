@@ -31,21 +31,6 @@ mapbox_access_token = open(".mapbox_token.txt").read()
 DATA_PATH = pathlib.Path(__file__).parent.joinpath("data") 
 df = pd.read_csv(DATA_PATH.joinpath("final_tweets.csv")) 
 
-# Initiate app
-app = JupyterDash(
-    __name__, external_stylesheets=[dbc.themes.BOOTSTRAP],
-    meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"}]
-)
-
-server = app.server
-app.config.suppress_callback_exceptions = True
-
-githublink = 'https://github.com/s153748/extreme-weather-detection'
-mapbox_access_token = 'pk.eyJ1IjoiczE1Mzc0OCIsImEiOiJja25wcDlwdjYxcWJmMnFueDhhbHdreTlmIn0.DXfj5S2H91AZEPG1JnHbxg'
-
-# Load data
-df = pd.read_csv("data/final_tweets.csv")
-
 # Data prep
 total_count = len(df)
 df['date'] = pd.to_datetime(df['date'])
