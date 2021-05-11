@@ -235,13 +235,13 @@ def generate_geo_map(geo_df, graph_select, style_select, color_select, graph_lay
             user_name = dff['user_name']
             created_at = dff['created_at']
             source = dff['source']
-            retweet_count = ['retweet_count']
+            retweet_count = dff['retweet_count']
             
             trace = dict(
                 type="scattermapbox",
                 lat=dff["lat"],
                 lon=dff["lon"],
-                name=loc_list[i] if color_select=='localization' else retweet_list[i],
+                name=loc_list[i] if color_select=='localization' else retweet_list[i] if color_select=='retweeted',
                 customdata=tweet,
                 hoverinfo="text",
                 text='<b>'+tweet+'</b><br>localization: '+localization+'<br>user_name: '+user_name+'<br>created_at: '+created_at+'<br>source: '+source+'<br>retweet_count: '+retweet_count,
