@@ -60,7 +60,7 @@ layout = dict(
     plot_bgcolor="#171b26",
     paper_bgcolor="#171b26",
     hovermode="closest",
-    legend=dict(font=dict(size=10, color='#737a8d'), orientation="h"),
+    #legend=dict(font=dict(size=12, color='#737a8d'), orientation="h"),
     mapbox=dict(accesstoken=mapbox_access_token,
                 style='light',
                 center=go.layout.mapbox.Center(lat=20, lon=-3),
@@ -219,7 +219,6 @@ def generate_barchart(df, range_select, loc_select, n_clicks, keywords):
     graph_layout["showlegend"] = False
     graph_layout["height"] = 100
     
-    
     fig = dict(data=data, layout=graph_layout)
     
     return fig
@@ -241,7 +240,7 @@ def generate_geo_map(geo_df, graph_select, style_select, color_select, graph_lay
                 type="scattermapbox",
                 lat=dff["lat"],
                 lon=dff["lon"],
-                name=dff[color_select].unique(),
+                name=color_select,# dff[color_select].unique(),
                 customdata=tweet,
                 hoverinfo="text",
                 text='<b>'+tweet+'</b><br>localization: '+localization+'<br>user_name: '+user_name+'<br>created_at: '+created_at+'<br>source: '+source+'<br>retweet_count: '+retweet_count,
