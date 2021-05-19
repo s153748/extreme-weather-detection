@@ -37,6 +37,12 @@ total_count = len(df)
 df['hashtags'] = [literal_eval(s) for s in df['hashtags']]
 df['localization'] = df['localization'].astype(str)
 df['date'] = pd.to_datetime(df['date'])
+df['type'] = ""
+for i in range(len(df)):
+    if df.retweeted[i]:
+        df['type'][i] = 'Retweet'
+    else:
+        df['type'][i] = 'Tweet' 
 
 def unix_time(dt):
     return (dt-datetime.utcfromtimestamp(0)).total_seconds() 
@@ -45,27 +51,40 @@ init_end = unix_time(df['date'].max())
 init_start_date = datetime.utcfromtimestamp(init_start).strftime('%Y-%m-%d')
 init_end_date = datetime.utcfromtimestamp(init_end).strftime('%Y-%m-%d')
 
+def get_marks(start, end):
+    result = []
+    current = start
+    while current <= end:
+        result.append(current)
+        current += relativedelta(months=1)
+    return {int(unix_time(m)): (str(m.strftime('%b %Y'))) for m in result}
+
 # Set graph options
 graph_list = ['Scatter map','Hexagon map']
-style_list = ['Light','Dark','Streets','Outdoors','Satellite'] 
-color_list = ['Localization','Retweeted']
-loc_list = df.localization.unique()
-retweet_list = df.retweeted.unique()
-colors = ['#ef5675', '#7a5195', '#ffa600', '#003f5c']
+style_list = ['light','dark','streets','outdoors','satellite'] 
+filter_options = {'localization':['Geotagged coordinates','Geotagged place','Geoparsed from Tweet','Registered user location'],
+                  'type':['Tweet','Retweet']}
+colors = ['#ffa600','#ef5675','#8073ac','#35978f']
 
 # Create global chart template
 layout = dict(
     autosize=True,
-    automargin=True,
     margin=dict(l=0, r=0, t=0, b=0),
     plot_bgcolor="#171b26",
     paper_bgcolor="#171b26",
     hovermode="closest",
-    #legend=dict(font=dict(size=12, color='#737a8d'), orientation="h"),
+    dragmode='select',
     mapbox=dict(accesstoken=mapbox_access_token,
                 style='light',
                 center=go.layout.mapbox.Center(lat=20, lon=-3),
-                zoom=0.65,
+                zoom=0.7,
+    ),
+    legend=dict(bgcolor="#cbd2d3",
+                orientation="h",
+                font=dict(color="#7b7d8d",size='8px'),
+                x=0.02,
+                y=0,
+                yanchor="bottom",
     )
 )
 
@@ -102,7 +121,7 @@ def build_control_panel():
                             html.Label("Map Style"),
                             dcc.Dropdown(
                                 id="style-select",
-                                options=[{"label": i, "value": i} for i in style_list],
+                                options=[{"label": i.capitalize(), "value": i} for i in style_list],
                                 value=style_list[0],
                             ),
                         ],
@@ -113,40 +132,24 @@ def build_control_panel():
                 className="control-row-3",
                 children=[
                     html.Div(
-                        id="color-select-outer",
+                        id="filter-select-outer",
                         children=[
                             html.Label("Filter by"),
-                            dcc.Dropdown(
-                            #dcc.RadioItems(
-                                id="color-select",
-                                options=[{"label": i, "value": i} for i in color_list],
-                                value=color_list[0],
-                                #labelStyle={"display": "inline-block"},
+                            #dcc.Dropdown(
+                            dcc.RadioItems(
+                                id="filter-select",
+                                options=[{'label': k.capitalize(), 'value': k} for k in filter_options.keys()],
+                                value='localization',
+                                labelStyle={"display": "block"},
                             ),
+                            dcc.Dropdown(id='option-select',
+                                         multi=True),
                         ],
                     ),
                 ],
             ),
             html.Div(
                 className="control-row-4",
-                children=[
-                    html.Div(
-                        id="loc-select-outer",
-                        children=[
-                            html.Label("Localization Method"),
-                            dcc.Dropdown(
-                                id='loc-select',
-                                options=[{"label": i, "value": i} for i in loc_list],
-                                multi=True,
-                                value=loc_list,
-                                placeholder=''
-                            )
-                        ]
-                    )
-                ],
-            ),
-            html.Div(
-                className="control-row-5",
                 children=[
                     html.Div(
                         id="text-search-outer",
@@ -160,7 +163,8 @@ def build_control_panel():
                                 placeholder='e.g. Floods, Queensland'
                             ),
                             html.Button('Search', id='search-button', n_clicks=0),
-                            html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px','margin-top':'20px'}),
+                            html.Div('Tweets in selection:',style={'color':'#7b7d8d','fontsize':'9px','margin-top':'20px'}),
+                            html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px','margin-top':'1px'}),
                         ]
                     )
                 ]
@@ -168,35 +172,32 @@ def build_control_panel():
         ]
     )
 
-def filter_data(df, range_select, loc_select, n_clicks, keywords):
+def filter_data(df, range_select, filter_select, option_select, n_clicks, keywords):
         
     if n_clicks > 0 and keywords.strip():
         keywords = keywords.split(', ')
         for keyword in keywords:
             df = df[df['full_text'].str.contains(keyword, case=False)]
-    df = df[df['localization'].isin(loc_select)]
+    df = df[df[filter_select].isin(option_select)]
     df = df[df['date'] >= range_select[0]]
     filtered_df = df[df['date'] <= range_select[1]]
     
     return filtered_df
 
-def generate_barchart(df, range_select, loc_select, n_clicks, keywords):
+def generate_barchart(df, range_select, filter_select, option_select, n_clicks, keywords):
     
     graph_layout = copy.deepcopy(layout)
-    filtered_df = filter_data(df, [init_start_date,init_end_date], loc_select, n_clicks, keywords)
-    
+    filtered_df = filter_data(df, [init_start_date,init_end_date], filter_select, option_select, n_clicks, keywords)
     g = filtered_df[['date']]
     g.index = g['date']
     g = g.resample('D').count()
     g.rename(columns={'date':'count'},inplace=True)
-    
     cols = []
     for i in g.index:
         if i.strftime('%Y-%m-%d') >= range_select[0] and i.strftime('%Y-%m-%d') <= range_select[1]:
-            cols.append("rgb(197, 221, 240)")
+            cols.append("rgb(197,221,240)")
         else:
-            cols.append("rgba(197, 221, 240, 0.2)")
-    
+            cols.append("rgba(197,221,240,0.2)")
     data = [
         dict(
             type="scatter",
@@ -216,7 +217,7 @@ def generate_barchart(df, range_select, loc_select, n_clicks, keywords):
             hovertemplate ='<b>%{x} </b><br>Count: %{y}'
         ),
     ]
-    graph_layout["dragmode"] = "select"
+    graph_layout["selectdirection"] = 'h'
     graph_layout["showlegend"] = False
     graph_layout["height"] = 100
     
@@ -224,28 +225,33 @@ def generate_barchart(df, range_select, loc_select, n_clicks, keywords):
     
     return fig
 
-def generate_geo_map(geo_df, graph_select, style_select, color_select, graph_layout):
+def generate_geo_map(geo_df, graph_select, style_select, filter_select, graph_layout):
     
     if graph_select == 'Scatter map':
         traces = []
         i = 0
-        for color_type, dff in geo_df.groupby(color_select):
+        for filter_type, dff in geo_df.groupby(filter_select):
             tweet = dff["full_text"]
+            hashtags = dff['hashtags']
             localization = dff["localization"]
             user_name = dff['user_name']
+            user_location = dff['user_location']
             created_at = dff['created_at']
             source = dff['source']
+            tweettype = dff['type']
             #retweet_count = dff['retweet_count']
-            
             trace = dict(
                 type="scattermapbox",
                 lat=dff["lat"],
                 lon=dff["lon"],
-                name=loc_list[i] if color_select=='localization' else retweet_list[i],
-                customdata=tweet,
+                name=filter_options[filter_select][i],
+                selected=dict(marker={"color":"#c5ddf0" if style_select=='dark' else "#171b26"}),
                 hoverinfo="text",
-                text='<b>'+tweet+'</b><br>localization: '+localization+'<br>user_name: '+user_name+'<br>created_at: '+created_at+'<br>source: '+source, #'<br>retweet_count: '+retweet_count+'<br>',
-                marker=dict(size=4, opacity=0.7, color=colors[i]),
+                text='<b>'+tweet+'</b><br>User name: '+user_name+'<br>User location: '+user_location+
+                     '<br>Created at: '+created_at+'<br>Source: '+source+'<br>Localization: '+localization+
+                     '<br>Type: '+tweettype,#'<br>retweet_count: '+retweet_count+'<br>',
+                marker=dict(size=4,opacity=0.7,color=colors[i]),
+                customdata=hashtags,
             )
             traces.append(trace)
             i += 1
@@ -253,7 +259,7 @@ def generate_geo_map(geo_df, graph_select, style_select, color_select, graph_lay
         if graph_layout is not None:
             if "mapbox.center" in graph_layout.keys():
                 layout["mapbox"]["center"]["lon"] = float(graph_layout["mapbox.center"]["lon"])
-                layout["mapbox"]["center"]["lat"] =  float(graph_layout["mapbox.center"]["lat"])
+                layout["mapbox"]["center"]["lat"] = float(graph_layout["mapbox.center"]["lat"])
                 layout["mapbox"]["zoom"] = float(graph_layout["mapbox.zoom"])
         layout["mapbox"]["style"] = style_select
         
@@ -269,14 +275,19 @@ def generate_geo_map(geo_df, graph_select, style_select, color_select, graph_lay
                                       min_count=1, 
                                       color_continuous_scale='GnBu',
         )
-        
     return fig
 
-def generate_treemap(filtered_df):
+def generate_treemap(filtered_df, geo_select):
+    
+    if geo_select is None:
+        hashtag_list = filtered_df['hashtags'].tolist()
+    else:
+        hashtag_list = [point["customdata"] for point in geo_select["points"]]
     k = 20
-    hashtag_list = [hashtag for sublist in filtered_df['hashtags'].tolist() for hashtag in sublist]
-    freq_df = pd.DataFrame(list(FreqDist(hashtag_list).items()), columns = ["hashtag","count"]) 
+    hashtags = [hashtag for sublist in hashtag_list for hashtag in sublist]
+    freq_df = pd.DataFrame(list(FreqDist(hashtags).items()),columns=["hashtag","count"]) 
     freq_df = freq_df.sort_values('count',ascending=False)
+    
     fig = go.Figure(go.Treemap(
                         labels=freq_df['hashtag'][:k].tolist(),
                         values=freq_df['count'][:k].tolist(),
@@ -285,19 +296,26 @@ def generate_treemap(filtered_df):
                         hovertemplate='<b>%{label} </b> <br>Count: %{value}<extra></extra>'))
     fig.update_layout(margin=dict(l=0, r=0, t=0, b=20), 
                       height=240,
+                      width=240,
                       plot_bgcolor="#171b26",
                       paper_bgcolor="#171b26") 
     return fig
 
-def generate_table(filtered_df):
-    text_df = filtered_df[['full_text']]
+def generate_table(filtered_df, geo_select):
+    
+    if geo_select is None:
+        text_df = filtered_df[['full_text']]
+    else:
+        full_text = [point["text"] for point in geo_select["points"]]
+        text_df = pd.DataFrame(full_text,columns=['full_text'])
     text_df.rename(columns={'full_text':'Tweets'},inplace=True)
+    
     table = dash_table.DataTable( 
-        id="tweets-table",
+        #id="tweets-table",
         columns=[{"name": i, "id": i} for i in text_df.columns],
         data=text_df.to_dict('records'),
         page_size=5,
-        style_cell={'whiteSpace':'normal','height':'auto','width':'250px',"background-color":"#242a3b","color":"#7b7d8d"},
+        style_cell={'whiteSpace':'normal','height':'auto','width':'240px',"background-color":"#242a3b","color":"#7b7d8d"},
         style_as_list_view=False,
         style_header={"background-color":"#1f2536",'fontWeight':'bold',"padding":"0px 5px"},
     )
@@ -323,7 +341,6 @@ app.layout = dbc.Container([
     ),
     dbc.Row([
         dbc.Col([
-            html.Div(id="output-clientside"), 
             build_control_panel(),
         ], 
             xs=12, sm=12, md=2, lg=2, xl=2
@@ -349,10 +366,11 @@ app.layout = dbc.Container([
                             min=init_start,
                             max=init_end, 
                             value=[init_start, init_end], 
+                            marks=get_marks(df['date'].min(), df['date'].max()),
                             updatemode='mouseup',
                         ), 
-                    ], style={'height':'20px','margin-bottom':'1px'}),
-                    html.Div(id='output-range-slider',style={'color':'#7b7d8d','fontsize':'8px','margin-bottom':'1px'}),
+                    ]),
+                    #html.Div(id='output-range-slider',style={'color':'#7b7d8d','fontsize':'8px','margin-bottom':'1px'}),
                     html.Div([
                         dcc.Loading(children=dcc.Graph(
                             id="barchart",
@@ -374,7 +392,7 @@ app.layout = dbc.Container([
                                     dcc.Loading(children=dcc.Graph(
                                         id='treemap',
                                         figure={
-                                            "data": [], "layout": dict(plot_bgcolor="#171b26", paper_bgcolor="#171b26"),
+                                            "data": [], "layout": dict(plot_bgcolor="#171b26",paper_bgcolor="#171b26"),
                                         },
                                     )),
                                 ],
@@ -397,58 +415,92 @@ app.layout = dbc.Container([
     ], no_gutters=False, justify='start')
 ], fluid=True)
 
-# Slider -> Barchart
+
+# Set filter options and value
 @app.callback(
-    Output("range-slider", "value"),
     [
-        Input("barchart", "selectedData")
+        Output("option-select", "options"),
+        Output("option-select", "value"),
+    ], [
+        Input("filter-select", "value")   
     ]
 )
-def update_slider(barchart_selected):
-    if barchart_selected is None:
-        return [init_start, init_end]
+def set_options(filter_select):
+    options = [{"label": i, "value": i} for i in filter_options[filter_select]]
+    value = filter_options[filter_select]
+    return options, value
     
-    nums = [int(point["pointNumber"]) for point in barchart_selected["points"]]
-    start = unix_time(datetime.strptime('2013-01-27','%Y-%m-%d') + timedelta(days=min(nums)))
-    end = unix_time(datetime.strptime('2013-01-28','%Y-%m-%d') + timedelta(days=max(nums)))
+# Update slider based on barchart
+@app.callback(
+    Output("range-slider", "value"),
+    Input("barchart", "selectedData")
+)
+def update_slider(bar_select):
+    
+    if bar_select is not None:
+        nums = [int(point["pointNumber"]) for point in bar_select["points"]]
+        start = unix_time(datetime.strptime('2013-01-27','%Y-%m-%d') + timedelta(days=min(nums)))
+        end = unix_time(datetime.strptime('2013-01-28','%Y-%m-%d') + timedelta(days=max(nums)))
+        return [start, end]
+    else:
+        return [init_start, init_end]
 
-    return [start, end]
-
-# Selectors -> Map, Barchart, Table, Treemap
+# Update barchart and geomap based on configurations
 @app.callback(
     [
         Output('barchart', 'figure'),
         Output('geo-map', 'figure'),
-        Output('treemap', 'figure'),
-        Output('tweets-table', 'children'),
         Output('counter', 'children'),
-        Output('output-range-slider', 'children'),
+        #Output('output-range-slider', 'children'),
     ], [
         Input('range-slider', 'value'),
         Input('graph-select', 'value'),
         Input('style-select', 'value'),
-        Input('color-select', 'value'),
-        Input('loc-select', 'value'),
-        Input('search-button', 'n_clicks')
+        Input('filter-select', 'value'),
+        Input('option-select', 'value'),
+        Input('search-button', 'n_clicks'),
     ], [
         State('text-search', 'value'),
         State('geo-map', 'relayoutData')
     ], 
 )
-def update_visuals(range_select, graph_select, style_select, color_select, loc_select, n_clicks, keywords, graph_layout):
+def update_visuals(range_select, graph_select, style_select, filter_select, option_select, n_clicks, keywords, graph_layout):
     
     start = datetime.utcfromtimestamp(range_select[0]).strftime('%Y-%m-%d')
     end = datetime.utcfromtimestamp(range_select[1]).strftime('%Y-%m-%d')
-    filtered_df = filter_data(df, [start,end], loc_select, n_clicks, keywords)
-    barchart = generate_barchart(df, [start,end], loc_select, n_clicks, keywords)
-    geomap = generate_geo_map(filtered_df, graph_select, style_select.lower(), color_select.lower(), graph_layout)
-    treemap = generate_treemap(filtered_df)
-    table = generate_table(filtered_df)
+    filtered_df = filter_data(df, [start,end], filter_select, option_select, n_clicks, keywords)
+    barchart = generate_barchart(df, [start,end], filter_select, option_select, n_clicks, keywords)
+    geomap = generate_geo_map(filtered_df, graph_select, style_select, filter_select, graph_layout)
     pct = np.round(len(filtered_df)/total_count*100,1)
-    counter = f'Tweets in selection: {len(filtered_df)} ({pct}%)' if pct < 100 else f'Tweets in selection: {len(filtered_df)}'
-    period = f'Selected period: {pd.to_datetime(start).strftime("%b %d, %Y")} - {pd.to_datetime(end).strftime("%b %d, %Y")}'
+    counter = f'{len(filtered_df)} ({pct}%)'
+    #period = f'Selected period: {pd.to_datetime(start).strftime("%b %d, %Y")} - {pd.to_datetime(end).strftime("%b %d, %Y")}'
 
-    return barchart, geomap, treemap, table, counter, period
+    return barchart, geomap, counter #period    
+
+# Update table and treemap based on configurations and map
+@app.callback(
+    [
+        Output('treemap', 'figure'),
+        Output('tweets-table', 'children')
+    ], [
+        Input('geo-map', 'selectedData'),
+        Input('range-slider', 'value'),
+        Input('filter-select', 'value'),
+        Input('option-select', 'value'),
+        Input('search-button', 'n_clicks'),
+    ], [
+        State('text-search', 'value'),
+    ], 
+)
+def update_content(geo_select, range_select, filter_select, option_select, n_clicks, keywords):
+    
+    start = datetime.utcfromtimestamp(range_select[0]).strftime('%Y-%m-%d')
+    end = datetime.utcfromtimestamp(range_select[1]).strftime('%Y-%m-%d')
+    filtered_df = filter_data(df, [start,end], filter_select, option_select, n_clicks, keywords)
+    treemap = generate_treemap(filtered_df, geo_select)
+    table = generate_table(filtered_df, geo_select)
+    
+    return treemap, table
 
 if __name__ == '__main__':
     app.run_server()
