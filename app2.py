@@ -164,8 +164,6 @@ def build_control_panel():
                                 placeholder='e.g. Floods, Queensland'
                             ),
                             html.Button('Search', id='search-button', n_clicks=0),
-                            html.Div('Tweets in selection:',style={'color':'#7b7d8d','fontsize':'9px','margin-top':'20px'}),
-                            html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px','margin-top':'1px'}),
                         ]
                     )
                 ]
@@ -297,7 +295,7 @@ def generate_treemap(filtered_df, geo_select):
                         hovertemplate='<b>%{label} </b> <br>Count: %{value}<extra></extra>'))
     fig.update_layout(margin=dict(l=0, r=0, t=0, b=20), 
                       height=240,
-                      width=240,
+                      width=250,
                       plot_bgcolor="#171b26",
                       paper_bgcolor="#171b26") 
     return fig
@@ -312,7 +310,6 @@ def generate_table(filtered_df, geo_select):
     text_df.rename(columns={'full_text':'Tweets'},inplace=True)
     
     table = dash_table.DataTable( 
-        #id="tweets-table",
         columns=[{"name": i, "id": i} for i in text_df.columns],
         data=text_df.to_dict('records'),
         page_size=5,
@@ -377,6 +374,7 @@ app.layout = dbc.Container([
                             id="barchart",
                         )),
                     ]),
+                    html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px','margin-top':'1px'}),
                 ], 
                     xs=12, sm=12, md=9, lg=9, xl=9
                 ),
@@ -415,7 +413,6 @@ app.layout = dbc.Container([
         )
     ], no_gutters=False, justify='start')
 ], fluid=True)
-
 
 # Set filter options and value
 @app.callback(
@@ -473,7 +470,7 @@ def update_visuals(range_select, graph_select, style_select, filter_select, opti
     barchart = generate_barchart(df, [start,end], filter_select, option_select, n_clicks, keywords)
     geomap = generate_geo_map(filtered_df, graph_select, style_select, filter_select, graph_layout)
     pct = np.round(len(filtered_df)/total_count*100,1)
-    counter = f'{len(filtered_df)} ({pct}%)'
+    counter = f'Tweets in selection: {len(filtered_df)} ({pct}%)'
     #period = f'Selected period: {pd.to_datetime(start).strftime("%b %d, %Y")} - {pd.to_datetime(end).strftime("%b %d, %Y")}'
 
     return barchart, geomap, counter #period    
