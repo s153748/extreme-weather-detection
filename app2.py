@@ -295,7 +295,7 @@ def generate_treemap(filtered_df, geo_select):
                         hovertemplate='<b>%{label} </b> <br>Count: %{value}<extra></extra>'))
     fig.update_layout(margin=dict(l=0, r=0, t=0, b=20), 
                       height=240,
-                      width=250,
+                      width=270,
                       plot_bgcolor="#171b26",
                       paper_bgcolor="#171b26") 
     return fig
