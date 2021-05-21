@@ -296,7 +296,7 @@ def generate_hexabin_map(geo_df, style_select, graph_layout):
     trace = ff.create_hexbin_mapbox(geo_df, 
                                   lat="lat", 
                                   lon="lon",
-                                  nx_hexagon=int(max(30,len(geo_df)/30)), 
+                                  nx_hexagon=int(max(50,len(geo_df)/60)), 
                                   min_count=1, 
                                   opacity=0.8, 
                                   labels={"color": "Count"},
@@ -346,7 +346,7 @@ def generate_table(filtered_df, geo_select):
     table = dash_table.DataTable( 
         columns=[{"name": i, "id": i} for i in text_df.columns],
         data=text_df.to_dict('records'),
-        page_size=5,
+        page_size=3,
         style_cell={'textAlign': 'left','whiteSpace':'normal','height':'auto','width':'240px',"background-color":"#242a3b","color":"#7b7d8d"},
         style_as_list_view=False,
         style_header={"background-color":"#1f2536",'fontWeight':'bold',"padding":"0px 5px"},
