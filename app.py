@@ -290,7 +290,7 @@ def generate_hexabin_map(geo_df, style_select, graph_layout):
     trace = ff.create_hexbin_mapbox(geo_df, 
                                   lat="lat", 
                                   lon="lon",
-                                  nx_hexagon=int(max(150,len(geo_df)/150)), 
+                                  nx_hexagon=200, #int(max(150,len(geo_df)/150)), 
                                   min_count=1, 
                                   opacity=0.8, 
                                   labels={"color": "Count"},
