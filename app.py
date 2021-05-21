@@ -38,12 +38,6 @@ total_count = len(df)
 df['hashtags'] = [literal_eval(s) for s in df['hashtags']]
 df['localization'] = df['localization'].astype(str)
 df['date'] = pd.to_datetime(df['date'])
-df['type'] = ""
-for i in range(len(df)):
-    if df.retweeted[i]:
-        df['type'][i] = 'Retweet'
-    else:
-        df['type'][i] = 'Tweet' 
 
 def unix_time(dt):
     return (dt-datetime.utcfromtimestamp(0)).total_seconds() 
@@ -232,7 +226,7 @@ def generate_scatter_map(geo_df, style_select, loc_select, graph_layout):
     traces = []
     i = 0
     for filter_type, dff in geo_df.groupby('localization'):
-        tweet = dff["tweet"]
+        tweet = dff["full_text"]
         user_name = dff['user_name']
         user_location = dff['user_location']
         created_at = dff['created_at']
