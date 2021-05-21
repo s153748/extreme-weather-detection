@@ -232,7 +232,7 @@ def generate_scatter_map(geo_df, style_select, loc_select, graph_layout):
     traces = []
     i = 0
     for filter_type, dff in geo_df.groupby('localization'):
-        tweet = dff["full_text"]
+        tweet = dff["tweet"]
         user_name = dff['user_name']
         user_location = dff['user_location']
         created_at = dff['created_at']
@@ -296,7 +296,7 @@ def generate_hexabin_map(geo_df, style_select, graph_layout):
     trace = ff.create_hexbin_mapbox(geo_df, 
                                   lat="lat", 
                                   lon="lon",
-                                  nx_hexagon=int(max(50,len(geo_df)/60)), 
+                                  nx_hexagon=int(max(120,len(geo_df)/120)), 
                                   min_count=1, 
                                   opacity=0.8, 
                                   labels={"color": "Count"},
