@@ -76,7 +76,7 @@ layout = dict(
     hovermode="closest",
     mapbox=dict(accesstoken=mapbox_access_token,
                 style='light',
-                center=go.layout.mapbox.Center(lat=0, lon=-5),
+                center=go.layout.mapbox.Center(lat=5, lon=5),
                 zoom=1,
     ),
     legend=dict(bgcolor="#cbd2d3",
