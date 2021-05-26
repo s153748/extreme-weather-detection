@@ -204,9 +204,8 @@ def generate_barchart(df, range_select, loc_select, type_select, n_clicks, keywo
             type="bar",
             x=g.index,
             y=g["count"],
-            #name="Count",
             marker=dict(color=cols),
-            hovertemplate ='<b>%{x} </b><br>Count: %{y}'
+            hovertemplate ='<b>%{x} </b><br>Count: %{y}<extra></extra>'
         ),
     ]
     graph_layout["dragmode"] = 'select'
@@ -492,13 +491,8 @@ def update_map(range_select, graph_select, style_select, loc_select, type_select
     start = datetime.utcfromtimestamp(range_select[0]).strftime('%Y-%m-%d')
     end = datetime.utcfromtimestamp(range_select[1]).strftime('%Y-%m-%d')
     filtered_df = filter_data(df, [start,end], loc_select, type_select, n_clicks, keywords)
-    
-    if len(df) == 0: # no matches
-        empty = pd.DataFrame([0, 0]).T
-        empty.columns = ['lat', 'long']
-        fig = px.scatter_mapbox(empty, lat="lat", lon="long", color_discrete_sequence=['#cbd2d3'], opacity=0)
-        geomap = dict(data=fig, layout=layout)
-    elif graph_select == 'Scatter map':
+   
+    if graph_select == 'Scatter map':
         geomap = generate_scatter_map(filtered_df, style_select, loc_select, graph_layout)
     elif graph_select == 'Density heatmap':
         geomap = generate_density_map(filtered_df, style_select, graph_layout)
