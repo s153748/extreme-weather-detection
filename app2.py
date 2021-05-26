@@ -163,16 +163,16 @@ def build_control_panel():
         ]
     )
 
-def filter_data(df, range_select, loc_select, type_select, n_clicks, keywords):
+def filter_data(dff, range_select, loc_select, type_select, n_clicks, keywords):
         
     if n_clicks > 0 and keywords.strip():
         keywords = keywords.split(', ')
         for keyword in keywords:
-            df = df[df['full_text'].str.contains(keyword, case=False)]
-    df = df[df['localization'].isin(loc_select)]
-    df = df[df['type'].isin(type_select)]
-    df = df[df['date'] >= range_select[0]]
-    filtered_df = df[df['date'] <= range_select[1]]
+            dff = dff[dff['full_text'].str.contains(keyword, case=False)]
+    dff = dff[dff['localization'].isin(loc_select)]
+    dff = dff[dff['type'].isin(type_select)]
+    dff = dff[dff['date'] >= range_select[0]]
+    filtered_df = dff[dff['date'] <= range_select[1]]
     
     return filtered_df
 
@@ -386,7 +386,7 @@ app.layout = dbc.Container([
                             id='range-slider',
                             min=init_start,
                             max=init_end, 
-                            value=[init_start, init_start+(init_end-init_start)/10],
+                            value=[init_start, init_end],
                             marks=get_marks(df['date'].min(), df['date'].max()),
                             updatemode='mouseup',
                         ), 
@@ -450,7 +450,7 @@ def update_slider(bar_select):
         end = unix_time(datetime.strptime('2016-01-10','%Y-%m-%d') + timedelta(days=max(nums)))
         return [start, end]
     else:
-        return [init_start, init_start+(init_end-init_start)/10]
+        return [init_start, init_end]
 
 # Update barchart 
 @app.callback(
