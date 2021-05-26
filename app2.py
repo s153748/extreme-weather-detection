@@ -340,7 +340,7 @@ def generate_table(filtered_df, geo_select):
 def generate_tweet_div(tweet):
     return html.P(
         children=[dash_dangerously_set_inner_html.DangerouslySetInnerHTML(str(tweet['Tweets']))],
-        style={'width':'100%',"background-color":"#242a3b","color":"#7b7d8d",'margin-bottom':'5px','fontsize':8}
+        style={'width':'100%',"background-color":"#242a3b","color":"#7b7d8d",'margin-bottom':'5px','fontsize':5}
     )
 
 app.layout = dbc.Container([
@@ -387,7 +387,7 @@ app.layout = dbc.Container([
                             id='range-slider',
                             min=init_start,
                             max=init_end, 
-                            value=[init_start, init_end/6],
+                            value=[init_start, (init_end-init_start)/6],
                             marks=get_marks(df['date'].min(), df['date'].max()),
                             updatemode='mouseup',
                         ), 
@@ -397,7 +397,7 @@ app.layout = dbc.Container([
                             id="barchart",
                         )),
                     ]),
-                    html.Div(dcc.Loading(html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'8px','margin-top':'1px'}))),
+                    html.Div(dcc.Loading(html.Div(id='counter',style={'color':'#7b7d8d','fontsize':5,'margin-top':'1px'}))),
                 ], 
                     xs=12, sm=12, md=9, lg=9, xl=9
                 ),
@@ -451,7 +451,7 @@ def update_slider(bar_select):
         end = unix_time(datetime.strptime(init_start_date,'%Y-%m-%d') + timedelta(days=max(nums)))
         return [start, end]
     else:
-        return [init_start, init_end/6]
+        return [init_start, (init_end-init_start)/6]
 
 # Update barchart 
 @app.callback(
@@ -492,12 +492,18 @@ def update_map(range_select, graph_select, style_select, loc_select, type_select
     start = datetime.utcfromtimestamp(range_select[0]).strftime('%Y-%m-%d')
     end = datetime.utcfromtimestamp(range_select[1]).strftime('%Y-%m-%d')
     filtered_df = filter_data(df, [start,end], loc_select, type_select, n_clicks, keywords)
-    if graph_select == 'Scatter map':
+    
+    if len(df) == 0: # no matches
+        empty = pd.DataFrame([0, 0]).T
+        empty.columns = ['lat', 'long']
+        geomap = px.scatter_mapbox(empty, lat="lat", lon="long", color_discrete_sequence=['#cbd2d3'], opacity=0)
+    elif graph_select == 'Scatter map':
         geomap = generate_scatter_map(filtered_df, style_select, loc_select, graph_layout)
     elif graph_select == 'Density heatmap':
         geomap = generate_density_map(filtered_df, style_select, graph_layout)
     else:
         geomap = generate_hexabin_map(filtered_df, style_select, graph_layout)
+
     return geomap
 
 # Update content
