@@ -147,13 +147,13 @@ def build_control_panel():
                     html.Div(
                         id="text-search-outer",
                         children=[
-                            html.Label("Filter by Keywords"),
+                            html.Label("Keywords"),
                             dcc.Textarea(
                                 id='text-search',
                                 value='',
                                 style={'width':'100%','background-color':'#171b26','opacity':0.5,'color':'#ffffff','fontsize':'8px'}, 
                                 draggable=False,
-                                placeholder='e.g. Floods, Queensland'
+                                placeholder='e.g. floods, #waterdamage'
                             ),
                             html.Button('Search', id='search-button', n_clicks=0),
                         ]
@@ -340,7 +340,7 @@ def generate_table(filtered_df, geo_select):
 def generate_tweet_div(tweet):
     return html.P(
         children=[dash_dangerously_set_inner_html.DangerouslySetInnerHTML(str(tweet['Tweets']))],
-        style={'width':'100%',"background-color":"#242a3b","color":"#7b7d8d",'margin-bottom':'5px'}
+        style={'width':'100%',"background-color":"#242a3b","color":"#7b7d8d",'margin-bottom':'5px','fontsize':'8px'}
     )
 
 app.layout = dbc.Container([
@@ -387,7 +387,6 @@ app.layout = dbc.Container([
                             id='range-slider',
                             min=init_start,
                             max=init_end, 
-                            value=[init_start, init_start+2500000], 
                             marks=get_marks(df['date'].min(), df['date'].max()),
                             updatemode='mouseup',
                         ), 
@@ -451,7 +450,7 @@ def update_slider(bar_select):
         end = unix_time(datetime.strptime(init_start_date,'%Y-%m-%d') + timedelta(days=max(nums)))
         return [start, end]
     else:
-        return [init_start, init_start+2500000]
+        return [init_start, init_end/6]
 
 # Update barchart 
 @app.callback(
