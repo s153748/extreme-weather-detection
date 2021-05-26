@@ -59,7 +59,7 @@ colors = ['#ef5675','#8073ac','#35978f','#ffa600']
 # Create global chart template
 layout = dict(
     autosize=True,
-    margin=dict(l=5, r=0, t=0, b=0),
+    margin=dict(l=0, r=0, t=0, b=0),
     plot_bgcolor="#171b26",
     paper_bgcolor="#171b26",
     hovermode="closest",
@@ -213,7 +213,6 @@ def generate_barchart(df, range_select, loc_select, type_select, n_clicks, keywo
     graph_layout["selectdirection"] = 'h'
     graph_layout["showlegend"] = False
     graph_layout["height"] = 90
-    graph_layout["margin"] = dict(l=0, r=0, t=0, b=0),
     
     return dict(data=data, layout=graph_layout)
 
