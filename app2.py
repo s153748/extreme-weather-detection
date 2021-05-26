@@ -338,8 +338,7 @@ def generate_table(filtered_df, geo_select):
     table = dash_table.DataTable( 
         columns=[{"name": i, "id": i} for i in text_df.columns],
         data=text_df.to_dict('records'),
-        page_size=5,
-        style_cell={'textAlign': 'left','whiteSpace':'normal','height':'auto','width':'240px',"background-color":"#242a3b","color":"#7b7d8d"},
+        style_cell={'textAlign': 'left','whiteSpace':'normal','height':'auto'},#'width':'240px',"background-color":"#242a3b","color":"#7b7d8d"},
         style_as_list_view=False,
         style_header={"background-color":"#1f2536",'fontWeight':'bold',"padding":"0px 5px"},
     )
@@ -349,9 +348,8 @@ def generate_table(filtered_df, geo_select):
 def generate_tweet_div(tweet):
     return html.P(
         children=[dash_dangerously_set_inner_html.DangerouslySetInnerHTML(str(tweet['Tweets']))],
-        style={'width': '100%', "background-color":"#242a3b", "color":"#7b7d8d"}
+        style={'width':'100%',"background-color":"#242a3b","color":"#7b7d8d"}
     )
-    # return html.P(str(tweet['Tweets']).replace('<br>', ' ').replace('<br>', ' ').replace('<b>', ''))
 
 app.layout = dbc.Container([
     dbc.Row(
@@ -402,13 +400,12 @@ app.layout = dbc.Container([
                             updatemode='mouseup',
                         ), 
                     ]),
-                    #html.Div(id='output-range-slider',style={'color':'#7b7d8d','fontsize':'8px','margin-bottom':'1px'}),
                     html.Div([
                         dcc.Loading(children=dcc.Graph(
                             id="barchart",
                         )),
                     ]),
-                    html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px','margin-top':'1px'}),
+                    html.Div(dcc.Loading(html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px','margin-top':'1px'}))),
                 ], 
                     xs=12, sm=12, md=9, lg=9, xl=9
                 ),
@@ -458,8 +455,8 @@ def update_slider(bar_select):
     
     if bar_select is not None:
         nums = [int(point["pointNumber"]) for point in bar_select["points"]]
-        start = unix_time(datetime.strptime('2013-01-27','%Y-%m-%d') + timedelta(days=min(nums)))
-        end = unix_time(datetime.strptime('2013-01-28','%Y-%m-%d') + timedelta(days=max(nums)))
+        start = unix_time(datetime.strptime(init_start_date,'%Y-%m-%d') + timedelta(days=min(nums)))
+        end = unix_time(datetime.strptime(init_start_date,'%Y-%m-%d') + timedelta(days=max(nums)+1))
         return [start, end]
     else:
         return [init_start, init_end]
