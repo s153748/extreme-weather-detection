@@ -44,7 +44,7 @@ init_end_date = datetime.utcfromtimestamp(init_end).strftime('%Y-%m-%d')
 def get_marks(start, end):
     result = []
     current = start
-    while current <= end:
+    while current < end: # <=
         result.append(current)
         current += relativedelta(months=1)
     return {int(unix_time(m)): (str(m.strftime('%b %Y'))) for m in result}
@@ -212,7 +212,7 @@ def generate_barchart(df, range_select, loc_select, type_select, n_clicks, keywo
     graph_layout['dragmode'] = 'select'
     graph_layout["selectdirection"] = 'h'
     graph_layout["showlegend"] = False
-    graph_layout["height"] = 100
+    graph_layout["height"] = 90
     
     return dict(data=data, layout=graph_layout)
 
@@ -287,7 +287,7 @@ def generate_hexabin_map(geo_df, style_select, graph_layout):
     trace = ff.create_hexbin_mapbox(geo_df, 
                                   lat="lat", 
                                   lon="lon",
-                                  nx_hexagon=200, #int(max(150,len(geo_df)/150)), 
+                                  nx_hexagon=200, #int(max(30,len(geo_df)/150)), 
                                   min_count=1, 
                                   opacity=0.8, 
                                   labels={"color": "Count"},
@@ -335,20 +335,13 @@ def generate_table(filtered_df, geo_select):
         text_df = pd.DataFrame(full_text,columns=['full_text'])
     text_df.rename(columns={'full_text':'Tweets'},inplace=True)
     
-    table = dash_table.DataTable( 
-        columns=[{"name": i, "id": i} for i in text_df.columns],
-        data=text_df.to_dict('records'),
-        style_cell={'textAlign': 'left','whiteSpace':'normal','height':'auto'},#'width':'240px',"background-color":"#242a3b","color":"#7b7d8d"},
-        style_as_list_view=False,
-        style_header={"background-color":"#1f2536",'fontWeight':'bold',"padding":"0px 5px"},
-    )
     t = [generate_tweet_div(i) for i in text_df.to_dict('records')]
     return t
     
 def generate_tweet_div(tweet):
     return html.P(
         children=[dash_dangerously_set_inner_html.DangerouslySetInnerHTML(str(tweet['Tweets']))],
-        style={'width':'100%',"background-color":"#242a3b","color":"#7b7d8d"}
+        style={'width':'100%',"background-color":"#242a3b","color":"#7b7d8d",'margin-bottom':'0px'}
     )
 
 app.layout = dbc.Container([
@@ -456,7 +449,7 @@ def update_slider(bar_select):
     if bar_select is not None:
         nums = [int(point["pointNumber"]) for point in bar_select["points"]]
         start = unix_time(datetime.strptime(init_start_date,'%Y-%m-%d') + timedelta(days=min(nums)))
-        end = unix_time(datetime.strptime(init_start_date,'%Y-%m-%d') + timedelta(days=max(nums)+1))
+        end = unix_time(datetime.strptime(init_start_date,'%Y-%m-%d') + timedelta(days=max(nums)))
         return [start, end]
     else:
         return [init_start, init_end]
