@@ -319,9 +319,9 @@ def generate_treemap(filtered_df, geo_select):
                         parents=['']*k,
                         marker_colorscale=px.colors.sequential.Teal,
                         hovertemplate='<b>%{label} </b> <br>Count: %{value}<extra></extra>'))
-    fig.update_layout(margin=dict(l=0, r=0, t=0, b=20), 
+    fig.update_layout(margin=dict(l=0, r=0, t=0, b=10), 
                       height=240,
-                      width=270,
+                      #width=270,
                       plot_bgcolor="#171b26",
                       paper_bgcolor="#171b26") 
     return fig
@@ -388,7 +388,7 @@ app.layout = dbc.Container([
                             id='range-slider',
                             min=init_start,
                             max=init_end, 
-                            value=[init_start, init_end], 
+                            value=[init_start, init_start+5000000], 
                             marks=get_marks(df['date'].min(), df['date'].max()),
                             updatemode='mouseup',
                         ), 
@@ -525,7 +525,7 @@ def update_content(range_select, loc_select, type_select, geo_select, n_clicks, 
     treemap = generate_treemap(filtered_df, geo_select)
     table = generate_table(filtered_df, geo_select)
     pct = np.round(len(filtered_df)/total_count*100,1)
-    counter = f'Tweets in selection: {len(filtered_df)} ({pct}%)'
+    counter = f'Tweets in selection: {len(filtered_df)} ({pct} %)'
     
     return treemap, table, counter
   
