@@ -123,18 +123,18 @@ def build_control_panel():
                     html.Div(
                         id="filter-select-outer",
                         children=[
-                            html.Label("Filter by Localization"),
-                            dcc.Dropdown(
-                                id="loc-select",
-                                options=[{'label': i, 'value': i} for i in loc_options],
-                                value=loc_options,
-                                multi=True
-                            ),
-                            html.Label("Filter by Type"),
+                            html.Label("Tweet Type"),
                             dcc.Dropdown(
                                 id='type-select',
                                 options=[{'label': i, 'value': i} for i in type_options],
                                 value=type_options,
+                                multi=True
+                            ),
+                            html.Label("Location Type"),
+                            dcc.Dropdown(
+                                id="loc-select",
+                                options=[{'label': i, 'value': i} for i in loc_options],
+                                value=loc_options[:2],
                                 multi=True
                             ),
                         ],
@@ -151,7 +151,7 @@ def build_control_panel():
                             dcc.Textarea(
                                 id='text-search',
                                 value='',
-                                style={'width':'100%','height':'1px','background-color':'#171b26','opacity':0.5,'color':'#ffffff'},
+                                style={'width':'100%','background-color':'#171b26','opacity':0.5,'color':'#ffffff','fontsize':'8px'}, 
                                 draggable=False,
                                 placeholder='e.g. Floods, Queensland'
                             ),
@@ -209,7 +209,7 @@ def generate_barchart(df, range_select, loc_select, type_select, n_clicks, keywo
             hovertemplate ='<b>%{x} </b><br>Count: %{y}'
         ),
     ]
-    graph_layout['dragmode'] = 'select'
+    graph_layout["dragmode"] = 'select'
     graph_layout["selectdirection"] = 'h'
     graph_layout["showlegend"] = False
     graph_layout["height"] = 90
@@ -321,7 +321,6 @@ def generate_treemap(filtered_df, geo_select):
                         hovertemplate='<b>%{label} </b> <br>Count: %{value}<extra></extra>'))
     fig.update_layout(margin=dict(l=0, r=0, t=0, b=10), 
                       height=240,
-                      #width=270,
                       plot_bgcolor="#171b26",
                       paper_bgcolor="#171b26") 
     return fig
@@ -341,7 +340,7 @@ def generate_table(filtered_df, geo_select):
 def generate_tweet_div(tweet):
     return html.P(
         children=[dash_dangerously_set_inner_html.DangerouslySetInnerHTML(str(tweet['Tweets']))],
-        style={'width':'100%',"background-color":"#242a3b","color":"#7b7d8d",'margin-bottom':'0px'}
+        style={'width':'100%',"background-color":"#242a3b","color":"#7b7d8d",'margin-bottom':'1px'}
     )
 
 app.layout = dbc.Container([
@@ -388,7 +387,7 @@ app.layout = dbc.Container([
                             id='range-slider',
                             min=init_start,
                             max=init_end, 
-                            value=[init_start, init_start+5000000], 
+                            value=[init_start, init_start+2000000], 
                             marks=get_marks(df['date'].min(), df['date'].max()),
                             updatemode='mouseup',
                         ), 
@@ -398,7 +397,7 @@ app.layout = dbc.Container([
                             id="barchart",
                         )),
                     ]),
-                    html.Div(dcc.Loading(html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'9px','margin-top':'1px'}))),
+                    html.Div(dcc.Loading(html.Div(id='counter',style={'color':'#7b7d8d','fontsize':'8px','margin-top':'1px'}))),
                 ], 
                     xs=12, sm=12, md=9, lg=9, xl=9
                 ),
@@ -425,8 +424,8 @@ app.layout = dbc.Container([
                                 children=[
                                     dcc.Loading(children=html.Div(id="tweets-table")),
                                 ],
-                                style={'overflow-y': 'scroll', 'overflow-x': 'none', 'height': 350}
-                            )
+                                style={'overflow-y':'scroll','overflow-x':'none','height':350}
+                            ),
                         ],
                     ),
                 ], 
@@ -449,10 +448,10 @@ def update_slider(bar_select):
     if bar_select is not None:
         nums = [int(point["pointNumber"]) for point in bar_select["points"]]
         start = unix_time(datetime.strptime(init_start_date,'%Y-%m-%d') + timedelta(days=min(nums)))
-        end = unix_time(datetime.strptime(init_start_date,'%Y-%m-%d') + timedelta(days=max(nums)))
+        end = unix_time(datetime.strptime(init_start_date,'%Y-%m-%d') + timedelta(days=max(nums)+1))
         return [start, end]
     else:
-        return [init_start, init_end]
+        return [init_start, init_start+2000000]
 
 # Update barchart 
 @app.callback(
