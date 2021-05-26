@@ -134,7 +134,7 @@ def build_control_panel():
                             dcc.Dropdown(
                                 id="loc-select",
                                 options=[{'label': i, 'value': i} for i in loc_options],
-                                value=loc_options[:2],
+                                value=loc_options[:3], 
                                 multi=True
                             ),
                         ],
@@ -340,7 +340,7 @@ def generate_table(filtered_df, geo_select):
 def generate_tweet_div(tweet):
     return html.P(
         children=[dash_dangerously_set_inner_html.DangerouslySetInnerHTML(str(tweet['Tweets']))],
-        style={'width':'100%',"background-color":"#242a3b","color":"#7b7d8d",'margin-bottom':'1px'}
+        style={'width':'100%',"background-color":"#242a3b","color":"#7b7d8d",'margin-bottom':'5px'}
     )
 
 app.layout = dbc.Container([
@@ -387,7 +387,7 @@ app.layout = dbc.Container([
                             id='range-slider',
                             min=init_start,
                             max=init_end, 
-                            value=[init_start, init_start+2000000], 
+                            value=[init_start, init_start+2500000], 
                             marks=get_marks(df['date'].min(), df['date'].max()),
                             updatemode='mouseup',
                         ), 
@@ -448,10 +448,10 @@ def update_slider(bar_select):
     if bar_select is not None:
         nums = [int(point["pointNumber"]) for point in bar_select["points"]]
         start = unix_time(datetime.strptime(init_start_date,'%Y-%m-%d') + timedelta(days=min(nums)))
-        end = unix_time(datetime.strptime(init_start_date,'%Y-%m-%d') + timedelta(days=max(nums)+1))
+        end = unix_time(datetime.strptime(init_start_date,'%Y-%m-%d') + timedelta(days=max(nums)))
         return [start, end]
     else:
-        return [init_start, init_start+2000000]
+        return [init_start, init_start+2500000]
 
 # Update barchart 
 @app.callback(
