@@ -44,7 +44,7 @@ init_end_date = datetime.utcfromtimestamp(init_end).strftime('%Y-%m-%d')
 def get_marks(start, end):
     result = []
     current = start
-    while current < end: # <=
+    while current <= end: 
         result.append(current)
         current += relativedelta(months=1)
     return {int(unix_time(m)): (str(m.strftime('%b %Y'))) for m in result}
@@ -59,7 +59,7 @@ colors = ['#ef5675','#8073ac','#35978f','#ffa600']
 # Create global chart template
 layout = dict(
     autosize=True,
-    margin=dict(l=0, r=0, t=0, b=0),
+    margin=dict(l=5, r=0, t=0, b=0),
     plot_bgcolor="#171b26",
     paper_bgcolor="#171b26",
     hovermode="closest",
@@ -134,7 +134,7 @@ def build_control_panel():
                             dcc.Dropdown(
                                 id="loc-select",
                                 options=[{'label': i, 'value': i} for i in loc_options],
-                                value=loc_options[:3], 
+                                value=['Geotagged coordinates','Geotagged place'],
                                 multi=True
                             ),
                         ],
@@ -151,9 +151,9 @@ def build_control_panel():
                             dcc.Textarea(
                                 id='text-search',
                                 value='',
-                                style={'width':'100%','background-color':'#171b26','opacity':0.5,'color':'#ffffff','fontsize':'8px'}, 
+                                style={'width':'100%','background-color':'#171b26','opacity':0.5,'color':'#ffffff','fontsize':8}, 
                                 draggable=False,
-                                placeholder='e.g. floods, #waterdamage'
+                                placeholder='e.g. floods, #water'
                             ),
                             html.Button('Search', id='search-button', n_clicks=0),
                         ]
@@ -213,6 +213,7 @@ def generate_barchart(df, range_select, loc_select, type_select, n_clicks, keywo
     graph_layout["selectdirection"] = 'h'
     graph_layout["showlegend"] = False
     graph_layout["height"] = 90
+    graph_layout["margin"] = dict(l=0, r=0, t=0, b=0),
     
     return dict(data=data, layout=graph_layout)
 
@@ -340,7 +341,7 @@ def generate_table(filtered_df, geo_select):
 def generate_tweet_div(tweet):
     return html.P(
         children=[dash_dangerously_set_inner_html.DangerouslySetInnerHTML(str(tweet['Tweets']))],
-        style={'width':'100%',"background-color":"#242a3b","color":"#7b7d8d",'margin-bottom':'5px','fontsize':'8px'}
+        style={'width':'100%',"background-color":"#242a3b","color":"#7b7d8d",'margin-bottom':'5px','fontsize':8}
     )
 
 app.layout = dbc.Container([
@@ -387,6 +388,7 @@ app.layout = dbc.Container([
                             id='range-slider',
                             min=init_start,
                             max=init_end, 
+                            value=[init_start, init_end/6],
                             marks=get_marks(df['date'].min(), df['date'].max()),
                             updatemode='mouseup',
                         ), 
