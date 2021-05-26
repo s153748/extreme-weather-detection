@@ -51,7 +51,7 @@ def get_marks(start, end):
 
 # Set graph options
 graph_options = ['Scatter map','Density heatmap','Hexabin map']
-style_options = ['light','dark','streets','outdoors','satellite'] 
+style_options = ['light','dark','streets','satellite'] 
 loc_options = ['Geoparsed from Tweet','Geotagged coordinates','Geotagged place','Registered user location']
 type_options = ['Tweet','Retweet']
 colors = ['#ef5675','#8073ac','#35978f','#ffa600']
@@ -204,7 +204,7 @@ def generate_barchart(df, range_select, loc_select, type_select, n_clicks, keywo
             type="bar",
             x=g.index,
             y=g["count"],
-            name="Count",
+            #name="Count",
             marker=dict(color=cols),
             hovertemplate ='<b>%{x} </b><br>Count: %{y}'
         ),
@@ -241,7 +241,7 @@ def generate_scatter_map(geo_df, style_select, loc_select, graph_layout):
             text='<b>'+tweet+'</b><br>User name: '+user_name+'<br>User location: '+user_location+
                  '<br>Created at: '+created_at.map(str)+'<br>Source: '+source+'<br>Localization: '+localization+
                  '<br>Retweet count: '+retweet_count.map(str), # '<br>Type: '+tweettype+
-            marker=dict(size=4.5,opacity=0.8,color=colors[i]),
+            marker=dict(size=4.5,opacity=0.9,color=colors[i]),
             customdata=hashtags
         )
         traces.append(trace)
@@ -289,7 +289,7 @@ def generate_hexabin_map(geo_df, style_select, graph_layout):
                                   lon="lon",
                                   nx_hexagon=200, #int(max(30,len(geo_df)/150)), 
                                   min_count=1, 
-                                  opacity=0.8, 
+                                  opacity=0.9, 
                                   labels={"color": "Count"},
                                   color_continuous_scale='YlGnBu',
     )
@@ -447,8 +447,8 @@ def update_slider(bar_select):
     
     if bar_select is not None:
         nums = [int(point["pointNumber"]) for point in bar_select["points"]]
-        start = unix_time(datetime.strptime(init_start_date,'%Y-%m-%d') + timedelta(days=min(nums)))
-        end = unix_time(datetime.strptime(init_start_date,'%Y-%m-%d') + timedelta(days=max(nums)))
+        start = unix_time(datetime.strptime(init_start_date,'%Y-%m-%d') + timedelta(days=min(nums))) 
+        end = unix_time(datetime.strptime('2016-01-10','%Y-%m-%d') + timedelta(days=max(nums)))
         return [start, end]
     else:
         return [init_start, init_start+(init_end-init_start)/10]
