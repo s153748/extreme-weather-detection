@@ -151,7 +151,7 @@ def build_control_panel():
                             dcc.Textarea(
                                 id='text-search',
                                 value='',
-                                style={'width':'100%','background-color':'#171b26','opacity':0.5,'color':'#ffffff','fontsize':8}, 
+                                style={'width':'100%','background-color':'#171b26','opacity':0.5,'color':'#ffffff','fontsize':2}, 
                                 draggable=False,
                                 placeholder='e.g. floods, #water'
                             ),
@@ -340,7 +340,7 @@ def generate_table(filtered_df, geo_select):
 def generate_tweet_div(tweet):
     return html.P(
         children=[dash_dangerously_set_inner_html.DangerouslySetInnerHTML(str(tweet['Tweets']))],
-        style={'width':'100%',"background-color":"#242a3b","color":"#7b7d8d",'margin-bottom':'5px','fontsize':5}
+        style={'width':'100%',"background-color":"#242a3b","color":"#7b7d8d",'margin-bottom':'5px','fontsize':2}
     )
 
 app.layout = dbc.Container([
@@ -387,7 +387,7 @@ app.layout = dbc.Container([
                             id='range-slider',
                             min=init_start,
                             max=init_end, 
-                            value=[init_start, (init_end-init_start)/6],
+                            value=[init_start, init_start+(init_end-init_start)/12],
                             marks=get_marks(df['date'].min(), df['date'].max()),
                             updatemode='mouseup',
                         ), 
@@ -397,7 +397,7 @@ app.layout = dbc.Container([
                             id="barchart",
                         )),
                     ]),
-                    html.Div(dcc.Loading(html.Div(id='counter',style={'color':'#7b7d8d','fontsize':5,'margin-top':'1px'}))),
+                    html.Div(dcc.Loading(html.Div(id='counter',style={'color':'#7b7d8d','fontsize':2,'margin-top':'1px'}))),
                 ], 
                     xs=12, sm=12, md=9, lg=9, xl=9
                 ),
@@ -451,7 +451,7 @@ def update_slider(bar_select):
         end = unix_time(datetime.strptime(init_start_date,'%Y-%m-%d') + timedelta(days=max(nums)))
         return [start, end]
     else:
-        return [init_start, (init_end-init_start)/6]
+        return [init_start, init_start+(init_end-init_start)/12]
 
 # Update barchart 
 @app.callback(
