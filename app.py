@@ -63,12 +63,13 @@ layout = dict(
     plot_bgcolor="#171b26",
     paper_bgcolor="#171b26",
     hovermode="closest",
+    clickmode="event+select",
     mapbox=dict(accesstoken=mapbox_access_token,
                 style='light',
                 center=go.layout.mapbox.Center(lat=5, lon=5),
                 zoom=1,
     ),
-    legend=dict(bgcolor="#cbd2d3",
+    legend=dict(bgcolor=rgba(203,210,211,0.2)
                 orientation="h",
                 font=dict(color="#7b7d8d",size='8px'),
                 x=0.02,
@@ -226,7 +227,6 @@ def generate_scatter_map(geo_df, style_select, loc_select, graph_layout):
         created_at = dff['created_at']
         source = dff['source']
         localization = dff["localization"]
-        #tweettype = dff['type']
         retweet_count = dff['retweet_count']
         hashtags = dff['hashtags']
         trace = dict(
@@ -239,7 +239,7 @@ def generate_scatter_map(geo_df, style_select, loc_select, graph_layout):
             hoverinfo="text",
             text='<b>'+tweet+'</b><br>User name: '+user_name+'<br>User location: '+user_location+
                  '<br>Created at: '+created_at.map(str)+'<br>Source: '+source+'<br>Localization: '+localization+
-                 '<br>Retweet count: '+retweet_count.map(str), # '<br>Type: '+tweettype+
+                 '<br>Retweet count: '+retweet_count.map(str), 
             marker=dict(size=4.5,opacity=0.9,color=colors[i]),
             customdata=hashtags
         )
@@ -524,8 +524,12 @@ def update_content(range_select, loc_select, type_select, geo_select, n_clicks, 
     filtered_df = filter_data(df, [start,end], loc_select, type_select, n_clicks, keywords)
     treemap = generate_treemap(filtered_df, geo_select)
     table = generate_table(filtered_df, geo_select)
-    pct = np.round(len(filtered_df)/total_count*100,1)
-    counter = f'Tweets in selection: {len(filtered_df)} ({pct} %)'
+    if geo_select is None:
+        num = len(filtered_df)
+    else:
+        num = len(geo_select["points"])
+    pct = np.round(num/total_count*100,1)
+    counter = f'Tweets in selection: {num} ({pct} %)'
     
     return treemap, table, counter
   
