@@ -69,7 +69,7 @@ layout = dict(
                 center=go.layout.mapbox.Center(lat=5, lon=5),
                 zoom=1,
     ),
-    legend=dict(bgcolor=rgba(203,210,211,0.2)
+    legend=dict(bgcolor=rgba(203,210,211,0.2),
                 orientation="h",
                 font=dict(color="#7b7d8d",size='8px'),
                 x=0.02,
