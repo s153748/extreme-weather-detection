@@ -54,6 +54,7 @@ graph_options = ['Scatter map','Density heatmap','Hexabin map']
 style_options = ['light','dark','streets','satellite'] 
 loc_options = ['Geoparsed from Tweet','Geotagged coordinates','Geotagged place','Registered user location']
 type_options = ['Tweet','Retweet']
+class_options = ['Logistic regression','Random forest','CNN','ULMFiT']
 colors = ['#ef5675','#8073ac','#35978f','#ffa600']
 
 # Create global chart template
@@ -137,6 +138,12 @@ def build_control_panel():
                                 options=[{'label': i, 'value': i} for i in loc_options],
                                 value=['Geotagged coordinates','Geotagged place'],
                                 multi=True
+                            ),
+                            html.Label("Classifier"),
+                            dcc.Dropdown(
+                                id='class-select',
+                                options=[{'label': i, 'value': i} for i in class_options],
+                                value=class_options
                             ),
                         ],
                     ),
@@ -287,7 +294,7 @@ def generate_hexabin_map(geo_df, style_select, graph_layout):
                                   lat="lat", 
                                   lon="lon",
                                   nx_hexagon=200, #int(max(30,len(geo_df)/150)), 
-                                  min_count=1, 
+                                  min_count=3, 
                                   opacity=0.9, 
                                   labels={"color": "Count"},
                                   color_continuous_scale='YlGnBu',
