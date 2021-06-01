@@ -46,7 +46,7 @@ def get_marks(start, end):
     current = start
     while current <= end: 
         result.append(current)
-        current += relativedelta(months=3) # 1 
+        current += relativedelta(months=1) # 1 
     return {int(unix_time(m)): (str(m.strftime('%b %Y'))) for m in result} 
 
 # Set graph options
@@ -106,7 +106,7 @@ def build_control_panel():
                             dcc.Dropdown(
                                 id="style-select",
                                 options=[{"label": i.capitalize(), "value": i} for i in style_options],
-                                value=style_options[0],
+                                value=style_options[1],
                             ),
                         ], style={'margin-top':'2px'}
                     ),
@@ -235,9 +235,8 @@ def generate_scatter_map(geo_df, style_select, loc_select, graph_layout):
             selected=dict(marker={"opacity":1.0,"color":"#d6edff" if style_select=='dark' or style_select=='satellite' else "#171b26"}),
             unselected=dict(marker={"opacity":0.3}),
             hoverinfo="text",
-            text='<b>'+tweet+'</b><br>User name: '+user_name+'<br>User location: '+user_location+
-                 '<br>Created at: '+created_at.map(str)+'<br>Source: '+source+'<br>Localization: '+localization+
-                 '<br>Retweet count: '+retweet_count.map(str), 
+            text='<b>'+tweet+'</b><br>User name: '+user_name+'<br>User location: '+user_location+'<br>Created at: '+created_at.map(str)+
+                 '<br>Source: '+source+'<br>Localization: '+localization+'<br>Retweet count: '+retweet_count.map(str), 
             marker=dict(size=4.5,opacity=0.9,color=colors[i]),
             customdata=hashtags
         )
