@@ -30,7 +30,7 @@ mapbox_access_token = open(".mapbox_token.txt").read()
 
 # Load data
 DATA_PATH = pathlib.Path(__file__).parent.joinpath("data") 
-df = pd.read_json(DATA_PATH.joinpath("eng_tweets.json"),orient='split')
+df = pd.read_json(DATA_PATH.joinpath("eng_tweets_1718.json"),orient='split')
 total_count = len(df)
 
 def unix_time(dt):
