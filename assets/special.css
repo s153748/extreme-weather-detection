@@ -24,7 +24,7 @@ body {
 
 .banner h6 {
   font-family: 'Open Sans', sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 500;
   line-height: 1;
   text-transform: uppercase;
@@ -45,7 +45,7 @@ body {
     min-height: calc(100vh - 5.5rem);
 }
 
-.geo-map > div, .line-chart > div, {
+.geo-map > div, .barchart > div, {
     height: 100% !important;
     width: 100% !important;
 }
@@ -77,35 +77,10 @@ span.Select-clear-zone {
   cursor: pointer;
 }
 
-#graph-select-outer, #style-select-outer, #color-select-outer, #loc-select-outer, #text-search-outer {
-  width: 100%;
-}
-
-#graph-select-outer > label, #style-select-outer > label, #color-select-outer > label, #loc-select-outer > label, #text-search-outer > label {
-  margin-bottom: 2px;
-  color: #7b7d8d;
-}
-
-.section-title, #map-title, #treemap-title, #tweets-title {
+.section-title, #map-title, #treemap-title {
   font-size: 16px;
   font-weight: bold;
   display: block;
-}
-
-.dash-spreadsheet-container .dash-spreadsheet-inner th, td {
-  text-align: left !important;
-  font-family: "Open Sans", sans-serif !important;
-  border-top-color: #171b26 !important;
-  border-bottom-color: #171b26 !important;
-  border-left-color: #171b26 !important;
-  border-right-color: #171b26 !important;
-  font-size: 12px;
-}
-
-#tweets-outer > p {
-  font-weight: bold;
-  margin: 20px 0px;
-  overflow: auto;
 }
 
 .mapboxgl-canvas, .mapboxgl-map {
