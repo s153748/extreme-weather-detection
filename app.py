@@ -334,8 +334,8 @@ def generate_table(filtered_df, geo_select):
     
 def generate_tweet_div(tweet):
     return html.P(
-        children=[dash_dangerously_set_inner_html.DangerouslySetInnerHTML(str(tweet['full_text']))],
-        style={'width':'100%',"background-color":"#242a3b","font-color":"#7b7d8d",'font-size':'14px','margin-bottom':'4px'}
+        children=[dash_dangerously_set_inner_html.DangerouslySetInnerHTML(str(tweet['full_text']).replace('<br>',' '))],
+        style={'width':'100%',"background-color":"#242a3b",'font-size':'14px','margin-bottom':'4px'}
     )
 
 app.layout = dbc.Container([
