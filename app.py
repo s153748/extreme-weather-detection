@@ -335,7 +335,7 @@ def generate_table(filtered_df, geo_select):
 def generate_tweet_div(tweet):
     return html.P(
         children=[dash_dangerously_set_inner_html.DangerouslySetInnerHTML(str(tweet['full_text']))],
-        style={'width':'100%',"background-color":"#242a3b","color":"#7b7d8d",'margin-bottom':'4px','font-size':'14px'}
+        style={'width':'100%',"background-color":"#242a3b","font-color":"#7b7d8d",'font-size':'14px','margin-bottom':'4px'}
     )
 
 app.layout = dbc.Container([
@@ -386,13 +386,13 @@ app.layout = dbc.Container([
                             marks=get_marks(df['date'].min(), df['date'].max()),
                             updatemode='mouseup',
                         ), 
-                    ], style={'font-color':'#7b7d8d','font-size':'8px'}),
+                    ]),
                     html.Div([
                         dcc.Loading(children=dcc.Graph(
                             id="barchart",
                         )),
                     ]),
-                    html.Div(dcc.Loading(html.Div(id='counter',style={'margin-top':'1px','font-color':'#7b7d8d','font-size':'12px'}))),
+                    html.Div(dcc.Loading(html.Div(id='counter',style={'margin-top':'1px','font-size':'14px'}))),
                 ], 
                     xs=12, sm=12, md=9, lg=9, xl=9
                 ),
