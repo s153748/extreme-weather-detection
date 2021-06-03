@@ -108,7 +108,7 @@ def build_control_panel():
                                 options=[{"label": i.capitalize(), "value": i} for i in style_options],
                                 value=style_options[1],
                             ),
-                        ], style={'margin-top':'2px'}
+                        ], style={'margin-top':'5px'}
                     ),
                     html.Div(
                         id="filter-select-outer",
