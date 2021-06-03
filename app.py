@@ -120,7 +120,7 @@ def build_control_panel():
                                 value=type_options,
                                 multi=True
                             ), 
-                        ], style={'margin-top':'4px'}
+                        ], style={'margin-top':'6px'}
                     ),
                     html.Div(
                          id="loc-select-outer",
@@ -132,7 +132,7 @@ def build_control_panel():
                                  value=loc_options[:3],
                                  multi=True
                              ),
-                         ], style={'margin-top':'4px'}
+                         ], style={'margin-top':'6px'}
                     ),
                     html.Div(
                          id="class-select-outer",
@@ -143,7 +143,7 @@ def build_control_panel():
                                 options=[{'label': i, 'value': i} for i in class_options],
                                 value=class_options[3]
                             ),
-                        ], style={'margin-top':'4px'}
+                        ], style={'margin-top':'6px'}
                     ),
                     html.Div(
                         id="text-search-outer",
@@ -157,7 +157,7 @@ def build_control_panel():
                                 placeholder='e.g. floods, #water'
                             ),
                             html.Button('Search', id='search-button', n_clicks=0),
-                        ], style={'margin-top':'4px'}
+                        ], style={'margin-top':'6px'}
                     )
                 ]
            )
@@ -396,7 +396,7 @@ app.layout = dbc.Container([
                     ]),
                     html.Div(dcc.Loading(html.Div(id='counter',style={'color':'#7b7d8d','margin-top':'1px'}))),
                 ], 
-                    xs=12, sm=12, md=9, lg=9, xl=9
+                    xs=12, sm=12, md=9, lg=10, xl=10
                 ),
                 dbc.Col([
                     html.Div(
@@ -426,7 +426,7 @@ app.layout = dbc.Container([
                         ],
                     ),
                 ], 
-                    xs=12, sm=12, md=3, lg=3, xl=3
+                    xs=12, sm=12, md=2, lg=2, xl=2
                 ),
             ])
         ], 
