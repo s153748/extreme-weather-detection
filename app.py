@@ -328,15 +328,14 @@ def generate_table(filtered_df, geo_select):
     else:
         full_text = [point["text"] for point in geo_select["points"]]
         text_df = pd.DataFrame(full_text,columns=['full_text'])
-    text_df.rename(columns={'full_text':'Tweets'},inplace=True)
-    
+
     t = [generate_tweet_div(i) for i in text_df.to_dict('records')]
     return t
     
 def generate_tweet_div(tweet):
     return html.P(
-        children=[dash_dangerously_set_inner_html.DangerouslySetInnerHTML(str(tweet['Tweets']))],
-        style={'width':'100%',"background-color":"#242a3b","color":"#7b7d8d",'margin-bottom':'5px'}
+        children=[dash_dangerously_set_inner_html.DangerouslySetInnerHTML(str(tweet['full_text']))],
+        style={'width':'100%',"background-color":"#242a3b","color":"#7b7d8d",'margin-bottom':'4px','font-size':'9px'}
     )
 
 app.layout = dbc.Container([
