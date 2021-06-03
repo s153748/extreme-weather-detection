@@ -108,38 +108,42 @@ def build_control_panel():
                                 options=[{"label": i.capitalize(), "value": i} for i in style_options],
                                 value=style_options[1],
                             ),
-                        ], style={'margin-top':'5px'}
+                        ], style={'margin-top':'4px'}
                     ),
                     html.Div(
-                        id="filter-select-outer",
+                        id="tweet-select-outer",
                         children=[
-                            #html.Label("Year"),
-                            #dcc.Dropdown(
-                            #    id='year-select',
-                            #    options=[{'label': i, 'value': i} for i in years],
-                            #    value=years[-1]
-                            #),
                             html.Label("Tweet Type"),
                             dcc.Dropdown(
                                 id='type-select',
                                 options=[{'label': i, 'value': i} for i in type_options],
                                 value=type_options,
                                 multi=True
-                            ),
-                            html.Label("Location Type"),
-                            dcc.Dropdown(
-                                id="loc-select",
-                                options=[{'label': i, 'value': i} for i in loc_options],
-                                value=loc_options[:3],
-                                multi=True
-                            ),
+                            ), 
+                        ], style={'margin-top':'4px'}
+                    ),
+                    html.Div(
+                         id="loc-select-outer",
+                         children=[
+                             html.Label("Location Type"),
+                             dcc.Dropdown(
+                                 id="loc-select",
+                                 options=[{'label': i, 'value': i} for i in loc_options],
+                                 value=loc_options[:3],
+                                 multi=True
+                             ),
+                         ], style={'margin-top':'4px'}
+                    ),
+                    html.Div(
+                         id="class-select-outer",
+                         children=[ 
                             html.Label("Classifier"),
                             dcc.Dropdown(
                                 id='class-select',
                                 options=[{'label': i, 'value': i} for i in class_options],
                                 value=class_options[3]
                             ),
-                        ],
+                        ], style={'margin-top':'4px'}
                     ),
                     html.Div(
                         id="text-search-outer",
@@ -153,7 +157,7 @@ def build_control_panel():
                                 placeholder='e.g. floods, #water'
                             ),
                             html.Button('Search', id='search-button', n_clicks=0),
-                        ]
+                        ], style={'margin-top':'4px'}
                     )
                 ]
            )
