@@ -52,7 +52,7 @@ def get_marks(start, end):
 # Set graph options
 graph_options = ['Scatter','Density','Hexabin']
 style_options = ['light','dark','streets','satellite'] 
-loc_options = ['Geotagged coordinates','Geotagged place','Geoparsed from Tweet','Registered user location']
+loc_options = ['Geoparsed from Tweet','Geotagged coordinates','Geotagged place','Registered user location']
 type_options = ['Tweet','Retweet']
 class_options = ['Logistic regression','Random forest','CNN','ULMFiT']
 colors = ['#ef5675','#ffa600','#8073ac','#35978f']
