@@ -283,8 +283,8 @@ def generate_hexabin_map(geo_df, style_select, graph_layout):
     trace = ff.create_hexbin_mapbox(geo_df, 
                                   lat="lat", 
                                   lon="lon",
-                                  nx_hexagon=200, #int(max(30,len(geo_df)/150)), 
-                                  min_count=5, 
+                                  nx_hexagon=300, #int(max(30,len(geo_df)/150)), 
+                                  min_count=10, 
                                   opacity=0.9, 
                                   labels={"color": "Count"},
     )
@@ -335,7 +335,7 @@ def generate_table(filtered_df, geo_select):
 def generate_tweet_div(tweet):
     return html.P(
         children=[dash_dangerously_set_inner_html.DangerouslySetInnerHTML(str(tweet['full_text']))],
-        style={'width':'100%',"background-color":"#242a3b","color":"#7b7d8d",'margin-bottom':'4px','font-size':'12px'}
+        style={'width':'100%',"background-color":"#242a3b","color":"#7b7d8d",'margin-bottom':'4px','font-size':'14px'}
     )
 
 app.layout = dbc.Container([
@@ -386,13 +386,13 @@ app.layout = dbc.Container([
                             marks=get_marks(df['date'].min(), df['date'].max()),
                             updatemode='mouseup',
                         ), 
-                    ]),
+                    ], style={'font-color':'#7b7d8d','font-size':'8px'}),
                     html.Div([
                         dcc.Loading(children=dcc.Graph(
                             id="barchart",
                         )),
                     ]),
-                    html.Div(dcc.Loading(html.Div(id='counter',style={'color':'#7b7d8d','margin-top':'1px'}))),
+                    html.Div(dcc.Loading(html.Div(id='counter',style={'margin-top':'1px','font-color':'#7b7d8d','font-size':'12px'}))),
                 ], 
                     xs=12, sm=12, md=9, lg=9, xl=9
                 ),
@@ -524,11 +524,9 @@ def update_content(range_select, loc_select, type_select, class_select, geo_sele
     treemap = generate_treemap(filtered_df, geo_select)
     table = generate_table(filtered_df, geo_select)
     if geo_select is None:
-        num = len(filtered_df)
+        counter = f'Tweets in selection: {len(filtered_df)}'
     else:
-        num = len(geo_select["points"])
-    pct = np.round(num/total_count*100,1)
-    counter = f'Tweets in selection: {num} ({pct} %)'
+        counter = f'Tweets in selection: {len(geo_select["points"])}'
     
     return treemap, table, counter
 
