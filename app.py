@@ -430,7 +430,7 @@ app.layout = dbc.Container([
                 ),
             ])
         ], 
-            xs=12, sm=12, md=9, lg=9, xl=9
+            xs=12, sm=12, md=10, lg=10, xl=10
         )
     ], no_gutters=False, justify='start')
 ], fluid=True)
