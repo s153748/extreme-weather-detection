@@ -39,14 +39,13 @@ init_start = unix_time(df['date'].min())
 init_end = unix_time(df['date'].max())
 init_start_date = datetime.utcfromtimestamp(init_start).strftime('%Y-%m-%d')
 init_end_date = datetime.utcfromtimestamp(init_end).strftime('%Y-%m-%d')
-#years = df.year.unique()
 
 def get_marks(start, end):
     result = []
     current = start
     while current <= end: 
         result.append(current)
-        current += relativedelta(months=1) # 1 
+        current += relativedelta(months=1) 
     return {int(unix_time(m)): (str(m.strftime('%b %Y'))) for m in result} 
 
 # Set graph options
@@ -396,7 +395,7 @@ app.layout = dbc.Container([
                     ]),
                     html.Div(dcc.Loading(html.Div(id='counter',style={'color':'#7b7d8d','margin-top':'1px'}))),
                 ], 
-                    xs=12, sm=12, md=9, lg=10, xl=10
+                    xs=12, sm=12, md=9, lg=9, xl=9
                 ),
                 dbc.Col([
                     html.Div(
