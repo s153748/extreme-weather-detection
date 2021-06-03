@@ -52,7 +52,7 @@ def get_marks(start, end):
 # Set graph options
 graph_options = ['Scatter','Density','Hexabin']
 style_options = ['light','dark','streets','satellite'] 
-loc_options = ['Geoparsed from Tweet','Geotagged coordinates','Geotagged place','Registered user location']
+loc_options = ['Geotagged coordinates','Geotagged place','Geoparsed from Tweet','Registered user location']
 type_options = ['Tweet','Retweet']
 class_options = ['Logistic regression','Random forest','CNN','ULMFiT']
 colors = ['#ef5675','#ffa600','#8073ac','#35978f']
@@ -130,14 +130,14 @@ def build_control_panel():
                             dcc.Dropdown(
                                 id="loc-select",
                                 options=[{'label': i, 'value': i} for i in loc_options],
-                                value=['Geotagged coordinates','Geotagged place'],
+                                value=loc_options[:3],
                                 multi=True
                             ),
                             html.Label("Classifier"),
                             dcc.Dropdown(
                                 id='class-select',
                                 options=[{'label': i, 'value': i} for i in class_options],
-                                value=class_options[0]
+                                value=class_options[3]
                             ),
                         ],
                     ),
