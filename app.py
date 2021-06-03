@@ -362,7 +362,7 @@ app.layout = dbc.Container([
         dbc.Col([
             build_control_panel(),
         ], 
-            xs=12, sm=12, md=1.8, lg=1.8, xl=1.8
+            xs=12, sm=12, md=2, lg=2, xl=2
         ),
         dbc.Col([
             dbc.Row([
