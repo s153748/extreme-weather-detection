@@ -140,9 +140,9 @@ def build_control_panel():
                             dcc.Dropdown(
                                 id='class-select',
                                 options=[{'label': i, 'value': i} for i in class_options],
-                                placeholder='Select Tweets classified by...'
+                                placeholder='Select classifier'
                             ),
-                        ], style={'margin-top':'6px'}
+                        ], style={'margin-top':'6px','opacity':0.5}
                     ),
                     html.Div(
                         id="text-search-outer",
@@ -151,7 +151,7 @@ def build_control_panel():
                             dcc.Textarea(
                                 id='text-search',
                                 value='',
-                                style={'width':'100%','height':20,'background-color':'#171b26','opacity':0.5,'color':'#ffffff'}, 
+                                style={'width':'100%','height':'10px','background-color':'#171b26','opacity':0.5,'color':'#ffffff'}, 
                                 draggable=False,
                                 placeholder='e.g. floods, #water',
                             ),
@@ -262,10 +262,10 @@ def generate_density_map(geo_df, style_select, graph_layout):
         type="densitymapbox",
         lat=geo_df["lat"],
         lon=geo_df["lon"],
-        #z=geo_df['retweet_count'],
-        radius=10,
+        radius=3,
         opacity=0.8,
-        hovertemplate='Count: %{z}<extra></extra>',
+        customdata=geo_df['full_text'],
+        hovertemplate='{customdata}<extra></extra>',
         showscale=False,
     )]
     
