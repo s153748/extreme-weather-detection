@@ -140,7 +140,7 @@ def build_control_panel():
                             dcc.Dropdown(
                                 id='class-select',
                                 options=[{'label': i, 'value': i} for i in class_options],
-                                value=class_options[3]
+                                placeholder='Select Tweets classified by...'
                             ),
                         ], style={'margin-top':'6px'}
                     ),
@@ -171,7 +171,8 @@ def filter_data(df, range_select, loc_select, type_select, class_select, n_click
             df = df[df['full_text'].str.contains(keyword, case=False)]
     df = df[df['localization'].isin(loc_select)]
     df = df[df['type'].isin(type_select)]
-    df = df[df[class_select]==1]
+    if class_select is not None:
+        df = df[df[class_select]==1]
     df = df[df['date'] >= range_select[0]]
     filtered_df = df[df['date'] <= range_select[1]]
     
@@ -196,7 +197,7 @@ def generate_barchart(df, range_select, loc_select, type_select, class_select, n
             type="scatter",
             mode="markers",
             x=g.index,
-            y=g["count"] / 2,
+            y=g["count"]/2,
             name="Count",
             opacity=0,
             hoverinfo="skip",
@@ -240,7 +241,7 @@ def generate_scatter_map(geo_df, style_select, loc_select, graph_layout):
             hoverinfo="text",
             text='<b>'+tweet+'</b><br>User name: '+user_name+'<br>User location: '+user_location+'<br>Created at: '+created_at.map(str)+
                  '<br>Source: '+source+'<br>Retweet count: '+retweet_count.map(str), # '<br>Localization: '+localization+
-            marker=dict(size=4.5,opacity=0.9,color=colors[i]),
+            marker=dict(size=4,opacity=0.9,color=colors[i]),
             customdata=hashtags
         )
         traces.append(trace)
@@ -262,10 +263,9 @@ def generate_density_map(geo_df, style_select, graph_layout):
         lat=geo_df["lat"],
         lon=geo_df["lon"],
         #z=geo_df['retweet_count'],
-        radius=4,
+        radius=10,
         opacity=0.8,
-        hoverinfo="text",
-        hovertext=geo_df["full_text"],
+        hovertemplate='Count: %{z}<extra></extra>',
         showscale=False,
     )]
     
@@ -283,7 +283,7 @@ def generate_hexabin_map(geo_df, style_select, graph_layout):
     trace = ff.create_hexbin_mapbox(geo_df, 
                                   lat="lat", 
                                   lon="lon",
-                                  nx_hexagon=300, #int(max(30,len(geo_df)/150)), 
+                                  nx_hexagon=int(max(30,len(geo_df)/100)), 
                                   min_count=10, 
                                   opacity=0.9, 
                                   labels={"color": "Count"},
@@ -294,7 +294,6 @@ def generate_hexabin_map(geo_df, style_select, graph_layout):
         hexa_layout["mapbox"]["center"]["lat"] = float(graph_layout["mapbox.center"]["lat"])
         hexa_layout["mapbox"]["zoom"] = float(graph_layout["mapbox.zoom"])
     hexa_layout["mapbox"]["style"] = style_select
-    hexa_layout["clickmode"] = None
     
     return dict(data=trace.data, layout=hexa_layout)
 
