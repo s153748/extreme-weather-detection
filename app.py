@@ -140,9 +140,9 @@ def build_control_panel():
                             dcc.Dropdown(
                                 id='class-select',
                                 options=[{'label': i, 'value': i} for i in class_options],
-                                placeholder='Select classifier'
+                                placeholder=''
                             ),
-                        ], style={'margin-top':'6px','opacity':0.5}
+                        ], style={'margin-top':'6px'}
                     ),
                     html.Div(
                         id="text-search-outer",
@@ -151,7 +151,7 @@ def build_control_panel():
                             dcc.Textarea(
                                 id='text-search',
                                 value='',
-                                style={'width':'100%','height':'10px','background-color':'#171b26','opacity':0.5,'color':'#ffffff'}, 
+                                style={'width':'100%','max-height':'10px','background-color':'#171b26','opacity':0.5,'color':'#ffffff'}, 
                                 draggable=False,
                                 placeholder='e.g. floods, #water',
                             ),
@@ -265,7 +265,7 @@ def generate_density_map(geo_df, style_select, graph_layout):
         radius=3,
         opacity=0.8,
         customdata=geo_df['full_text'],
-        hovertemplate='{customdata}<extra></extra>',
+        hovertemplate=customdata,
         showscale=False,
     )]
     
