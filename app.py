@@ -153,7 +153,8 @@ def build_control_panel():
                                 value='',
                                 style={'width':'100%','background-color':'#171b26','opacity':0.5,'color':'#ffffff'}, 
                                 draggable=False,
-                                placeholder='e.g. floods, #water'
+                                placeholder='e.g. floods, #water',
+                                style={'height': 20},
                             ),
                             html.Button('Search', id='search-button', n_clicks=0),
                         ], style={'margin-top':'6px'}
