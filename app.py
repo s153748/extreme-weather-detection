@@ -454,7 +454,7 @@ def update_loc_dropdown(select_all):
 
 # update select all checklist
 @app.callback(
-    Output("checklist-container", "value"),
+    Output("loc-select-all", "value"),
     [Input("loc-select", "value")],
     [State("loc-select-all", "value")],
 )
