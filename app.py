@@ -98,7 +98,7 @@ def build_control_panel():
                                 options=[{"label": i, "value": i} for i in graph_options],
                                 value=graph_options[0],
                             ),
-                        ], style={'margin-top':'5px'}
+                        ], style={'margin-top':'4px'}
                     ),
                     html.Div(
                         id='style-select-outer',
@@ -109,7 +109,7 @@ def build_control_panel():
                                 options=[{"label": i.capitalize(), "value": i} for i in style_options],
                                 value=style_options[1],
                             ),
-                        ], style={'margin-top':'5px'}
+                        ], style={'margin-top':'4px'}
                     ),
                     html.Div(
                          id="class-select-outer",
@@ -120,7 +120,7 @@ def build_control_panel():
                                 options=[{'label': i, 'value': i} for i in class_options],
                                 value=class_options[0],
                             ),
-                        ], style={'margin-top':'5px'}
+                        ], style={'margin-top':'4px'}
                     ),
                     html.Div(
                         id="tweet-select-outer",
@@ -132,7 +132,7 @@ def build_control_panel():
                                 value=type_options,
                                 multi=True
                             ), 
-                        ], style={'margin-top':'5px'}
+                        ], style={'margin-top':'4px'}
                     ),
                     html.Div(
                          id="loc-select-outer",
@@ -144,7 +144,7 @@ def build_control_panel():
                                      id="loc-select-all",
                                      options=[{"label": " Select All", "value": "All"}],
                                      value=[],
-                                 ),
+                                 ), style={'font-size':'12px'}
                              ), 
                              html.Div(
                                 id="loc-select-dropdown-outer",
@@ -155,7 +155,7 @@ def build_control_panel():
                                     multi=True
                                 ),
                              ),
-                         ], style={'margin-top':'5px'}
+                         ], style={'margin-top':'4px'}
                     ),
                     html.Div(
                         id="text-search-outer",
@@ -169,7 +169,7 @@ def build_control_panel():
                                 placeholder='e.g. floods, #water',
                             ),
                             html.Button('Search', id='search-button', n_clicks=0),
-                        ], style={'margin-top':'5px'}
+                        ], style={'margin-top':'4px'}
                     )
                 ]
            )
