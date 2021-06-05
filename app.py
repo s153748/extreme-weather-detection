@@ -156,7 +156,7 @@ def build_control_panel():
                                 draggable=False,
                                 placeholder='e.g. floods, #water',
                             ),
-                            html.Button('Search', id='search-button', n_clicks=0, style={'color':'#7b7d8d'}),
+                            html.Button('Search', id='search-button', n_clicks=0),
                         ], style={'margin-top':'5px'}
                     )
                 ]
@@ -253,6 +253,7 @@ def generate_scatter_map(geo_df, style_select, loc_select, graph_layout):
         scatter_layout["mapbox"]["center"]["lat"] = float(graph_layout["mapbox.center"]["lat"])
         scatter_layout["mapbox"]["zoom"] = float(graph_layout["mapbox.zoom"])
     scatter_layout["mapbox"]["style"] = style_select
+    scatter_layout["margin"]["r"] = 5
     
     return dict(data=traces, layout=scatter_layout)
         
@@ -524,9 +525,11 @@ def update_content(range_select, loc_select, type_select, class_select, geo_sele
     treemap = generate_treemap(filtered_df, geo_select)
     table = generate_table(filtered_df, geo_select)
     if geo_select is None:
-        counter = f'Tweets in selection: {len(filtered_df)}'
+        pct = np.round(len(filtered_df)/total_count*100,1)
+        counter = f'Tweets in selection: {len(filtered_df)} ({pct}%)'
     else:
-        counter = f'Tweets in selection: {len(geo_select["points"])}'
+        pct = np.round(len(geo_select["points"])/total_count*100,1)
+        counter = f'Tweets in selection: {len(geo_select["points"])} ({pct}%)'
     
     return treemap, table, counter
 
