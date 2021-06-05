@@ -239,7 +239,6 @@ def generate_scatter_map(geo_df, style_select, loc_select, graph_layout):
     
     scatter_layout = copy.deepcopy(layout)
     traces = []
-    i = 0
     for filter_type, dff in geo_df.groupby('localization'):
         tweet = dff["full_text"] 
         user_name = dff['user_name']
@@ -253,7 +252,7 @@ def generate_scatter_map(geo_df, style_select, loc_select, graph_layout):
             type="scattermapbox",
             lat=dff["lat"],
             lon=dff["lon"],
-            name=loc_select[i],
+            name=dff["localization"],
             selected=dict(marker={"opacity":1.0,"color":"#d6edff" if style_select=='dark' or style_select=='satellite' else "#171b26"}),
             unselected=dict(marker={"opacity":0.3}),
             hoverinfo="text",
@@ -263,7 +262,6 @@ def generate_scatter_map(geo_df, style_select, loc_select, graph_layout):
             customdata=hashtags
         )
         traces.append(trace)
-        i += 1
         
     if graph_layout is not None and "mapbox.center" in graph_layout.keys():
         scatter_layout["mapbox"]["center"]["lon"] = float(graph_layout["mapbox.center"]["lon"])
