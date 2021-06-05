@@ -138,11 +138,16 @@ def build_control_panel():
                          id="loc-select-outer",
                          children=[
                              html.Label("Location Type"),
-                             dcc.Checklist(
-                                 id="loc-select-all",
-                                 options=[{"label": "Select All", "value": "All"}],
-                                 value=[],
-                             ),
+                             html.Div(
+                                 id='checklist',
+                                 children=[
+                                     dcc.Checklist(
+                                         id="loc-select-all",
+                                         options=[{"label": " Select All", "value": "All"}],
+                                         value=[],
+                                     ),
+                                 ],
+                             ), 
                              dcc.Dropdown(
                                  id="loc-select",
                                  options=[{'label': i, 'value': i} for i in loc_options],
@@ -454,20 +459,24 @@ def update_loc_dropdown(select_all):
 
 # update select all checklist
 @app.callback(
-    Output("loc-select-all", "value"),
+    Output("checklist", "children"),
     [Input("loc-select", "value")],
     [State("loc-select-all", "value")],
 )
 def update_checklist(selected, checked):
-    if len(checked) == 0 and len(selected) < len(select_options):
+    if len(checked) == 0 and len(selected) < len(loc_options):
         raise PreventUpdate()
     elif len(checked) == 1 and len(selected) < len(loc_options):
-        return []
-    elif len(checked) == 1 and len(selected) == len(select_options):
+        return dcc.Checklist(id="loc-select-all",
+                             options=[{"label": " Select All", "value": "All"}],
+                             value=[])
+    elif len(checked) == 1 and len(selected) == len(loc_options):
         raise PreventUpdate()
     else:
-        return ["All"]
-
+        return dcc.Checklist(id="loc-select-all",
+                             options=[{"label": " Select All", "value": "All"}],
+                             value=["All"])
+   
 # Update slider
 @app.callback(
     Output("range-slider", "value"),
