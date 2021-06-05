@@ -140,19 +140,20 @@ def build_control_panel():
                              html.Label("Location Type"),
                              html.Div(
                                  id='checklist',
-                                 children=[
-                                     dcc.Checklist(
-                                         id="loc-select-all",
-                                         options=[{"label": " Select All", "value": "All"}],
-                                         value=[],
-                                     ),
-                                 ],
+                                 children=dcc.Checklist(
+                                     id="loc-select-all",
+                                     options=[{"label": " Select All", "value": "All"}],
+                                     value=[],
+                                 ),
                              ), 
-                             dcc.Dropdown(
-                                 id="loc-select",
-                                 options=[{'label': i, 'value': i} for i in loc_options],
-                                 value=loc_options[:3],
-                                 multi=True
+                             html.Div(
+                                id="loc-select-outer",
+                                children=dcc.Dropdown(
+                                    id="loc-select",
+                                    options=[{'label': i, 'value': i} for i in loc_options],
+                                    value=loc_options[:3],
+                                    multi=True
+                                ),
                              ),
                          ], style={'margin-top':'5px'}
                     ),
@@ -446,9 +447,7 @@ app.layout = dbc.Container([
 
 # update location type
 @app.callback(
-    [
-        Output("loc-select", "value"),
-    ],
+    Output("loc-select", "value"),
     [Input("loc-select-all", "value")],
 )
 def update_loc_dropdown(select_all):
