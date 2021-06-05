@@ -52,7 +52,7 @@ def get_marks(start, end):
 # Set graph options
 graph_options = ['Scatter','Density','Hexabin']
 style_options = ['light','dark','streets','satellite'] 
-loc_options = ['Geoparsed from Tweet','Geotagged coordinates','Geotagged place','Registered user location']
+loc_options = ['Geotagged coordinates','Geotagged place','Geoparsed from Tweet','Registered user location']
 type_options = ['Tweet','Retweet']
 class_options = ['Unspecified','Logistic regression','Random forest','CNN','ULMFiT']
 colors = ['#ef5675','#ffa600','#8073ac','#35978f']
@@ -239,6 +239,7 @@ def generate_scatter_map(geo_df, style_select, loc_select, graph_layout):
     
     scatter_layout = copy.deepcopy(layout)
     traces = []
+    i = 0
     for filter_type, dff in geo_df.groupby('localization'):
         tweet = dff["full_text"] 
         user_name = dff['user_name']
@@ -262,6 +263,7 @@ def generate_scatter_map(geo_df, style_select, loc_select, graph_layout):
             customdata=hashtags
         )
         traces.append(trace)
+        i += 1
         
     if graph_layout is not None and "mapbox.center" in graph_layout.keys():
         scatter_layout["mapbox"]["center"]["lon"] = float(graph_layout["mapbox.center"]["lon"])
