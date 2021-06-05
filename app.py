@@ -135,7 +135,7 @@ def build_control_panel():
                         ], style={'margin-top':'4px'}
                     ),
                     html.Div(
-                         id="loc-select-outer",
+                         id="loc-type-outer",
                          children=[
                              html.Label("Location Type"),
                              html.Div(
@@ -144,8 +144,13 @@ def build_control_panel():
                                      id="loc-select-all",
                                      options=[{"label": " Select All", "value": "All"}],
                                      value=[],
-                                 ), style={'font-size':'12px'}
-                             ), 
+                                 ), style={'font-size':'14px'}
+                             ),  
+                         ], style={'margin-top':'4px'}
+                    ),
+                    html.Div(
+                         id="loc-select-outer",
+                         children=[
                              html.Div(
                                 id="loc-select-dropdown-outer",
                                 children=dcc.Dropdown(
@@ -155,7 +160,7 @@ def build_control_panel():
                                     multi=True
                                 ),
                              ),
-                         ], style={'margin-top':'4px'}
+                         ], style={'margin-top':'2px'}
                     ),
                     html.Div(
                         id="text-search-outer",
