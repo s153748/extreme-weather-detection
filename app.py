@@ -240,7 +240,7 @@ def generate_scatter_map(geo_df, style_select, loc_select, graph_layout):
     scatter_layout = copy.deepcopy(layout)
     traces = []
     i = 0
-    for filter_type, dff in geo_df.groupby('localization'):
+    for loc, dff in geo_df.groupby('localization'):
         tweet = dff["full_text"] 
         user_name = dff['user_name']
         user_location = dff['user_location']
@@ -253,7 +253,7 @@ def generate_scatter_map(geo_df, style_select, loc_select, graph_layout):
             type="scattermapbox",
             lat=dff["lat"],
             lon=dff["lon"],
-            name=dff["localization"],
+            name=loc,
             selected=dict(marker={"opacity":1.0,"color":"#d6edff" if style_select=='dark' or style_select=='satellite' else "#171b26"}),
             unselected=dict(marker={"opacity":0.3}),
             hoverinfo="text",
