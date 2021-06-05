@@ -35,8 +35,8 @@ total_count = len(df)
 
 def unix_time(dt):
     return (dt-datetime.utcfromtimestamp(0)).total_seconds() 
-init_start = unix_time(df['date'].min()-relativedelta(days=15))
-init_end = unix_time(df['date'].max()+relativedelta(days=15))
+init_start = unix_time(df['date'].min())
+init_end = unix_time(df['date'].max())
 init_start_date = datetime.utcfromtimestamp(init_start).strftime('%Y-%m-%d')
 init_end_date = datetime.utcfromtimestamp(init_end).strftime('%Y-%m-%d')
 
@@ -189,7 +189,7 @@ def generate_barchart(df, range_select, loc_select, type_select, class_select, n
     g.rename(columns={'date':'count'},inplace=True)
     cols = []
     for i in g.index:
-        if i.strftime('%Y-%m-%d') >= range_select[0] and i.strftime('%Y-%m-%d') <= range_select[1]:
+        if i.strftime('%Y-%m-%d') >= range_select[0] and i.strftime('%Y-%m-%d') < range_select[1]:
             cols.append("rgb(214,237,255)")
         else:
             cols.append("rgba(214,237,255,0.3)")
@@ -384,7 +384,7 @@ app.layout = dbc.Container([
                                 min=init_start,
                                 max=init_end, 
                                 value=[init_start, init_end],
-                                marks=get_marks(df['date'].min()-relativedelta(days=15), df['date'].max()+relativedelta(days=15)),
+                                marks=get_marks(df['date'].min()-relativedelta(days=17), df['date'].max()+relativedelta(days=8)),
                                 updatemode='mouseup',
                             ), 
                         ], style={'margin-left':10}
@@ -421,7 +421,7 @@ app.layout = dbc.Container([
                                 children=[
                                     dcc.Loading(children=html.Div(id="tweets-table")),
                                 ],
-                                style={'overflow-y':'scroll','overflow-x':'none','height':330}
+                                style={'overflow-y':'scroll','overflow-x':'none','height':325}
                             ),
                         ],
                     ),
