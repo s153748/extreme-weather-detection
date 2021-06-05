@@ -253,7 +253,7 @@ def generate_scatter_map(geo_df, style_select, loc_select, graph_layout):
         scatter_layout["mapbox"]["center"]["lat"] = float(graph_layout["mapbox.center"]["lat"])
         scatter_layout["mapbox"]["zoom"] = float(graph_layout["mapbox.zoom"])
     scatter_layout["mapbox"]["style"] = style_select
-    scatter_layout["margin"]["r"] = 5
+    scatter_layout["margin"]["r"] = 20
     
     return dict(data=traces, layout=scatter_layout)
         
@@ -276,6 +276,7 @@ def generate_density_map(geo_df, style_select, graph_layout):
         density_layout["mapbox"]["center"]["lat"] = float(graph_layout["mapbox.center"]["lat"])
         density_layout["mapbox"]["zoom"] = float(graph_layout["mapbox.zoom"])
     density_layout["mapbox"]["style"] = style_select
+    density_layout["margin"]["r"] = 20
     
     return dict(data=trace, layout=density_layout)
     
@@ -296,6 +297,7 @@ def generate_hexabin_map(geo_df, style_select, graph_layout):
         hexa_layout["mapbox"]["center"]["lat"] = float(graph_layout["mapbox.center"]["lat"])
         hexa_layout["mapbox"]["zoom"] = float(graph_layout["mapbox.zoom"])
     hexa_layout["mapbox"]["style"] = style_select
+    hexa_layout["margin"]["r"] = 20
     
     return dict(data=trace.data, layout=hexa_layout)
 
@@ -329,7 +331,6 @@ def generate_table(filtered_df, geo_select):
     else:
         full_text = [point["text"] for point in geo_select["points"]]
         text_df = pd.DataFrame(full_text,columns=['full_text'])
-
     t = [generate_tweet_div(i) for i in text_df.to_dict('records')]
     return t
     
@@ -378,16 +379,19 @@ app.layout = dbc.Container([
                             )),
                         ],
                     ),
-                    html.Div([
-                        dcc.RangeSlider(
-                            id='range-slider',
-                            min=init_start,
-                            max=init_end, 
-                            value=[init_start, init_end],
-                            marks=get_marks(df['date'].min(), df['date'].max()),
-                            updatemode='mouseup',
-                        ), 
-                    ]),
+                    html.Div(
+                        id="range-slider-outer",
+                        children=[
+                            dcc.RangeSlider(
+                                id='range-slider',
+                                min=init_start,
+                                max=init_end, 
+                                value=[init_start, init_end],
+                                marks=get_marks(df['date'].min(), df['date'].max()),
+                                updatemode='mouseup',
+                            ), 
+                        ], style={'margin-right':20}
+                    ),
                     html.Div([
                         dcc.Loading(children=dcc.Graph(
                             id="barchart",
@@ -420,7 +424,7 @@ app.layout = dbc.Container([
                                 children=[
                                     dcc.Loading(children=html.Div(id="tweets-table")),
                                 ],
-                                style={'overflow-y':'scroll','overflow-x':'none','height':350}
+                                style={'overflow-y':'scroll','overflow-x':'none','height':330}
                             ),
                         ],
                     ),
