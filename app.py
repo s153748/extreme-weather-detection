@@ -53,7 +53,7 @@ graph_options = ['Scatter','Density','Hexabin']
 style_options = ['light','dark','streets','satellite'] 
 loc_options = ['Geoparsed from Tweet','Geotagged coordinates','Geotagged place','Registered user location']
 type_options = ['Tweet','Retweet']
-class_options = ['Logistic regression','Random forest','CNN','ULMFiT']
+class_options = ['Unspecified','Logistic regression','Random forest','CNN','ULMFiT']
 colors = ['#ef5675','#ffa600','#8073ac','#35978f']
 
 # Create global chart template
@@ -141,7 +141,7 @@ def build_control_panel():
                             dcc.Dropdown(
                                 id='class-select',
                                 options=[{'label': i, 'value': i} for i in class_options],
-                                placeholder=''
+                                value=class_options[0],
                             ),
                         ], style={'margin-top':'5px'}
                     ),
@@ -172,7 +172,7 @@ def filter_data(df, range_select, loc_select, type_select, class_select, n_click
             df = df[df['full_text'].str.contains(keyword, case=False)]
     df = df[df['localization'].isin(loc_select)]
     df = df[df['type'].isin(type_select)]
-    if class_select is not None:
+    if class_select is not 'Unspecified':
         df = df[df[class_select]==1]
     df = df[df['date'] >= range_select[0]]
     filtered_df = df[df['date'] <= range_select[1]]
@@ -316,7 +316,7 @@ def generate_treemap(filtered_df, geo_select):
                         marker_colorscale=px.colors.sequential.Teal,
                         hovertemplate='<b>%{label} </b> <br>Count: %{value}<extra></extra>'))
     fig.update_layout(margin=dict(l=0, r=0, t=0, b=10), 
-                      height=240,
+                      height=250,
                       plot_bgcolor="#171b26",
                       paper_bgcolor="#171b26") 
     return fig
@@ -335,7 +335,7 @@ def generate_table(filtered_df, geo_select):
 def generate_tweet_div(tweet):
     return html.P(
         children=[dash_dangerously_set_inner_html.DangerouslySetInnerHTML(str(tweet['full_text']).replace('<br>',' '))],
-        style={'width':'100%',"background-color":"#242a3b",'font-size':'14px','margin-bottom':'4px'}
+        style={'width':'100%',"background-color":"#242a3b",'font-size':'14px','margin-bottom':'5px'}
     )
 
 app.layout = dbc.Container([
@@ -360,7 +360,7 @@ app.layout = dbc.Container([
         dbc.Col([
             build_control_panel(),
         ], 
-            xs=12, sm=12, md=2, lg=2, xl=2
+            xs=12, sm=12, md=3, lg=3, xl=3
         ),
         dbc.Col([
             dbc.Row([
@@ -428,7 +428,7 @@ app.layout = dbc.Container([
                 ),
             ])
         ], 
-            xs=12, sm=12, md=10, lg=10, xl=10
+            xs=12, sm=12, md=9, lg=9, xl=9
         )
     ], no_gutters=False, justify='start')
 ], fluid=True)
