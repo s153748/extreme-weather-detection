@@ -189,7 +189,7 @@ def generate_barchart(df, range_select, loc_select, type_select, class_select, n
     g.rename(columns={'date':'count'},inplace=True)
     cols = []
     for i in g.index:
-        if i.strftime('%Y-%m-%d') >= range_select[0] and i.strftime('%Y-%m-%d') < range_select[1]:
+        if i.strftime('%Y-%m-%d') >= range_select[0] and i.strftime('%Y-%m-%d') <= range_select[1]:
             cols.append("rgb(214,237,255)")
         else:
             cols.append("rgba(214,237,255,0.3)")
