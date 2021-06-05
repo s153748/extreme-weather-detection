@@ -384,7 +384,7 @@ app.layout = dbc.Container([
                                 min=init_start,
                                 max=init_end, 
                                 value=[init_start, init_end],
-                                marks=get_marks(df['date'].min(), df['date'].max()), # +/- relativedelta(days/months=...)
+                                marks=get_marks(df['date'].min()-relativedelta(months=1), df['date'].max()+relativedelta(months=1)), 
                                 updatemode='mouseup',
                             ), 
                         ], style={'margin-left':15, 'margin-right':15}
