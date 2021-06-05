@@ -253,7 +253,6 @@ def generate_scatter_map(geo_df, style_select, loc_select, graph_layout):
         scatter_layout["mapbox"]["center"]["lat"] = float(graph_layout["mapbox.center"]["lat"])
         scatter_layout["mapbox"]["zoom"] = float(graph_layout["mapbox.zoom"])
     scatter_layout["mapbox"]["style"] = style_select
-    scatter_layout["margin"]["r"] = 20
     
     return dict(data=traces, layout=scatter_layout)
         
@@ -276,7 +275,6 @@ def generate_density_map(geo_df, style_select, graph_layout):
         density_layout["mapbox"]["center"]["lat"] = float(graph_layout["mapbox.center"]["lat"])
         density_layout["mapbox"]["zoom"] = float(graph_layout["mapbox.zoom"])
     density_layout["mapbox"]["style"] = style_select
-    density_layout["margin"]["r"] = 20
     
     return dict(data=trace, layout=density_layout)
     
@@ -297,7 +295,6 @@ def generate_hexabin_map(geo_df, style_select, graph_layout):
         hexa_layout["mapbox"]["center"]["lat"] = float(graph_layout["mapbox.center"]["lat"])
         hexa_layout["mapbox"]["zoom"] = float(graph_layout["mapbox.zoom"])
     hexa_layout["mapbox"]["style"] = style_select
-    hexa_layout["margin"]["r"] = 20
     
     return dict(data=trace.data, layout=hexa_layout)
 
@@ -387,10 +384,10 @@ app.layout = dbc.Container([
                                 min=init_start,
                                 max=init_end, 
                                 value=[init_start, init_end],
-                                marks=get_marks(df['date'].min(), df['date'].max()),
+                                marks=get_marks(df['date'].min(), df['date'].max()+relativedelta(months=1)),
                                 updatemode='mouseup',
                             ), 
-                        ], style={'margin-right':20}
+                        ], #style={'margin-right':20}
                     ),
                     html.Div([
                         dcc.Loading(children=dcc.Graph(
