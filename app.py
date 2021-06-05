@@ -111,6 +111,17 @@ def build_control_panel():
                         ], style={'margin-top':'5px'}
                     ),
                     html.Div(
+                         id="class-select-outer",
+                         children=[ 
+                            html.Label("Classifier"),
+                            dcc.Dropdown(
+                                id='class-select',
+                                options=[{'label': i, 'value': i} for i in class_options],
+                                value=class_options[0],
+                            ),
+                        ], style={'margin-top':'5px'}
+                    ),
+                    html.Div(
                         id="tweet-select-outer",
                         children=[
                             html.Label("Tweet Type"),
@@ -126,6 +137,11 @@ def build_control_panel():
                          id="loc-select-outer",
                          children=[
                              html.Label("Location Type"),
+                             dcc.Checklist(
+                                 id="loc-select-all",
+                                 options=[{"label": "Select All", "value": "All"}],
+                                 value=[],
+                             ),
                              dcc.Dropdown(
                                  id="loc-select",
                                  options=[{'label': i, 'value': i} for i in loc_options],
@@ -133,17 +149,6 @@ def build_control_panel():
                                  multi=True
                              ),
                          ], style={'margin-top':'5px'}
-                    ),
-                    html.Div(
-                         id="class-select-outer",
-                         children=[ 
-                            html.Label("Classifier"),
-                            dcc.Dropdown(
-                                id='class-select',
-                                options=[{'label': i, 'value': i} for i in class_options],
-                                value=class_options[0],
-                            ),
-                        ], style={'margin-top':'5px'}
                     ),
                     html.Div(
                         id="text-search-outer",
@@ -265,9 +270,7 @@ def generate_density_map(geo_df, style_select, graph_layout):
         lon=geo_df["lon"],
         radius=3,
         opacity=0.8,
-        customdata=geo_df['full_text'],
-        hovertemplate=customdata,
-        showscale=False,
+        #showscale=False,
     )]
     
     if graph_layout is not None and "mapbox.center" in graph_layout.keys():
@@ -434,6 +437,29 @@ app.layout = dbc.Container([
         )
     ], no_gutters=False, justify='start')
 ], fluid=True)
+
+# update location type
+@app.callback(
+    [
+        Output("loc-select", "value"),
+    ],
+    [State("loc-select-all", "value")],
+)
+def update_loc_dropdown(checked):
+    if len(checked) == 1
+        return loc_options
+
+# update select all checklist
+@app.callback(
+    Output("checklist-container", "value"),
+    [Input("loc-select", "value")],
+    [State("loc-select-all", "value")],
+)
+def update_checklist(selected, checked):
+    if len(checked) == 1 and len(selected) < len(loc_options):
+        return []
+    else:
+        return ["All"]
 
 # Update slider
 @app.callback(
