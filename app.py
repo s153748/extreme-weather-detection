@@ -4,6 +4,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
+from dash.exceptions import PreventUpdate
 import dash_dangerously_set_inner_html
 import plotly.express as px
 import plotly.graph_objects as go
@@ -443,11 +444,13 @@ app.layout = dbc.Container([
     [
         Output("loc-select", "value"),
     ],
-    [State("loc-select-all", "value")],
+    [Input("loc-select-all", "value")],
 )
-def update_loc_dropdown(checked):
-    if len(checked) == 1:
+def update_loc_dropdown(select_all):
+    if select_all == ["All"]:
         return loc_options
+    else:
+        return dash.no_update
 
 # update select all checklist
 @app.callback(
@@ -456,8 +459,12 @@ def update_loc_dropdown(checked):
     [State("loc-select-all", "value")],
 )
 def update_checklist(selected, checked):
-    if len(checked) == 1 and len(selected) < len(loc_options):
+    if len(checked) == 0 and len(selected) < len(select_options):
+        raise PreventUpdate()
+    elif len(checked) == 1 and len(selected) < len(loc_options):
         return []
+    elif len(checked) == 1 and len(selected) == len(select_options):
+        raise PreventUpdate()
     else:
         return ["All"]
 
@@ -561,4 +568,4 @@ def update_content(range_select, loc_select, type_select, class_select, geo_sele
     return treemap, table, counter
 
 if __name__ == '__main__':
-  app.run_server()
+  app.run_server(debug=True)
