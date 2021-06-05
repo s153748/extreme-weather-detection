@@ -258,7 +258,7 @@ def generate_scatter_map(geo_df, style_select, loc_select, graph_layout):
             unselected=dict(marker={"opacity":0.3}),
             hoverinfo="text",
             text='<b>'+tweet+'</b><br>User name: '+user_name+'<br>User location: '+user_location+'<br>Created at: '+created_at.map(str)+
-                 '<br>Source: '+source+'<br>Retweet count: '+retweet_count.map(str), # '<br>Localization: '+localization+
+                 '<br>Source: '+source+'<br>Localization: '+localization+'<br>Retweet count: '+retweet_count.map(str),
             marker=dict(size=4,opacity=0.9,color=colors[i]),
             customdata=hashtags
         )
