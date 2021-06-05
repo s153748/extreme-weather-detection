@@ -354,9 +354,7 @@ app.layout = dbc.Container([
                 id="banner",
                 className="banner mb-4",
                 children=[
-                    html.A([
-                        html.H6("Extreme Weather Detection"),
-                    ], href=githublink),
+                    html.H6("Extreme Weather Detection"),
                     html.A([
                         html.Img(
                             src=app.get_asset_url("GitHub-Mark-Light-64px.png")
