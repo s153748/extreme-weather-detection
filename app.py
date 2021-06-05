@@ -147,7 +147,7 @@ def build_control_panel():
                                  ),
                              ), 
                              html.Div(
-                                id="loc-select-outer",
+                                id="loc-select-dropdown-outer",
                                 children=dcc.Dropdown(
                                     id="loc-select",
                                     options=[{'label': i, 'value': i} for i in loc_options],
