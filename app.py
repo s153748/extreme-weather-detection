@@ -35,8 +35,8 @@ total_count = len(df)
 
 def unix_time(dt):
     return (dt-datetime.utcfromtimestamp(0)).total_seconds() 
-init_start = unix_time(df['date'].min())
-init_end = unix_time(df['date'].max()+relativedelta(months=1))
+init_start = unix_time(df['date'].min()-relativedelta(days=15))
+init_end = unix_time(df['date'].max()+relativedelta(days=15))
 init_start_date = datetime.utcfromtimestamp(init_start).strftime('%Y-%m-%d')
 init_end_date = datetime.utcfromtimestamp(init_end).strftime('%Y-%m-%d')
 
@@ -384,10 +384,10 @@ app.layout = dbc.Container([
                                 min=init_start,
                                 max=init_end, 
                                 value=[init_start, init_end],
-                                marks=get_marks(df['date'].min(), df['date'].max()+relativedelta(months=1)),
+                                marks=get_marks(df['date'].min()-relativedelta(days=15), df['date'].max()+relativedelta(days=15)),
                                 updatemode='mouseup',
                             ), 
-                        ], #style={'margin-right':20}
+                        ], style={'margin-left':10}
                     ),
                     html.Div([
                         dcc.Loading(children=dcc.Graph(
