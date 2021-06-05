@@ -384,10 +384,10 @@ app.layout = dbc.Container([
                                 min=init_start,
                                 max=init_end, 
                                 value=[init_start, init_end],
-                                marks=get_marks(df['date'].min()-relativedelta(days=df['date'].min().day), df['date'].max()+relativedelta(days=30-df['date'].max().day,months=1)),
+                                marks=get_marks(df['date'].min(), df['date'].max()),
                                 updatemode='mouseup',
                             ), 
-                        ], #style={'margin-left':15, 'margin-right':15}
+                        ], style={'margin-left':20, 'margin-right':20}
                     ),
                     html.Div([
                         dcc.Loading(children=dcc.Graph(
