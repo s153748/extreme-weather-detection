@@ -446,7 +446,7 @@ app.layout = dbc.Container([
     [State("loc-select-all", "value")],
 )
 def update_loc_dropdown(checked):
-    if len(checked) == 1
+    if len(checked) == 1:
         return loc_options
 
 # update select all checklist
