@@ -172,7 +172,7 @@ def filter_data(df, range_select, loc_select, type_select, class_select, n_click
             df = df[df['full_text'].str.contains(keyword, case=False)]
     df = df[df['localization'].isin(loc_select)]
     df = df[df['type'].isin(type_select)]
-    if class_select is not 'Unspecified':
+    if not class_select=='Unspecified':
         df = df[df[class_select]==1]
     df = df[df['date'] >= range_select[0]]
     filtered_df = df[df['date'] <= range_select[1]]
@@ -360,7 +360,7 @@ app.layout = dbc.Container([
         dbc.Col([
             build_control_panel(),
         ], 
-            xs=12, sm=12, md=3, lg=3, xl=3
+            xs=12, sm=12, md=2, lg=2, xl=2
         ),
         dbc.Col([
             dbc.Row([
@@ -428,7 +428,7 @@ app.layout = dbc.Container([
                 ),
             ])
         ], 
-            xs=12, sm=12, md=9, lg=9, xl=9
+            xs=12, sm=12, md=10, lg=10, xl=10
         )
     ], no_gutters=False, justify='start')
 ], fluid=True)
