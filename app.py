@@ -70,7 +70,7 @@ layout = dict(
     ),
     legend=dict(bgcolor="rgba(203,210,211,0.2)",
                 orientation="h",
-                font=dict(color="#7b7d8d",size='8px'),
+                font=dict(color="#7b7d8d"),
                 x=0.02,
                 y=0,
                 yanchor="bottom",
@@ -91,23 +91,24 @@ def build_control_panel():
                     html.Div(
                         id="graph-select-outer",
                         children=[
-                            html.Label("Map Style"),
+                            html.Label("Graph Type"),
                             dcc.Dropdown(
                                 id="graph-select",
                                 options=[{"label": i, "value": i} for i in graph_options],
                                 value=graph_options[0],
                             ),
-                        ],
+                        ], style={'margin-top':'5px'}
                     ),
                     html.Div(
                         id='style-select-outer',
                         children=[
+                            html.Label("Map Style"),
                             dcc.Dropdown(
                                 id="style-select",
                                 options=[{"label": i.capitalize(), "value": i} for i in style_options],
                                 value=style_options[1],
                             ),
-                        ], style={'margin-top':'4px'}
+                        ], style={'margin-top':'5px'}
                     ),
                     html.Div(
                         id="tweet-select-outer",
@@ -119,7 +120,7 @@ def build_control_panel():
                                 value=type_options,
                                 multi=True
                             ), 
-                        ], style={'margin-top':'6px'}
+                        ], style={'margin-top':'5px'}
                     ),
                     html.Div(
                          id="loc-select-outer",
@@ -131,7 +132,7 @@ def build_control_panel():
                                  value=loc_options[:3],
                                  multi=True
                              ),
-                         ], style={'margin-top':'6px'}
+                         ], style={'margin-top':'5px'}
                     ),
                     html.Div(
                          id="class-select-outer",
@@ -142,7 +143,7 @@ def build_control_panel():
                                 options=[{'label': i, 'value': i} for i in class_options],
                                 placeholder=''
                             ),
-                        ], style={'margin-top':'6px'}
+                        ], style={'margin-top':'5px'}
                     ),
                     html.Div(
                         id="text-search-outer",
@@ -151,12 +152,12 @@ def build_control_panel():
                             dcc.Textarea(
                                 id='text-search',
                                 value='',
-                                style={'width':'100%','max-height':'10px','background-color':'#171b26','opacity':0.5,'color':'#ffffff'}, 
+                                style={'width':'100%','background-color':'#171b26','opacity':0.5,'color':'#ffffff'}, 
                                 draggable=False,
                                 placeholder='e.g. floods, #water',
                             ),
-                            html.Button('Search', id='search-button', n_clicks=0),
-                        ], style={'margin-top':'6px'}
+                            html.Button('Search', id='search-button', n_clicks=0, style={'color':'#7b7d8d'}),
+                        ], style={'margin-top':'5px'}
                     )
                 ]
            )
@@ -213,7 +214,7 @@ def generate_barchart(df, range_select, loc_select, type_select, class_select, n
     graph_layout["dragmode"] = 'select'
     graph_layout["selectdirection"] = 'h'
     graph_layout["showlegend"] = False
-    graph_layout["height"] = 100
+    graph_layout["height"] = 95
     
     return dict(data=data, layout=graph_layout)
 
