@@ -50,7 +50,7 @@ def get_marks(start, end):
     return {int(unix_time(m)): (str(m.strftime('%b %Y'))) for m in result} 
 
 # Set graph options
-graph_options = ['Scatter','Density','Hexabin']
+graph_options = ['Scatter','Density','Hexbin']
 style_options = ['light','dark','streets','satellite'] 
 loc_options = ['Geotagged coordinates','Geotagged place','Geoparsed from Tweet','Registered user location']
 type_options = ['Tweet','Retweet']
@@ -196,7 +196,7 @@ def filter_data(df, range_select, loc_select, type_select, class_select, n_click
     
     return filtered_df
 
-def generate_barchart(df, range_select, loc_select, type_select, class_select, n_clicks, keywords):
+def generate_histogram(df, range_select, loc_select, type_select, class_select, n_clicks, keywords):
     
     graph_layout = copy.deepcopy(layout)
     filtered_df = filter_data(df, [init_start_date,init_end_date], loc_select, type_select, class_select, n_clicks, keywords)
@@ -293,7 +293,7 @@ def generate_density_map(geo_df, style_select, graph_layout):
     
     return dict(data=trace, layout=density_layout)
     
-def generate_hexabin_map(geo_df, style_select, graph_layout):
+def generate_hexbin_map(geo_df, style_select, graph_layout):
     
     hexa_layout = copy.deepcopy(layout)
     trace = ff.create_hexbin_mapbox(geo_df, 
@@ -406,7 +406,7 @@ app.layout = dbc.Container([
                     ),
                     html.Div([
                         dcc.Loading(children=dcc.Graph(
-                            id="barchart",
+                            id="histogram",
                         )),
                     ]),
                     html.Div(dcc.Loading(html.Div(id='counter',style={'margin-top':'1px','font-size':'14px'}))),
@@ -484,7 +484,7 @@ def update_checklist(selected, checked):
 # Update slider
 @app.callback(
     Output("range-slider", "value"),
-    Input("barchart", "selectedData")
+    Input("histogram", "selectedData")
 )
 def update_slider(bar_select):
     
@@ -496,9 +496,9 @@ def update_slider(bar_select):
     else:
         return [init_start, init_end]
 
-# Update barchart 
+# Update histogram 
 @app.callback(
-        Output('barchart', 'figure'),
+        Output('histogram', 'figure'),
     [
         Input('range-slider', 'value'),
         Input('loc-select', 'value'),
@@ -509,12 +509,12 @@ def update_slider(bar_select):
         State('text-search', 'value')
     ]
 )  
-def update_barchart(range_select, loc_select, type_select, class_select, n_clicks, keywords):
+def update_histogram(range_select, loc_select, type_select, class_select, n_clicks, keywords):
     
     start = datetime.utcfromtimestamp(range_select[0]).strftime('%Y-%m-%d')
     end = datetime.utcfromtimestamp(range_select[1]).strftime('%Y-%m-%d')
     
-    return generate_barchart(df, [start,end], loc_select, type_select, class_select, n_clicks, keywords)
+    return generate_histogram(df, [start,end], loc_select, type_select, class_select, n_clicks, keywords)
 
 # Update map
 @app.callback(
@@ -543,7 +543,7 @@ def update_map(range_select, graph_select, style_select, loc_select, type_select
     elif graph_select == 'Density':
         geomap = generate_density_map(filtered_df, style_select, graph_layout)
     else:
-        geomap = generate_hexabin_map(filtered_df, style_select, graph_layout)
+        geomap = generate_hexbin_map(filtered_df, style_select, graph_layout)
 
     return geomap
 
