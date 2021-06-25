@@ -582,4 +582,4 @@ def update_content(range_select, loc_select, type_select, class_select, geo_sele
     return treemap, table, counter
 
 if __name__ == '__main__':
-  app.run_server() # debug=True
+  app.run_server(debug=True) 
