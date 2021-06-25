@@ -27,7 +27,8 @@ app = dash.Dash(
 )
 
 githublink = 'https://github.com/s153748/extreme-weather-detection'
-mapbox_access_token = open(".mapbox_token.txt").read()
+#mapbox_access_token = open(".mapbox_token.txt").read()
+mapbox_access_token = 'pk.eyJ1IjoiczE1Mzc0OCIsImEiOiJja25wcDlwdjYxcWJmMnFueDhhbHdreTlmIn0.DXfj5S2H91AZEPG1JnHbxg'
 
 # Load data
 DATA_PATH = pathlib.Path(__file__).parent.joinpath("data") 
