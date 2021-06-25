@@ -25,7 +25,7 @@ app = dash.Dash(
     __name__, external_stylesheets=[dbc.themes.BOOTSTRAP],
     meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"}]
 )
-
+server = app.server
 githublink = 'https://github.com/s153748/extreme-weather-detection'
 #mapbox_access_token = open(".mapbox_token.txt").read()
 mapbox_access_token = 'pk.eyJ1IjoiczE1Mzc0OCIsImEiOiJja25wcDlwdjYxcWJmMnFueDhhbHdreTlmIn0.DXfj5S2H91AZEPG1JnHbxg'
