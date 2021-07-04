@@ -3,3 +3,4 @@ venv
 .DS_Store
 .env
 .mapbox_token.txt
+.ipynb_checkpoints
