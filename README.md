@@ -1,7 +1,5 @@
 ### [EXTREME WEATHER DETECTION](https://extremeweatherdetection.herokuapp.com/)
 
-*By Julie Maria Petersen and Lise Styve*
-
 This repo consists of the code for the M.Sc. thesis project [Identification and Exploration of Extreme Weather Events From Twitter Data](https://github.com/s153748/extreme-weather-detection/blob/main/thesis.pdf) prepared at the [Technical University of Denmark (DTU)](https://www.dtu.dk/) during the Spring 2021. The project was completed as a part of the research project [AI for Climate Adaptation](https://liu.se/en/research/ai4climateadaptation) at [Linköping University (LiU)](https://liu.se/). 
 
 The objective was to implement AI-based methods to identify and visually explore extreme weather events, particularly floods, from social geodata. To this end, the main tasks were to implement text data mining methods for identification of relevant flood events from Twitter data and to create an accompanying [visual interface](https://extremeweatherdetection.herokuapp.com/) for exploring the events. The code for the application is seen in the file [app.py](https://github.com/s153748/extreme-weather-detection/blob/main/app.py), whereas the remaining code is gathered in an explainer [notebook](https://nbviewer.jupyter.org/github/s153748/extreme-weather-detection/blob/main/notebook.ipynb). 
